@@ -1,0 +1,12 @@
+.DS_Store
+**/.DS_Store
+**/.idea/
+
+# Large bundle archives and generated files
+n8n/bundle/*.tar.gz
+n8n/n8n-backup/
+n8n/README.pdf
+n8n-data.tar.gz
+
+# Logs
+*.log
