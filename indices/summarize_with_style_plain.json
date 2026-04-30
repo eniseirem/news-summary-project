@@ -1,0 +1,30 @@
+{
+    "mappings" : {
+      "properties" : {
+        "article_ids" : {
+          "type" : "keyword"
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "institutional" : {
+          "type" : "boolean"
+        },
+        "output_format" : {
+          "type" : "keyword"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "request_id" : {
+          "type" : "keyword"
+        },
+        "styled_summary" : {
+          "type" : "text"
+        },
+        "writing_style" : {
+          "type" : "keyword"
+        }
+      }
+    }
+  }

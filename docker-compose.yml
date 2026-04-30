@@ -1,0 +1,41 @@
+services:
+  opensearch:
+    image: opensearchproject/opensearch:2.9.0
+    container_name: opensearch
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - "9200:9200"
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+
+  dashboards:
+    image: opensearchproject/opensearch-dashboards:2.9.0
+    container_name: opensearch-dashboards
+    environment:
+      - OPENSEARCH_HOSTS=["https://opensearch:9200"]
+    ports:
+      - "5601:5601"
+    depends_on:
+      - opensearch
+
+  api:
+    image: python:3.11-slim
+    container_name: opensearch-python-api
+    working_dir: /app
+    volumes:
+      - ./api:/app
+    command:
+      - sh
+      - -c
+      - |
+        pip install fastapi uvicorn opensearch-py &&
+        uvicorn api:app --host 0.0.0.0 --port 8002
+    ports:
+      - "8002:8002"
+    depends_on:
+      - opensearch
+
+volumes:
+  opensearch-data:

@@ -1,0 +1,33 @@
+{
+    "mappings" : {
+      "properties" : {
+        "cluster_count" : {
+          "type" : "integer"
+        },
+        "cluster_ids" : {
+          "type" : "keyword"
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "mega_summary" : {
+          "type" : "text"
+        },
+        "mega_summary_translated" : {
+          "type" : "text"
+        },
+        "mega_summary_translated_language" : {
+          "type" : "keyword"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "request_id" : {
+          "type" : "keyword"
+        },
+        "category_name": {
+        "type": "keyword"
+      }
+    }
+  }
+}

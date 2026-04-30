@@ -1,0 +1,49 @@
+{
+    "mappings" : {
+      "properties" : {
+        "archived_at" : {
+          "type" : "date"
+        },
+        "article_count" : {
+          "type" : "integer"
+        },
+        "article_ids" : {
+          "type" : "keyword"
+        },
+        "category" : {
+          "type" : "keyword"
+        },
+        "centroid_embedding" : {
+          "type" : "knn_vector",
+          "dimension" : 384
+        },
+        "cluster_id" : {
+          "type" : "keyword"
+        },
+        "created_at" : {
+          "type" : "date"
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "is_archived" : {
+          "type" : "boolean"
+        },
+        "last_updated_at" : {
+          "type" : "date"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "status" : {
+          "type" : "keyword"
+        },
+        "topic_label" : {
+          "type" : "keyword"
+        },
+        "updated_at" : {
+          "type" : "date"
+        }
+      }
+    }
+  }
