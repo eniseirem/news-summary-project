@@ -1,0 +1,44 @@
+# FastAPI backend
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+pydantic>=2.0.0
+
+# HTTP requests (for calling Ollama API)
+requests==2.31.0
+urllib3<2.0.0
+
+# Embeddings / clustering
+sentence-transformers>=2.7.0
+scikit-learn>=1.6.0
+hdbscan
+gensim
+nltk
+
+# Preprocessing (minimal, crawler provides clean text)
+beautifulsoup4==4.12.2
+regex==2023.10.3
+
+# Language detection (for translation)
+langdetect==1.0.9
+
+# Translation (MarianMT models require PyTorch)
+transformers>=4.41.0
+torch>=2.0.0
+sacremoses
+sentencepiece
+protobuf
+
+# Evaluation tools
+numpy<2.0.0,>=1.24.0
+scipy
+bert-score
+rouge-score
+spacy>=3.8.0
+matplotlib>=3.7.0
+pandas
+
+# Dotenv for secrets/config
+python-dotenv==1.0.0
+
+# YAML config parsing (for model configs)
+PyYAML>=6.0

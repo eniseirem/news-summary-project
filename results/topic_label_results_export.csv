@@ -1,0 +1,79 @@
+title,crawler_category,llm_category,llm_secondary_tags,llm_confidence,match
+"Israel has ‘de facto state policy’ of organised torture, says UN report",world,global politics,"news, human rights",0.9,False
+Donald Trump says airspace above and around Venezuela is closed,world,global politics,"news, conflict",0.9,False
+Russian attack on Kyiv cuts power to half of city and leaves two dead,world,global politics,"conflict, politics",1.0,False
+"At least 460 killed in south-east Asia floods and landslides, reports say",world,news,floods,0.9,False
+"Convincing evidence Israel backed aid convoy looters in Gaza, historian says",world,global politics,"conflict, policy",1.0,False
+"Ukrainian soldiers see Trump plan as capitulation, even as they dream of peace",world,global politics,"conflict, diplomacy",1.0,False
+National Guard member killed in D.C. shooting remembered for 'heart of gold',us-news,global politics,news,0.8,False
+What we know about the National Guard members who were victims of the D.C. shooting,us-news,global politics,news,0.8,False
+The campaign to make Richard Nixon great again,politics,global politics,"politics, history",0.9,False
+Trump tells airlines Venezuela's airspace is 'closed in its entirety' in latest escalation,world,global politics,"military, conflict",0.9,False
+"After 46 years, a family thought they had closure in the disappearance of their 6-year-old. Now, they’ll face another trial",none,global politics,news,0.8,False
+"From mobile phones to cooked frogs, inside London's biggest lost property office",none,events,news,0.8,False
+Oregon teacher accused of sexual misconduct that school district was ‘fully aware’ of,none,news,global politics,0.8,False
+"Man Keeps Rock For Years, Hoping It's Gold. It Turned Out to Be Way More Valuable.",none,news,science,0.9,False
+Scientists sound alarm over unprecedented conditions in capital city: 'We may have to evacuate',none,news,"global politics, environment",0.8,False
+Settlement reached in Fox vs Dominion lawsuit,business,global politics,"law, media",0.8,False
+Settlement reached in Fox vs Dominion lawsuit,business,news,global politics,1.0,False
+Here are the Fox broadcasts and tweets Dominion says were defamatory,media,global politics,news,0.8,False
+"Fox News settles with Dominion for $787 million, averting defamation trial over its 2020 election lies",media,news,global politics,0.8,False
+The US economy could depend on McCarthy corralling his extremist Republican troops,politics,global politics,"economics, politics",0.9,False
+"Israel has ‘de facto state policy’ of organised torture, says UN report",world,global politics,news,1.0,False
+Donald Trump says airspace above and around Venezuela is closed,world,global politics,news,1.0,False
+Russian attack on Kyiv cuts power to half of city and leaves two dead,world,global politics,"conflict, diplomacy",1.0,False
+"At least 460 killed in south-east Asia floods and landslides, reports say",world,news,natural disasters,1.0,False
+"Convincing evidence Israel backed aid convoy looters in Gaza, historian says",world,global politics,"conflict, diplomacy",1.0,False
+Zelenskyy faces ‘mini-revolution’ as Yermak’s fall reshapes Ukraine’s wartime power system,world,global politics,news,0.9,False
+Your Party conference thrown into chaos as Zarah Sultana boycotts first day,politics,global politics,party politics,1.0,False
+Impasse over EHRC single-sex spaces guidance ‘distracting from other issues’,world,global politics,news,0.9,False
+UK MPs push for extra aid and visas as Jamaica reels from Hurricane Melissa,world,global politics,news,0.9,False
+Sri Lanka death toll from floods and landslides reaches 153,world,news,"floods, natural disaster",1.0,False
+Talks for UK to join EU defence fund collapse in blow to Starmer’s bid to reset relations,world,global politics,europe,0.9,False
+Rebel nuns who busted out of Austrian care home win reprieve – if they stay off social media,world,news,global politics,0.8,False
+"Ukrainian soldiers see Trump plan as capitulation, even as they dream of peace",world,global politics,"conflict, diplomacy",1.0,False
+National Guard member killed in D.C. shooting remembered for 'heart of gold',us-news,global politics,"news, events",0.8,False
+What we know about the National Guard members who were victims of the D.C. shooting,us-news,global politics,news,0.8,False
+The campaign to make Richard Nixon great again,politics,global politics,"news, politics",0.8,False
+Trump tells airlines Venezuela's airspace is 'closed in its entirety' in latest escalation,world,global politics,"news, conflict",0.9,False
+"Ritz-Carlton's $5,000-a-night safari lodge threatens critical wildlife corridor, conservationists warn",world,events,news,0.8,False
+"Chinese EVs Won't Cost $10,000 In The US: Here's Why",none,news,economics,0.9,False
+"After 46 years, a family thought they had closure in the disappearance of their 6-year-old. Now, they’ll face another trial",none,news,global politics,0.8,False
+"From mobile phones to cooked frogs, inside London's biggest lost property office",none,news,events,0.8,False
+"Man Keeps Rock For Years, Hoping It's Gold. It Turned Out to Be Way More Valuable.",none,news,science,1.0,False
+Scientists sound alarm over unprecedented conditions in capital city: 'We may have to evacuate',none,news,global politics,0.8,False
+"""There Is An Epidemic"": Medical Professionals Are Revealing The ""Bad"" Everyday Habits That Are Slowly Ruining Your Health Over Time",none,news,health,1.0,False
+Missing Virginia high school football coach Travis Turner disappeared into woods with gun after child-sex allegations: family,none,events,"news, crime",0.8,False
+"In brief glimpses of Tehran, an AP journalist sees a changing and challenged Iran",none,news,global politics,0.8,False
+Scientists pull up first riches from 'Holy Grail of shipwrecks' that sank off Colombia in 1708,none,events,news,0.8,False
+Billionaire sparks outrage after pulling up to seaside town in color-shifting yacht: 'As if they were playing Monopoly',none,news,environment,0.9,False
+Dutch chipmaker Nexperia urges Chinese units to help restore supply chain,none,global politics,economy,0.9,False
+You've Been Warned: Consumer Reports Says These Popular SUVs Are Also The Least Reliable,none,news,economics,0.8,False
+3 shot at Westfield Valley Fair mall in San Jose; investigation underway,none,events,"news, crime",1.0,False
+Australian prime minister Albanese becomes the first ever to marry in office,none,global politics,news,0.8,False
+Tim Walz Hits Back At Trump's Shocking Slur With Pointed 4-Word Challenge,none,global politics,news,0.9,False
+Scientists make shocking discovery after interviewing fishermen at Panama Canal: 'We'll just keep running out of them',none,news,"environment, science",1.0,False
+Donald Trump Uses Shocking Slur in Late-Night Thanksgiving Message,none,global politics,"us-news, politics",0.9,False
+Trump says he wants to 'permanently pause' migration to the US from poorer countries,none,global politics,"politics, immigration",1.0,False
+"Heavy snow coming to Indiana, NWS says. When and how much Indy could see",none,news,weather,1.0,False
+Russia accidentally destroys its only way of sending astronauts to space,none,news,space,1.0,False
+Settlement reached in Fox vs Dominion lawsuit,business,global politics,news,0.9,False
+Settlement reached in Fox vs Dominion lawsuit,business,global politics,news,0.8,False
+Here are the Fox broadcasts and tweets Dominion says were defamatory,media,global politics,news,1.0,False
+"Fox News settles with Dominion for $787 million, averting defamation trial over its 2020 election lies",media,global politics,news,0.9,False
+The US economy could depend on McCarthy corralling his extremist Republican troops,politics,global politics,economics,1.0,False
+The White homeowner accused of shooting a Black teen who rang his doorbell turns himself in and is released on bail,none,global politics,"news, human rights",0.9,False
+Jake Gyllenhaal and Jamie Lee Curtis spent the Covid-19 lockdown together,none,events,"celebrity, entertainment",1.0,False
+Tiny troubles: Toddler infiltrates White House grounds,politics,events,technology,1.0,False
+Jamie Foxx remains hospitalized nearly a week after experiencing ‘medical complication’,none,news,"celebrities, health",0.9,False
+Benadryl TikTok ‘challenge’: A 13-year-old died in Ohio after participating,none,news,health,0.8,False
+Netflix is winding down its DVD business after 25 years,media,events,technology,1.0,False
+FTC chair Lina Khan warns AI could ‘turbocharge’ fraud and scams,none,news,"global politics, economics",0.8,False
+"Refined carbs and meat driving global rise in type 2 diabetes, study says",health,news,health,0.9,False
+ADHD medication abuse in schools is a ‘wake-up call’,health,news,health,1.0,False
+Democrats bash Justice Clarence Thomas but their plan to investigate ethics allegations is unclear,politics,global politics,"politics, government",1.0,False
+"April 18, 2023 - Russia-Ukraine news",none,global politics,"security, nuclear",1.0,False
+Two Russians claiming to be former Wagner commanders admit killing children and civilians in Ukraine,none,global politics,"conflict, human rights",1.0,False
+GOP blocks Democratic effort to replace Feinstein on Judiciary panel,politics,global politics,"us-news, politics",0.9,False
+"McCurtain County, Oklahoma, recording: Governor calls on officials to resign over recording of racist and threatening remarks",none,global politics,news,1.0,False
+Zaporizhzhia nuclear plant: US warns Russia not to touch American nuclear technology at Ukrainian nuclear plant,politics,global politics,"news, nuclear",1.0,False

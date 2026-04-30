@@ -1,0 +1,182 @@
+[
+  {
+    "article_id": "623",
+    "true_category": "politics",
+    "predicted_category": "politics",
+    "correct": true
+  },
+  {
+    "article_id": "1431",
+    "true_category": "sport",
+    "predicted_category": "sport",
+    "correct": true
+  },
+  {
+    "article_id": "1144",
+    "true_category": "politics",
+    "predicted_category": "politics",
+    "correct": true
+  },
+  {
+    "article_id": "323",
+    "true_category": "business",
+    "predicted_category": "business",
+    "correct": true
+  },
+  {
+    "article_id": "2129",
+    "true_category": "business",
+    "predicted_category": "business",
+    "correct": true
+  },
+  {
+    "article_id": "2029",
+    "true_category": "entertainment",
+    "predicted_category": "business",
+    "correct": false
+  },
+  {
+    "article_id": "1007",
+    "true_category": "business",
+    "predicted_category": "business",
+    "correct": true
+  },
+  {
+    "article_id": "117",
+    "true_category": "entertainment",
+    "predicted_category": "business",
+    "correct": false
+  },
+  {
+    "article_id": "889",
+    "true_category": "entertainment",
+    "predicted_category": "politics",
+    "correct": false
+  },
+  {
+    "article_id": "393",
+    "true_category": "sport",
+    "predicted_category": "sport",
+    "correct": true
+  },
+  {
+    "article_id": "456",
+    "true_category": "tech",
+    "predicted_category": "tech",
+    "correct": true
+  },
+  {
+    "article_id": "1767",
+    "true_category": "tech",
+    "predicted_category": "tech",
+    "correct": true
+  },
+  {
+    "article_id": "1848",
+    "true_category": "politics",
+    "predicted_category": "politics",
+    "correct": true
+  },
+  {
+    "article_id": "28",
+    "true_category": "tech",
+    "predicted_category": "tech",
+    "correct": true
+  },
+  {
+    "article_id": "1681",
+    "true_category": "business",
+    "predicted_category": "politics",
+    "correct": false
+  },
+  {
+    "article_id": "74",
+    "true_category": "sport",
+    "predicted_category": "politics",
+    "correct": false
+  },
+  {
+    "article_id": "688",
+    "true_category": "entertainment",
+    "predicted_category": "politics",
+    "correct": false
+  },
+  {
+    "article_id": "130",
+    "true_category": "sport",
+    "predicted_category": "",
+    "correct": false
+  },
+  {
+    "article_id": "1831",
+    "true_category": "tech",
+    "predicted_category": "business",
+    "correct": false
+  },
+  {
+    "article_id": "899",
+    "true_category": "sport",
+    "predicted_category": "business",
+    "correct": false
+  },
+  {
+    "article_id": "1840",
+    "true_category": "entertainment",
+    "predicted_category": "politics",
+    "correct": false
+  },
+  {
+    "article_id": "2127",
+    "true_category": "politics",
+    "predicted_category": "politics",
+    "correct": true
+  },
+  {
+    "article_id": "33",
+    "true_category": "entertainment",
+    "predicted_category": "entertainment",
+    "correct": true
+  },
+  {
+    "article_id": "1038",
+    "true_category": "entertainment",
+    "predicted_category": "politics",
+    "correct": false
+  },
+  {
+    "article_id": "2153",
+    "true_category": "politics",
+    "predicted_category": "politics",
+    "correct": true
+  },
+  {
+    "article_id": "1257",
+    "true_category": "business",
+    "predicted_category": "business",
+    "correct": true
+  },
+  {
+    "article_id": "2161",
+    "true_category": "tech",
+    "predicted_category": "tech",
+    "correct": true
+  },
+  {
+    "article_id": "783",
+    "true_category": "entertainment",
+    "predicted_category": "entertainment",
+    "correct": true
+  },
+  {
+    "article_id": "2186",
+    "true_category": "business",
+    "predicted_category": "politics",
+    "correct": false
+  },
+  {
+    "article_id": "774",
+    "true_category": "sport",
+    "predicted_category": "sport",
+    "correct": true
+  }
+]

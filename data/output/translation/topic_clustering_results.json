@@ -1,0 +1,13 @@
+[
+  {
+    "cluster_id": 0,
+    "article_ids": [
+      "https://www.spiegel.de/netzwelt/laender-stimmen-pflicht-fuer-widerrufsbutton-in-onlineshops-zu-a-4b2efcd6-16b8-4091-9934-a3439756e02f#ref=rss",
+      "https://www.spiegel.de/sport/fussball/champions-league-borussia-dortmund-trifft-auf-atalanta-bergamo-a-91c54ac2-c96e-4e33-835e-12b1496ac70c#ref=rss",
+      "https://www.spiegel.de/gesundheit/rsv-welle-warum-weniger-kinder-in-die-klinik-muessen-a-39c66575-9c64-4f6b-9449-1abb5201a4db#ref=rss",
+      "https://www.stern.de/gesellschaft/regional/hamburg-schleswig-holstein/warnstreik-bei-den-stadtbussen--busfahrer-in-den-kreisfreien-staedten-streiken-am-montag-37090632.html",
+      "https://www.bild.de/regional/sachsen/glas-glanz-und-kein-band-mehr-vw-erfindet-glaeserne-manufaktur-neu-697c7feba3f0a8f7d1899271"
+    ],
+    "label": null
+  }
+]

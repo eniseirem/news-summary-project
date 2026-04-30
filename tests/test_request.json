@@ -1,0 +1,17 @@
+{
+  "articles": [
+    {
+      "id": "test_001",
+      "title": "Tech Company Reports Strong Q3 Earnings",
+      "body": "TechCorp announced Q3 revenue of $2.5 billion, up 15% year-over-year. The company credits growth to cloud services and AI products. CEO Jane Smith said the results reflect strong demand and operational efficiency. The company raised its full-year forecast and plans to expand into European markets next quarter.",
+      "language": "en"
+    }
+  ],
+  "writing_style": "journalistic",
+  "output_format": "paragraph",
+  "institutional": false,
+  "additional_combinations": [
+    {"writing_style": "academic", "output_format": "paragraph"},
+    {"writing_style": "executive", "output_format": "paragraph"}
+  ]
+}
