@@ -4,6 +4,21 @@ SWP News Summary is an end-to-end news processing platform that crawls articles,
 
 This repository is a **monorepo** composed of multiple previously separate project branches, now kept together in one place for easier setup and collaboration.
 
+## Contents
+
+- [Project Purpose](#project-purpose)
+- [Core Capabilities](#core-capabilities)
+- [Monorepo Structure](#monorepo-structure)
+- [Architecture Overview](#architecture-overview)
+- [End-to-End Processing Flow](#end-to-end-processing-flow)
+- [Project Structure Design](#project-structure-design)
+- [Where To Start](#where-to-start)
+- [Start Here For Workflow Logic](#start-here-for-workflow-logic)
+- [Implementation References](#implementation-references)
+- [Contributors](#contributors)
+- [Team Responsibilities (Draft)](#team-responsibilities-draft)
+- [Acknowledgements (Non-GitHub Contributors)](#acknowledgements-non-github-contributors)
+
 ## Project Purpose
 
 The project is designed to turn large streams of raw news into structured, readable intelligence.
@@ -119,6 +134,21 @@ Recommended first run path:
 2. Run setup from `n8n/` using `bundle_data_setup.sh`.
 3. Verify services and ports as documented in `n8n/README.md`.
 
+## Start Here For Workflow Logic
+
+If you only read one technical area in this repository, read:
+`n8n/workflows/docs/`
+
+These workflow documents are the best source for understanding how the pipeline actually behaves in production (crawler scheduling, clustering logic, summarization flow, categorization, mega summaries, and webhook behavior).
+
+Suggested reading order:
+
+1. `n8n/workflows/docs/M3_Workflows_Overview.md`
+2. `n8n/workflows/docs/M3_News_Crawler.md`
+3. `n8n/workflows/docs/M3_Clustering_Summary_Label.md`
+4. `n8n/workflows/docs/M3_Categorize_Clusters_Workflow_Technical_Overview.md`
+5. `n8n/workflows/docs/M3_Mega_Summary_Workflow.md`
+
 ## Implementation References
 
 If you want to understand or modify implementation details, start in `n8n/`:
@@ -144,6 +174,39 @@ Component-specific implementation also lives in:
 - **eniseirem** 
 - **Lennyad** 
 
-Add future contributors in GitHub repository settings:
-`Settings -> Collaborators and teams`.
+
+## Team Responsibilities (Draft)
+
+This draft can be adjusted as team ownership evolves.
+
+### lelatvaliashvili (Team Lead)
+- Product direction and milestone scope definition.
+- Workflow quality review for business relevance and output usefulness.
+- Final acceptance for release/demo readiness.
+
+### eniseirem (N8N Team Lead, End-to-End Workflow & Integration)
+- End-to-end workflow orchestration across services using n8n.
+- Integration of Crawler, LLM, OpenSearch, and Frontend components.
+- API coordination and data schema alignment across teams.
+- Performance optimization (batch processing, rate limits, timeout handling).
+- Error handling strategies, retry logic, and system reliability improvements.
+- Docker-based deployment setup and cross-service communication configuration.
+- Workflow monitoring, request tracking, and debugging of integration issues.
+- Technical documentation, integration guides.
+- Cross-team coordination and support for resolving blocking issues during development.
+
+### Lennyad
+- Data model design and schema definition across services.
+- Testing, validation, and issue triage during integration cycles.
+- Support on implementation tasks across services.
+
+## Acknowledgements (Non-GitHub Contributors)
+
+The following people contributed to the project but are not currently listed as GitHub collaborators:
+
+- **Name Surname** - brief contribution summary (example: testing support, domain feedback, documentation review).
+- **Name Surname** - brief contribution summary.
+
+
+
 
