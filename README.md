@@ -170,14 +170,14 @@ Component-specific implementation also lives in:
 
 ## Contributors
 
-- **lelatvaliashvili**
-- **eniseirem** 
-- **Lennyad** 
+- [@lelatvaliashvili](https://github.com/lelatvaliashvili)
+- [@eniseirem](https://github.com/eniseirem)
+- [@Lennyad](https://github.com/Lennyad)
 
 
-## Team Responsibilities (Draft)
+## Team Responsibilities
 
-This draft can be adjusted as team ownership evolves.
+This draft can be adjusted as team ownership evolves. If you are added as a contributor, feel free to update the section that reflects your responsibilities.
 
 ### lelatvaliashvili (Team Lead)
 - Product direction and milestone scope definition.
@@ -195,17 +195,23 @@ This draft can be adjusted as team ownership evolves.
 - Technical documentation, integration guides.
 - Cross-team coordination and support for resolving blocking issues during development.
 
-### Lennyad
+### Lennyad (Data Model Lead)
 - Data model design and schema definition across services.
 - Testing, validation, and issue triage during integration cycles.
 - Support on implementation tasks across services.
 
 ## Acknowledgements (Non-GitHub Contributors)
 
-The following people contributed to the project but are not currently listed as GitHub collaborators:
+The following people contributed to the project but are not currently listed as GitHub collaborators: 
 
-- **Name Surname** - brief contribution summary (example: testing support, domain feedback, documentation review).
-- **Name Surname** - brief contribution summary.
+- **Abby** - LLM Team 
+- **Demi** - LLM Team 
+- **Anh** - Crawlers Team
+- **Levin** - Crawlers Team 
+- **Shidan** - N8N Team 
+- **David** - Frontend Research 
+- **Jan** - Frontend Research 
+
 
 
 
