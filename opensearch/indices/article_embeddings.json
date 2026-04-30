@@ -1,0 +1,25 @@
+{
+  "settings": {
+  "index": {
+    "knn": true
+  }
+},
+
+    "mappings" : {
+      "properties" : {
+        "article_id" : {
+          "type" : "keyword"
+        },
+        "created_at" : {
+          "type" : "date"
+        },
+        "embedding" : {
+          "type" : "knn_vector",
+          "dimension" : 384
+        },
+        "model" : {
+          "type" : "keyword"
+        }
+      }
+    }
+  }

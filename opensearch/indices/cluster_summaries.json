@@ -1,0 +1,91 @@
+{
+    "mappings" : {
+      "properties" : {
+        "article_count" : {
+          "type" : "integer"
+        },
+        "article_ids" : {
+          "type" : "keyword"
+        },
+        "cluster_id" : {
+          "type" : "keyword"
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "request_id" : {
+          "type" : "keyword"
+        },
+        "style_meta" : {
+          "properties" : {
+            "institutional" : {
+              "type" : "boolean"
+            },
+            "output_format" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "writing_style" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            }
+          }
+        },
+        "styled_processed_at" : {
+          "type" : "date"
+        },
+        "styled_summary" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "summary" : {
+          "type" : "text"
+        },
+        "summary_de" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "summary_de_processed_at" : {
+          "type" : "date"
+        },
+        "summary_styled_en" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "summary_translated" : {
+          "type" : "text"
+        },
+        "summary_translated_language" : {
+          "type" : "keyword"
+        }
+      }
+    }
+  }
