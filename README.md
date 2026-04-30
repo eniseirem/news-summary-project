@@ -190,7 +190,7 @@ This draft can be adjusted as team ownership evolves. If you are added as a cont
 - API coordination and data schema alignment across teams.
 - Performance optimization (batch processing, rate limits, timeout handling).
 - Error handling strategies, retry logic, and system reliability improvements.
-- Docker-based deployment setup and cross-service communication configuration.
+- Docker-based deployment setup.
 - Workflow monitoring, request tracking, and debugging of integration issues.
 - Technical documentation, integration guides.
 - Cross-team coordination and support for resolving blocking issues during development.
@@ -206,6 +206,7 @@ The following people contributed to the project but are not currently listed as 
 
 - **Abby** - LLM Team 
 - **Demi** - LLM Team 
+- **Theresia** - LLM Team
 - **Anh** - Crawlers Team
 - **Levin** - Crawlers Team 
 - **Shidan** - N8N Team 
