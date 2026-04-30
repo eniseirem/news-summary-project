@@ -1,0 +1,70 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "en_analyzer": {
+          "type": "standard"
+        }
+      }
+    }
+  },
+    "mappings" : {
+      "properties" : {
+        "author_id" : {
+          "type" : "keyword"
+        },
+        "body" : {
+          "type" : "text",
+          "analyzer" : "en_analyzer"
+        },
+        "category_id" : {
+          "type" : "keyword"
+        },
+        "embedding_knn" : {
+          "type" : "knn_vector",
+          "dimension" : 768
+        },
+        "id" : {
+          "type" : "keyword"
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "language" : {
+          "type" : "keyword"
+        },
+        "meta" : {
+          "type" : "object"
+        },
+        "published_at" : {
+          "type" : "date"
+        },
+        "retrieved_at" : {
+          "type" : "date"
+        },
+        "source" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "source_id" : {
+          "type" : "keyword"
+        },
+        "title" : {
+          "type" : "text",
+          "analyzer" : "en_analyzer"
+        },
+        "url" : {
+          "type" : "keyword"
+        },
+        "word_count" : {
+          "type" : "integer"
+        }
+        
+      }
+    }
+  }

@@ -1,0 +1,31 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "analysis": {
+        "analyzer": {
+          "en_analyzer": {
+            "type": "standard",
+            "stopwords": "_english_"
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": { "type": "keyword" },
+      "article_id": { "type": "keyword" },
+      "rouge_1": { "type": "float" },
+      "rouge_l": { "type": "float" },
+      "bert_f1": { "type": "float" },
+      "bleu": { "type": "float" },
+      "language": { "type": "keyword" },
+      "evaluated_at": { "type": "date" },
+      "human_relevance": { "type": "integer" },
+      "human_fluency": { "type": "integer" },
+      "human_comments": { "type": "text", "analyzer": "en_analyzer" }
+    }
+  }
+}

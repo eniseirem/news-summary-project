@@ -1,0 +1,85 @@
+{
+    "mappings" : {
+      "properties" : {
+        "article_ids" : {
+          "type" : "keyword"
+        },
+        "category" : {
+          "type" : "keyword"
+        },
+        "cluster_article_ids" : {
+          "type" : "object"
+        },
+        "cluster_id" : {
+          "type" : "keyword"
+        },
+        "error_reasons" : {
+          "type" : "keyword"
+        },
+        "eval_type" : {
+          "type" : "keyword"
+        },
+        "individual_results" : {
+          "type" : "nested",
+          "properties" : {
+            "error" : {
+              "type" : "text"
+            },
+            "model" : {
+              "type" : "keyword"
+            },
+            "scores" : {
+              "properties" : {
+                "coherence" : {
+                  "type" : "float"
+                },
+                "consistency" : {
+                  "type" : "float"
+                },
+                "fluency" : {
+                  "type" : "float"
+                },
+                "relevance" : {
+                  "type" : "float"
+                }
+              }
+            },
+            "status" : {
+              "type" : "keyword"
+            }
+          }
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "num_judges_used" : {
+          "type" : "integer"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "request_id" : {
+          "type" : "keyword"
+        },
+        "scores" : {
+          "properties" : {
+            "coherence" : {
+              "type" : "float"
+            },
+            "consistency" : {
+              "type" : "float"
+            },
+            "fluency" : {
+              "type" : "float"
+            },
+            "relevance" : {
+              "type" : "float"
+            }
+          }
+        },
+        "status" : {
+          "type" : "keyword"
+        }
+      }
+    }
+  }

@@ -1,0 +1,27 @@
+{
+    "mappings" : {
+      "properties" : {
+        "article_ids" : {
+          "type" : "keyword"
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "max_words" : {
+          "type" : "integer"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "request_id" : {
+          "type" : "keyword"
+        },
+        "summary_length" : {
+          "type" : "integer"
+        },
+        "topic_label" : {
+          "type" : "keyword"
+        }
+      }
+    }
+  }

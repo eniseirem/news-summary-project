@@ -1,0 +1,57 @@
+{
+    "mappings" : {
+      "properties" : {
+        "archived" : {
+          "properties" : {
+            "archived_cluster_ids" : {
+              "type" : "keyword"
+            },
+            "total_archived" : {
+              "type" : "integer"
+            }
+          }
+        },
+        "days_inactive" : {
+          "type" : "integer"
+        },
+        "duplicates_merged" : {
+          "type" : "keyword"
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "merges" : {
+          "type" : "nested",
+          "properties" : {
+            "cluster_id_1" : {
+              "type" : "keyword"
+            },
+            "cluster_id_2" : {
+              "type" : "keyword"
+            },
+            "merged_article_count" : {
+              "type" : "integer"
+            },
+            "merged_cluster_id" : {
+              "type" : "keyword"
+            },
+            "similarity" : {
+              "type" : "float"
+            }
+          }
+        },
+        "operation" : {
+          "type" : "keyword"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "request_id" : {
+          "type" : "keyword"
+        },
+        "similarity_threshold" : {
+          "type" : "float"
+        }
+      }
+    }
+  }

@@ -1,0 +1,39 @@
+{
+    "mappings" : {
+      "properties" : {
+        "article_ids" : {
+          "type" : "keyword"
+        },
+        "extract_lda" : {
+          "type" : "boolean"
+        },
+        "extract_tfidf" : {
+          "type" : "boolean"
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "lda_keywords" : {
+          "type" : "keyword"
+        },
+        "num_topics" : {
+          "type" : "integer"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "request_id" : {
+          "type" : "keyword"
+        },
+        "tfidf_keywords" : {
+          "type" : "keyword"
+        },
+        "top_k" : {
+          "type" : "integer"
+        },
+        "words_per_topic" : {
+          "type" : "integer"
+        }
+      }
+    }
+  }

@@ -1,0 +1,25 @@
+services:
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: dashboard
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./dashboard:/app
+    environment:
+      - OPENSEARCH_USER=admin
+      - OPENSEARCH_PASS=admin
+      - OPENSEARCH_HOST=opensearch
+      - OPENSEARCH_PORT=9200
+    networks:
+      - opensearch_internal_net
+      - n8n-network
+    restart: unless-stopped
+
+networks:
+  opensearch_internal_net:
+    external: true
+  n8n-network:
+    external: true
