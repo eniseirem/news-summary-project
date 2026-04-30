@@ -1,0 +1,371 @@
+{
+  "updatedAt": "2026-02-10T15:00:27.181Z",
+  "createdAt": "2026-02-10T15:00:27.181Z",
+  "id": "854Jg3_83NQdqeiToIatJ",
+  "name": "m3 - summary_style",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "style",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1424,
+        96
+      ],
+      "id": "1cae620a-2413-4775-9784-c83c5f97f364",
+      "name": "Webhook",
+      "webhookId": "600cb4a3-0195-4380-9fdc-2d4ce002be7f"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $json.body ?? $json;\n\n\nconst category = (b.category ?? \"\").toString().trim();\nif (!category) throw new Error(\"Missing category\");\n\n\nconst writingStyleMap = {\n  \"Journalistic\": \"journalistic\",\n  \"Academic\": \"academic\",\n  \"Executive\": \"executive\",\n  \"journalistic\": \"journalistic\",\n  \"academic\": \"academic\",\n  \"executive\": \"executive\",\n};\n\nconst outputFormatMap = {\n  \"Paragraph\": \"paragraph\",\n  \"Bullet Point\": \"bullet_points\",\n  \"Bullet Points\": \"bullet_points\",\n  \"TLDR\": \"tldr\",\n  \"Sections\": \"sections\",\n  \"paragraph\": \"paragraph\",\n  \"bullet_points\": \"bullet_points\",\n  \"tldr\": \"tldr\",\n  \"sections\": \"sections\",\n};\n\nconst writing_style = writingStyleMap[b.writing_style] ?? \"journalistic\";\nconst output_format = outputFormatMap[b.output_format] ?? \"bullet_points\";\nconst institutional = (typeof b.institutional === \"boolean\") ? b.institutional : false;\n\n// 可选：language / size（这里 size 固定查最新 1 条，你也可让前端传 size）\nconst language = (b.language ?? \"en\").toString().trim() || \"en\";\nconst size = (typeof b.size === \"number\" && b.size > 0) ? b.size : 1;\n\nreturn [{\n  json: {\n    category,\n    language,\n    size,\n    params: { writing_style, output_format, institutional }\n  }\n}];\n\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1424,
+        -224
+      ],
+      "id": "058917a3-6b94-42a2-b384-11792bdf31b7",
+      "name": "Normalize Request"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ JSON.stringify($json).replace(/\\n/g, '\\\\n') }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "content-type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -528,
+        96
+      ],
+      "id": "e496ae73-cfab-4b8e-867f-9bdf9db352d7",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const { category, size, language, params } = $json;\n\nconst os_query = {\n  size, \n  _source: [\"cluster_id\", \"summary\", \"processed_at\", \"category\", \"language\"],\n  query: {\n    bool: {\n      must: [\n        { term: { \"category\": category } },\n        { exists: { field: \"summary\" } }\n      ]\n    }\n  },\n  sort: [{ processed_at: { order: \"desc\" } }]\n};\n\n\n\nreturn [{\n  json: {\n    category,\n    language,\n    params,\n    index: \"cluster_summaries\",\n    os_query\n  }\n}];\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1200,
+        -224
+      ],
+      "id": "60282f88-fef1-4e1b-b15a-a41d74607500",
+      "name": "Build cluster search query"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/cluster_summaries/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.os_query }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "969a98e4-dabe-4d44-be8a-d3308191ca3b",
+      "name": "search clusters",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -976,
+        -224
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Trv8tso5MyKF1SQR",
+          "name": "Unnamed credential 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const r = $json;\nconst hits = r?.hits?.hits ?? r?.body?.hits?.hits ?? r?.result?.hits?.hits ?? [];\n\nif (!hits.length) {\n  return [{\n    json: {\n      error: \"No cluster summary found for this category\",\n      found: 0\n    }\n  }];\n}\n\nconst src = hits[0]._source ?? hits[0].source ?? hits[0];\n\nconst params = $node[\"Build cluster search query\"].json.params;\nconst category = $node[\"Build cluster search query\"].json.category;\nconst language = $node[\"Build cluster search query\"].json.language;\n\n\nreturn [{\n  json: {\n    category,\n    language,\n    params,\n    cluster_id: src.cluster_id,\n    summary: src.summary,\n    processed_at: src.processed_at ?? null\n  }\n}];\n;\n\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        -224
+      ],
+      "id": "80c6ba68-2d56-4a1d-b2b8-66fbe199f938",
+      "name": "Pick first Hit"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bf541601-4312-4382-8151-d6d8551500b0",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -528,
+        -224
+      ],
+      "id": "2c4d4075-0187-4b51-b43b-9e56b5a7a370",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = $json;\nconst p = j.params ?? {};\n\nconst writing_style = p.writing_style ?? \"journalistic\";\nconst output_format = p.output_format ?? \"bullet_points\";\nconst institutional = p.institutional ?? false;\n\nconst cluster_id = j.cluster_id ?? \"unknown\";\n\n\nconst request_id = `style_${new Date().toISOString()}_${cluster_id}`;\n\n\nconst summary = (j.summary ?? \"\").toString().trim();\nif (!summary) throw new Error(\"Missing summary for styling\");\n\nreturn [{\n  json: {\n    ...j,                 \n    request_id,\n    style_request: {\n      request_id,\n      summary,\n      writing_style,\n      output_format,\n      institutional\n    }\n  }\n}];\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -304,
+        -128
+      ],
+      "id": "45353775-c90e-4cfc-9b3c-577ef2e64bcd",
+      "name": "Prepare Style Payload"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://llm-service:8001/summary_style",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}\n",
+        "options": {
+          "timeout": 18000000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -976,
+        96
+      ],
+      "id": "3358ce0d-6c0a-4988-a093-ca4db4529267",
+      "name": "Call Style Endpoint"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    batches_processed: 0,\n    source_clusters: 0,\n    final_summary: \"\",\n    message: $json.error ?? \"error\",\n    all_clusters: [],\n    individual_summaries: []\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -304,
+        -320
+      ],
+      "id": "157e0877-144f-4d8b-97cb-6951fd5aa88b",
+      "name": "Error Response"
+    },
+    {
+      "parameters": {
+        "jsCode": "// FINAL n8n CODE NODE - For /summary_style endpoint on port 8001\n\nconst incomingBody = $input.item.json.body;\n\nconst summary = incomingBody.summary || \"\";\nconst requestId = incomingBody.request_id || \"unknown\";\nconst writingStyle = incomingBody.writing_style;\nconst outputFormat = incomingBody.output_format;\nconst editorialTone = incomingBody.editorial_tone;\n\nconst styleMapping = {\n  \"Journalistic\": \"journalistic\",\n  \"Academic\": \"academic\",\n  \"Executive\": \"executive\",\n  \"LinkedIn\": \"linkedin\"\n};\n\nconst formatMapping = {\n  \"Paragraph\": \"paragraph\",\n  \"Bullet Point\": \"bullet_points\",\n  \"TL;DR\": \"tldr\",\n  \"Sections\": \"sections\"\n};\n\nconst toneMapping = {\n  \"Institutional\": true,\n  \"Neutral\": false,\n  \"Default\": false\n};\n\n// Map the values\nlet mappedWritingStyle = styleMapping[writingStyle] || writingStyle;\nlet mappedOutputFormat = formatMapping[outputFormat] || outputFormat;\nlet mappedInstitutional = toneMapping[editorialTone] !== undefined ? toneMapping[editorialTone] : false;\n\n// Clean up invalid values\nif (!mappedWritingStyle || mappedWritingStyle === \"Default\" || mappedWritingStyle === \"null\") {\n  mappedWritingStyle = null;\n}\nif (!mappedOutputFormat || mappedOutputFormat === \"Default\" || mappedOutputFormat === \"null\") {\n  mappedOutputFormat = null;\n}\n\n// Build request with required fields\nconst transformedRequest = {\n  request_id: requestId,\n  summary: summary,\n  institutional: mappedInstitutional,\n};\n\n// Only add optional fields if they have valid values\nif (mappedWritingStyle) {\n  transformedRequest.writing_style = mappedWritingStyle;\n}\n\nif (mappedOutputFormat) {\n  transformedRequest.output_format = mappedOutputFormat;\n}\n\nconsole.log(\"Transformed request:\", JSON.stringify(transformedRequest, null, 2));\n\nreturn {\n  json: transformedRequest\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1200,
+        96
+      ],
+      "id": "66e6ced6-8f51-4592-b91f-7714036806ec",
+      "name": "Prepare Style Payload1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.item.json;\nconst result = Array.isArray(response) ? response[0] : response;\n\n// Return just the data fields directly\nreturn {\n  styled_summary: result.styled_summary || \"\",\n  request_id: result.request_id || \"unknown\",\n  writing_style: result.writing_style,\n  output_format: result.output_format,\n  institutional: result.institutional || false,\n  processed_at: result.processed_at || new Date().toISOString()\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        96
+      ],
+      "id": "e5bf7e28-9e52-4597-9990-9537cc02f8bd",
+      "name": "Prepare Update body"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Style Payload1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Request": {
+      "main": [
+        [
+          {
+            "node": "Build cluster search query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search clusters": {
+      "main": [
+        [
+          {
+            "node": "Pick first Hit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build cluster search query": {
+      "main": [
+        [
+          {
+            "node": "search clusters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick first Hit": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Style Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Style Payload": {
+      "main": [
+        []
+      ]
+    },
+    "Call Style Endpoint": {
+      "main": [
+        [
+          {
+            "node": "Prepare Update body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Style Payload1": {
+      "main": [
+        [
+          {
+            "node": "Call Style Endpoint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Update body": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "pinData": {},
+  "versionId": "0136f52d-b237-4f98-aacd-a9c503e541eb",
+  "activeVersionId": "0136f52d-b237-4f98-aacd-a9c503e541eb",
+  "versionCounter": 9,
+  "triggerCount": 1,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-02-10T15:00:27.184Z",
+      "createdAt": "2026-02-10T15:00:27.184Z",
+      "role": "workflow:owner",
+      "workflowId": "854Jg3_83NQdqeiToIatJ",
+      "projectId": "Fym8lmiogviYTzpp",
+      "project": {
+        "updatedAt": "2026-02-11T13:41:09.163Z",
+        "createdAt": "2026-02-10T14:59:11.065Z",
+        "id": "Fym8lmiogviYTzpp",
+        "name": "enise colak <eniseirem@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "f2a82ed6-b64a-4ab3-b153-a72995fa761d"
+      }
+    }
+  ]
+}

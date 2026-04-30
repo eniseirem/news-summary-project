@@ -1,0 +1,354 @@
+{
+  "name": "LLM-Summarization-Async",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "a93fd339-b587-4e66-b989-85237d780b0f",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -800,
+        1680
+      ]
+    },
+    {
+      "parameters": {
+        "content": "Files write ASYNC while loop continues!\nNo waiting for file I/O.",
+        "height": 100,
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        672,
+        1552
+      ],
+      "id": "615bfcb3-08fd-4a02-9395-51fd757fde60",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $json;\nconst inputItem = $('Split One by One').item.json;\n\nif (!response.final_summary || response.error || response.statusCode >= 400) {\n  // Error\n  const errorData = {\n    type: 'error',\n    article_id: inputItem.id,\n    title: inputItem.title,\n    source: inputItem.source,\n    error_message: response.message || response.error || JSON.stringify(response),\n    failed_at: new Date().toISOString()\n  };\n  console.error('❌ FAILED:', errorData.article_id);\n  return [{json: errorData}];\n}\n\n// Success\nconst successData = {\n  type: 'success',\n  article_id: inputItem.id,\n  title: inputItem.title,\n  source: inputItem.source,\n  url: inputItem.url,\n  summary: response.final_summary,\n  model: response.model,\n  processed_at: response.processed_at\n};\n\nconsole.log('✅ SUCCESS:', successData.article_id, '-', successData.title);\n\nconst jsonText = JSON.stringify(successData, null, 2);\n\nreturn [{\n  json: successData,\n  binary: {\n    data: {\n      data: Buffer.from(jsonText).toString('base64'),\n      mimeType: 'application/json',\n      fileName: `success_${successData.article_id}.json`\n    }\n  }\n}];"
+      },
+      "id": "a88c0e08-db01-4be9-abd4-4f7103be7aad",
+      "name": "Process Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        1696
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.type }}",
+              "value2": "success"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a4b1a4e2-63fa-43fd-b500-9cbfcd69312a",
+      "name": "Is Success?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        720,
+        1696
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "/crawler/articles.json",
+        "options": {}
+      },
+      "id": "c3653a01-c0e6-479f-af28-64e08d6193ec",
+      "name": "Read Articles",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        1680
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const binaryData = await this.helpers.getBinaryDataBuffer(0, 'data');\nconst articles = JSON.parse(binaryData.toString());\n\nconst shortArticles = articles.filter(a => a.body && a.body.length < 4000);\n\nconsole.log('📊 Total:', articles.length, 'Filtered:', shortArticles.length);\nconsole.log('🔄 Processing ONE BY ONE (model safety)');\n\nreturn shortArticles.map(article => ({json: article}));"
+      },
+      "id": "31d66f28-33da-44a2-add5-6b89a32212fe",
+      "name": "Prepare",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        1680
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "b5927fd7-1291-415b-8e2d-a5562e074ccf",
+      "name": "Split One by One",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -160,
+        1680
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "id": "75814115-a002-4114-b1f6-b420dc1d6030",
+      "name": "Wait 2s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        64,
+        1696
+      ],
+      "webhookId": "wait-between-articles"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8001/summarize_batch",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  request_id: $now.format('YYYY-MM-DD-HHmmss') + '-' + $json.id,\n  filters_used: {},\n  articles: [{\n    id: $json.id,\n    title: $json.title,\n    body: $json.body,\n    language: $json.language,\n    source: $json.source,\n    published_at: $json.published_at\n  }]\n}) }}",
+        "options": {
+          "timeout": 180000
+        }
+      },
+      "id": "8c425706-a6c5-4070-a4c5-63681d327f2a",
+      "name": "Summarize Single",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        1696
+      ],
+      "continueOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Just pass through - don't wait for file write!\nconsole.log('📝 File write initiated, continuing to next article...');\nreturn $input.all();"
+      },
+      "id": "4e8e3df9-17eb-48b7-b46d-11d6a6b05fb0",
+      "name": "Continue Loop",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1136,
+        1696
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json: {message: 'All articles processed! Check /llm/data/successes/ for results.'}}];"
+      },
+      "id": "227457ab-c408-4034-92f8-9141d5bd53dd",
+      "name": "Complete",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        1488
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/llm/data/successes/success_{{ $json.article_id }}.json",
+        "options": {}
+      },
+      "id": "65e9ad6b-5341-4951-9855-c301c64effb0",
+      "name": "Write Success NOW",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        912,
+        1584
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/llm/data/errors/error_{{ $json.article_id }}.txt",
+        "options": {}
+      },
+      "id": "afd6da12-e9ee-4e68-a1f5-8e93209bcf17",
+      "name": "Write Error",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        912,
+        1744
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Read Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Articles": {
+      "main": [
+        [
+          {
+            "node": "Prepare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare": {
+      "main": [
+        [
+          {
+            "node": "Split One by One",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split One by One": {
+      "main": [
+        [
+          {
+            "node": "Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 2s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 2s": {
+      "main": [
+        [
+          {
+            "node": "Summarize Single",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize Single": {
+      "main": [
+        [
+          {
+            "node": "Process Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Result": {
+      "main": [
+        [
+          {
+            "node": "Is Success?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Success?": {
+      "main": [
+        [
+          {
+            "node": "Write Success NOW",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Write Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Loop": {
+      "main": [
+        [
+          {
+            "node": "Split One by One",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Success NOW": {
+      "main": [
+        [
+          {
+            "node": "Continue Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Error": {
+      "main": [
+        [
+          {
+            "node": "Continue Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b364a50a-ad6e-40fb-b0c0-1d875370a293",
+  "meta": {
+    "instanceId": "1a3858aba68429b9782f815a4304eafd33a3c8405f954572f245dd36e44340b3"
+  },
+  "id": "fBmPdnXYrjAODaBB",
+  "tags": []
+}

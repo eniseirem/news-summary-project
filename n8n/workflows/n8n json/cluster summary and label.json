@@ -1,0 +1,245 @@
+{
+  "name": "cluster summary and label",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/cluster_summaries/_doc/{{ $json.cluster_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "869be922-4182-470b-a46b-b7f37862347e",
+      "name": "Save to OpenSearch1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2112,
+        1024
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Trv8tso5MyKF1SQR",
+          "name": "Unnamed credential 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://llm-service:8001/cluster_summarize",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 3000000
+        }
+      },
+      "id": "39ee2595-589e-4b60-9916-468eb3536b0b",
+      "name": "Generate Cluster Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1728,
+        1024
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Trv8tso5MyKF1SQR",
+          "name": "Unnamed credential 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "4f4f957b-4c73-45ff-89fb-2b2ee5c88b1c",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        1520,
+        1024
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format the LLM response for OpenSearch insert\nconst llmResponse = $input.first().json;\nconst cluster = llmResponse.clusters[0]; // Single cluster\n\nreturn {\n  cluster_id: cluster.cluster_id,\n  request_id: llmResponse.request_id,\n  article_ids: cluster.article_ids,\n  article_count: cluster.article_count,\n  summary: cluster.summary,\n  ingested_at: new Date().toISOString(),\n  processed_at: llmResponse.processed_at\n};"
+      },
+      "id": "25ad08fe-97e7-45ff-831b-47264b3112b2",
+      "name": "Attach Summaries to Clusters",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1904,
+        1024
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the cluster data that was just saved\nconst clusterData = $('Attach Summaries to Clusters').first().json;\n\nconst topicLabelPayload = {\n  request_id: `label_${clusterData.cluster_id}_${Date.now()}`,\n  summary: clusterData.summary,\n  cluster_id: clusterData.cluster_id\n};\n\nconsole.log(`🏷️ Returning topic_label payload for cluster ${clusterData.cluster_id}`);\n\nreturn [{ json: topicLabelPayload }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2288,
+        1024
+      ],
+      "id": "68826d4b-5b2a-406d-a63d-8f51ae110f1a",
+      "name": "topic_label structure"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://llm-service:8001/topic_label",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ request_id: $json.request_id, summary: $json.summary }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2480,
+        1024
+      ],
+      "id": "06fb998f-cf73-4423-9326-2bfe99924524",
+      "name": "Topic label",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/cluster_summaries/_update/{{ $('topic_label structure').first().json.cluster_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"doc\": {\n    \"topic_label\": \"={{ $json.topic_label }}\",\n    \"label_processed_at\": \"={{ $json.processed_at }}\"\n  }\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2672,
+        1024
+      ],
+      "id": "cc435655-8a17-4c7b-866f-148d6ec9b775",
+      "name": "Save topic label",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Trv8tso5MyKF1SQR",
+          "name": "Unnamed credential 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Generate Cluster Summary": {
+      "main": [
+        [
+          {
+            "node": "Attach Summaries to Clusters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Generate Cluster Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attach Summaries to Clusters": {
+      "main": [
+        [
+          {
+            "node": "Save to OpenSearch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to OpenSearch1": {
+      "main": [
+        [
+          {
+            "node": "topic_label structure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "topic_label structure": {
+      "main": [
+        [
+          {
+            "node": "Topic label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Topic label": {
+      "main": [
+        [
+          {
+            "node": "Save topic label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "ef2265d1-c18c-4364-a22d-86956c8ea97e",
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "id": "t0axUOUgpQYcZyXC",
+  "tags": []
+}

@@ -1,0 +1,127 @@
+{
+  "name": "news-crawler",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "may need a timer",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        176,
+        160
+      ],
+      "id": "1fa2bd69-e3a4-4903-8db1-8f6754ce9e1d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "command": "sh -c \"cd /crawler && PYTHONPATH=/crawler /home/node/crawler-venv/bin/python main.py\""
+      },
+      "id": "fc84f377-346a-47b1-bd42-cdf892762996",
+      "name": "Run Crawler",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.success }}",
+              "value2": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3b82b754-2322-445f-8c9d-52e124d8b3ed",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        592,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "/crawler/articles.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "29ba0962-6066-40d8-8787-a7411e807ae8",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "11e91f72-3db8-4024-b4a0-d2ccc109c022",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Run Crawler": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Run Crawler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cbd1f7c2-f56d-4d44-b032-235c779c9818",
+  "meta": {
+    "instanceId": "1a3858aba68429b9782f815a4304eafd33a3c8405f954572f245dd36e44340b3"
+  },
+  "id": "wbd08q3i7IUBVs8g",
+  "tags": []
+}

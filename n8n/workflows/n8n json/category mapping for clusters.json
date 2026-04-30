@@ -1,0 +1,198 @@
+{
+  "name": "category mapping for clusters",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.result }}",
+              "rightValue": "updated",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "bd7b874d-00e1-4fdf-a39b-3b68cba00606",
+      "name": "Check Update Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/clusters/_update/{{ $('Start').item.json._cluster_doc_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"doc\": {\n    \"category\": \"{{ $json.category }}\",\n    \"updated_at\": \"{{ new Date().toISOString() }}\"\n  }\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "b3d21bb6-b29b-4ba3-8765-fca130e393ad",
+      "name": "Update Cluster Category",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1056,
+        144
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Trv8tso5MyKF1SQR",
+          "name": "Unnamed credential 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://llm-service:8001/category_label",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"request_id\": \"{{ $json._cluster_doc_id }}\",\n  \"summary\": \"{{ $json.summary.replace(/\\n/g, ' ').replace(/\"/g, '\\\\\"') }}\",\n  \"article_count\": {{ $json.article_count }},\n  \"article_ids\": {{ JSON.stringify($json.article_ids) }},\n  \"cluster_id\": {{ $json.cluster_id }}\n}",
+        "options": {}
+      },
+      "id": "965b916b-2359-4722-978d-a5a8f8765715",
+      "name": "Get Category Label",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        864,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "_cluster_doc_id",
+              "type": "any"
+            },
+            {
+              "name": "article_count",
+              "type": "any"
+            },
+            {
+              "name": "article_ids",
+              "type": "any"
+            },
+            {
+              "name": "cluster_id",
+              "type": "any"
+            },
+            {
+              "name": "summary",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "id": "1e6ac58b-0c1d-4737-b5d8-874afe062a47",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        656,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "e555004e-872a-4919-802a-4743926b615c",
+      "name": "Collect Success Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1520,
+        144
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Check Update Success": {
+      "main": [
+        []
+      ]
+    },
+    "Update Cluster Category": {
+      "main": [
+        []
+      ]
+    },
+    "Get Category Label": {
+      "main": [
+        [
+          {
+            "node": "Update Cluster Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get Category Label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "280af313-219e-4018-9fe9-af9ee4e6dc93",
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "id": "KYAJn4vJ1sQr8zrP",
+  "tags": []
+}

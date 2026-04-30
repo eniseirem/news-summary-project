@@ -1,0 +1,754 @@
+{
+  "name": "Milestone 2 - Start summarize_clustered (Enhanced with Retry)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "18947d39-8cb6-4c39-85ce-cc89319dc285",
+      "name": "Start Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3776,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const filters = {\n  time_window: null,\n  category: null,\n  keywords: [],\n  size: 1000\n};\nconst options = {\n  style_version: \"Neutral\",\n  sentiment_target: \"None\"\n};\nconst query = { match_all: {} };\nreturn [{ json: {\n  filters,\n  options,\n  opensearch_query: {\n    size: filters.size,\n    _source: ['id', 'title', 'body', 'source', 'published_at', 'language'],\n    query,\n    sort: [{ published_at: { order: 'desc' }}]\n  }\n}}];"
+      },
+      "id": "b73c5977-c779-49c1-bca5-ceb74b0cb07d",
+      "name": "Build OpenSearch Query",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3536,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://opensearch:9200/articles/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.opensearch_query) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "bc2d6c58-33e0-40aa-b89d-0bbd6762f3e5",
+      "name": "Read Articles",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3312,
+        384
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const hits = $json.hits?.hits ?? [];\nconst articles = hits.map(h => h._source).filter(a => a && a.body);\nconst MAX_BODY_LENGTH = 5000;\nconst processed = articles.map(a => {\n  if (a.body.length > MAX_BODY_LENGTH) {\n    return { ...a, body: a.body.substring(0, MAX_BODY_LENGTH), body_truncated: true };\n  }\n  return { ...a, body_truncated: false };\n});\nconsole.log(`📊 Processing ${processed.length} articles (body max: ${MAX_BODY_LENGTH} chars)`);\nreturn processed.map(a => ({ json: a }));"
+      },
+      "id": "b6bccba7-d280-475d-b4e1-d17a9906fa0b",
+      "name": "Prepare Articles",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3136,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 20,
+        "options": {}
+      },
+      "id": "9750cf8f-49ac-48de-8673-5490923198e1",
+      "name": "Loop Over Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2944,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().map(i => i.json);\nconst pad2 = n => String(n).padStart(2, '0');\nconst pad3 = n => String(n).padStart(3, '0');\nconst now = new Date();\nconst datePart = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}${pad2(now.getMinutes())}`;\nconst requestId = `n8n_start_${datePart}_${pad3($runIndex+1)}`;\nconst filterData = $('Build OpenSearch Query').first().json;\nconst filters = filterData?.filters || {};\nconst options = filterData?.options || {};\nconst articleIds = items.map(a => a.id).filter(Boolean);\nconst articles = items.map(a => ({\n  id: a.id || \"\",\n  url: a.url || a.id,\n  title: a.title || \"\",\n  body: a.body || \"\",\n  language: a.language || \"en\",\n  source: a.source || \"\",\n  published_at: a.published_at || null,\n  category: \"general\"\n}));\n\nif (articles.length > 100) throw new Error(`Too many: ${articles.length}`);\nif (articles.length === 0) throw new Error('No articles');\n\nconsole.log(`✅ BATCH ${$runIndex + 1}: ${articles.length} articles`);\n\nreturn [{\n  json: {\n    llm_payload: {\n      request_id: requestId,\n      filters_used: filters,\n      articles: articles\n    },\n    llm_batch_record: {\n      request_id: requestId,\n      filters_used: filters,\n      options: options,\n      article_ids: articleIds,\n      article_count: articles.length,\n      status: \"pending\",\n      ingested_at: new Date().toISOString(),\n      trigger_type: \"start\",\n      llm_endpoint: \"/summarize_clustered\",\n      output_index: \"news_cluster_summaries\",\n      retry_count: 0,\n      current_batch_size: articles.length\n    }\n  }\n}];"
+      },
+      "id": "c99d9f0e-1207-4fa0-8d96-03a0d89a1f48",
+      "name": "Prepare Batch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2736,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://opensearch:9200/llm_batch/_doc/{{ $json.llm_batch_record.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.llm_batch_record) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "efa6de62-9d42-4296-9c3c-174caa30799a",
+      "name": "Store LLM Batch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2544,
+        512
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://llm-service:8001/summarize_clustered",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Prepare Batch').item.json.llm_payload) }}\n",
+        "options": {
+          "timeout": 18000000
+        }
+      },
+      "id": "6c506585-d4f1-48fb-b7f9-615e8633ae4e",
+      "name": "Call summarize_clustered",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2368,
+        512
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// ERROR BRANCH - Split into smaller batches and retry\nconst preservedData = $json;\n\nconsole.log(`🔍 Preserved data keys: ${Object.keys(preservedData).join(', ')}`);\n\n// DEFENSIVE: Support both structures\nconst batchData = preservedData.batch_data;\nconst payload = preservedData.payload;\n\n// Validate we have the required data\nif (!batchData) {\n  console.log(`❌ No batch_data found. Available keys: ${Object.keys(preservedData).join(', ')}`);\n  return [{\n    json: {\n      error: true,\n      message: \"Missing batch_data\",\n      skipped: true\n    }\n  }];\n}\n\nif (!payload) {\n  console.log(`❌ No payload found. Available keys: ${Object.keys(preservedData).join(', ')}`);\n  return [{\n    json: {\n      error: true,\n      message: \"Missing payload\",\n      skipped: true\n    }\n  }];\n}\n\nif (!payload.articles) {\n  console.log(`❌ No articles in payload. Payload keys: ${Object.keys(payload).join(', ')}`);\n  return [{\n    json: {\n      error: true,\n      message: \"Missing articles in payload\",\n      skipped: true\n    }\n  }];\n}\n\nconst originalArticles = payload.articles;\nconst retryCount = batchData.retry_count || 0;\nconst currentSize = batchData.current_batch_size;\n\nconsole.log(`❌ TIMEOUT: Batch failed with ${currentSize} articles. Retry count: ${retryCount}`);\n\n// Max retry check\nif (retryCount >= 3) {\n  console.log(`⚠️ Max retries reached. Skipping this batch.`);\n  return [{\n    json: {\n      error: true,\n      error_type: \"max_retry_exceeded\", \n      message: \"Max retries reached\",\n      request_id: batchData.request_id,\n      skipped: true,\n      batch_info: {\n        original_size: batchData.article_count,\n        final_size: currentSize,\n        retry_count: retryCount,\n        article_ids: batchData.article_ids\n      }\n    }\n  }];\n}\n\n// AGGRESSIVE BODY TRIMMING on retry\nconst maxBodyLength = Math.max(1000, 5000 - (retryCount * 1500));\nconsole.log(`✂️ Trimming article bodies to ${maxBodyLength} chars for retry ${retryCount + 1}`);\n\n// Trim articles before splitting\nconst trimmedArticles = originalArticles.map(a => {\n  const body = a.body || \"\";\n  if (body.length > maxBodyLength) {\n    return {\n      ...a,\n      body: body.substring(0, maxBodyLength),\n      body_trimmed: true,\n      original_length: body.length\n    };\n  }\n  return { ...a, body_trimmed: false };\n});\n\n// Calculate new batch size (split into thirds)\nconst newBatchSize = Math.max(5, Math.floor(currentSize / 3));\nconsole.log(`🔄 Splitting batch: ${currentSize} → ${newBatchSize} articles (1/3 size)`);\n\n// Split articles into smaller chunks\nconst subBatches = [];\nfor (let i = 0; i < trimmedArticles.length; i += newBatchSize) {\n  subBatches.push(trimmedArticles.slice(i, i + newBatchSize));\n}\n\nconsole.log(`📦 Created ${subBatches.length} sub-batches with ${maxBodyLength} char limit`);\n\n// Return sub-batches as separate items\nreturn subBatches.map((articles, idx) => {\n  const subRequestId = `${batchData.request_id}_retry${retryCount + 1}_sub${idx + 1}`;\n  \n  const totalChars = articles.reduce((sum, a) => sum + (a.body?.length || 0), 0);\n  console.log(`  Sub-batch ${idx + 1}: ${articles.length} articles, ${totalChars} total chars`);\n  \n  return {\n    json: {\n      llm_payload: {\n        request_id: subRequestId,\n        filters_used: batchData.filters_used,\n        articles: articles\n      },\n      llm_batch_record: {\n        request_id: subRequestId,\n        parent_request_id: batchData.parent_request_id || batchData.request_id,\n        filters_used: batchData.filters_used,\n        options: batchData.options,\n        article_ids: articles.map(a => a.id).filter(Boolean),\n        article_count: articles.length,\n        status: \"pending_retry\",\n        ingested_at: new Date().toISOString(),\n        trigger_type: \"retry\",\n        llm_endpoint: \"/summarize_clustered\",\n        output_index: \"news_cluster_summaries\",\n        retry_count: retryCount + 1,\n        current_batch_size: articles.length,\n        original_batch_size: currentSize,\n        body_max_length: maxBodyLength\n      }\n    }\n  };\n});"
+      },
+      "id": "13c5bf52-05ab-4b67-8b0d-2c889284fc7a",
+      "name": "Split and Retry",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1744,
+        496
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare data for retry LLM call\nconst splitRetryOutput = $input.item.json;\n\nconsole.log(`📥 Prepare Retry - Input keys: ${Object.keys(splitRetryOutput).join(', ')}`);\n\nconst llmPayload = splitRetryOutput.llm_payload;\nconst llmBatchRecord = splitRetryOutput.llm_batch_record;\n\nif (!llmPayload || !llmBatchRecord) {\n  console.log(`❌ Missing required data from Split and Retry`);\n  return [{\n    json: {\n      error: true,\n      message: \"Invalid data from Split and Retry\"\n    }\n  }];\n}\n\nconsole.log(`✅ Retry prepared: ${llmPayload.request_id}, ${llmPayload.articles.length} articles`);\n\n// Return both so Preserve node can access batch_record\nreturn [{\n  json: {\n    llm_payload: llmPayload,\n    llm_batch_record: llmBatchRecord\n  }\n}];"
+      },
+      "id": "41e46bb2-404a-4b8e-b6ed-b52a252ff6ac",
+      "name": "Prepare Retry Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1296,
+        672
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://opensearch:9200/llm_batch/_doc/{{ $json.llm_payload.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.llm_batch_record) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "56f72446-dcc4-4ebb-96ae-2b03eaae9a51",
+      "name": "Store Retry Batch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1008,
+        672
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://llm-service:8001/summarize_clustered",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.llm_payload)}}",
+        "options": {
+          "timeout": 18000000
+        }
+      },
+      "id": "7599d30e-857c-49b2-8ca6-cab456dc032d",
+      "name": "Retry Call LLM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1008,
+        816
+      ],
+      "continueOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const wrapper = $json;\nlet resp = wrapper.llm_response ?? wrapper;\nif (typeof resp === \"string\") {\n  try { resp = JSON.parse(resp); } catch { resp = {}; }\n}\n\nconst request_id = resp.request_id || \"\";\nconst processed_at = resp.processed_at || new Date().toISOString();\nlet clusters = resp.clusters || [];\n\nif (typeof clusters === \"string\") {\n  try { \n    clusters = JSON.parse(clusters); \n  } catch (e) { \n    clusters = []; \n  }\n}\n\nconst cluster_count = Array.isArray(clusters) ? clusters.length : 0;\nconst mega_summary = resp.mega_summary || \"\";\n\n// DEFENSIVE FIX: Get original articles with IDs from payload\nconst originalPayload = wrapper.payload;\nconst originalArticles = originalPayload?.articles || [];\n\n// Create a title-to-article map for ID lookup\nconst titleToArticleMap = {};\noriginalArticles.forEach(article => {\n  const normalizedTitle = (article.title || \"\").trim().toLowerCase();\n  if (normalizedTitle && article.id) {\n    titleToArticleMap[normalizedTitle] = article;\n  }\n});\n\nconsole.log(`✅ Creating ${cluster_count} cluster documents`);\nconsole.log(`📋 Original articles for ID mapping: ${originalArticles.length}`);\n\nreturn (Array.isArray(clusters) ? clusters : []).map(c => {\n  // Deduplicate articles by title\n  const uniqueArticlesMap = {};\n  (c.articles || []).forEach(a => {\n    const title = (a.title || \"\").trim();\n    const normalizedTitle = title.toLowerCase();\n    \n    if (title && !uniqueArticlesMap[normalizedTitle]) {\n      // Try to get ID from LLM response first, then fallback to original payload\n      let articleId = a.id || a.article_id || \"\";\n      \n      // DEFENSIVE: If LLM didn't provide ID, look it up from original payload\n      if (!articleId && titleToArticleMap[normalizedTitle]) {\n        articleId = titleToArticleMap[normalizedTitle].id;\n        console.log(`  🔍 Mapped ID for \"${title.substring(0, 50)}...\": ${articleId}`);\n      }\n      \n      uniqueArticlesMap[normalizedTitle] = {\n        id: a.url,\n        url: a.url || \"\",\n        title: title\n      };\n    }\n  });\n  \n  const uniqueArticles = Object.values(uniqueArticlesMap);\n  \n  console.log(`  Cluster ${c.cluster_id}: ${(c.articles || []).length} articles → ${uniqueArticles.length} unique (with IDs)`);\n  \n  return {\n    json: {\n      id: `${request_id}_c${c.cluster_id}`,\n      request_id: request_id,\n      summary_type: \"clustered_summary\",\n      processed_at: processed_at,\n      cluster_count: cluster_count,\n      mega_summary: mega_summary,\n      cluster_id: c.cluster_id,\n      category: c.category || \"\",\n      subcategory: c.subcategory || \"\",\n      topic_summary: c.topic_summary || \"\",\n      article_count: uniqueArticles.length,\n      articles: uniqueArticles,\n      processing_time: resp.processing_time || 0\n    }\n  };\n});"
+      },
+      "id": "20e08fcc-7f48-431a-aa62-8d4b3c7054a6",
+      "name": "Format news_cluster_summaries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1728,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://opensearch:9200/news_cluster_summaries/_doc/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "a32bf85a-8411-4bc0-9648-5669832a7390",
+      "name": "Store news_cluster_summaries",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1536,
+        240
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $json;\n\nlet prepareRetryData = [];\ntry {\n  prepareRetryData = $('Prepare Retry Data').all();\n} catch (e) {\n  prepareRetryData = [];\n}\n\nlet batchData;\nif (prepareRetryData && prepareRetryData.length > 0) {\n  batchData = prepareRetryData[0].json.llm_batch_record;\n} else {\n  batchData = $('Prepare Batch').item.json.llm_batch_record;\n}\n\nreturn [{\n  json: {\n    request_id: batchData.request_id,\n    update: {\n      status: \"completed\",\n      processed_at: new Date().toISOString(),\n      processing_time: llmResponse.processing_time || 0,\n      cluster_count: llmResponse.cluster_count || 0\n    }\n  }\n}];"
+      },
+      "id": "7f61ff99-254f-4479-90de-6eb0b31e52ac",
+      "name": "Update LLM Batch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1312,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/llm_batch/_update/{{ $json.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ doc: $json.update }) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "a7b072e7-5ad9-470b-a28c-b26a5f4f4c09",
+      "name": "Save LLM Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1088,
+        240
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "a235e37b-c25f-4f9b-b937-29eb3b683722",
+      "name": "Continue Loop",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { success: true, batches_processed: $runIndex }}];"
+      },
+      "id": "59ce6222-10f7-40ab-b5b2-9c6915f4eb54",
+      "name": "Complete",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2656,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $json;\n\n\nconst batch = $json.llm_batch_record || $json.batch_data;\nconst payload = $json.llm_payload || $json.payload;\n\nlet fallback = null;\nif (!batch || !payload) {\n  try { fallback = $items(\"Prepare Retry Data\", 0, 0)[0].json; } catch {}\n}\n\nconst finalBatch = batch || fallback?.llm_batch_record;\nconst finalPayload = payload || fallback?.llm_payload;\n\nreturn [{\n  json: {\n    llm_response: llmResponse,\n    batch_data: finalBatch,\n    payload: finalPayload,\n    error: llmResponse?.error || null,\n    has_error: !!llmResponse.error ? \"true\" : \"false\"\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -784,
+        832
+      ],
+      "id": "a4d54789-b80d-48b1-bd26-1e841e9ea562",
+      "name": "Preserve Retry Batch Data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "512a8b46-ce5f-4c4e-b270-b69a0aca03ef",
+              "leftValue": "={{ $json.error_type }}",
+              "rightValue": "max_retry_exceeded",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1504,
+        496
+      ],
+      "id": "48e870fe-bfde-46f3-a3f1-e9ba75930bd4",
+      "name": "Max Retry Reached"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.error }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "8e2b59ce-1ad1-40d8-b77e-30b2b0875e57",
+      "name": "Check for Error",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -2016,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 3
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -3776,
+        544
+      ],
+      "id": "10669027-cada-4502-afc3-a1ba42dd65eb",
+      "name": "3 am Trigger",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "=https://opensearch:9200/news_cluster_summaries/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "f57348f5-cb2e-4a29-8886-5e3dec4b938c",
+      "name": "Read news_cluster_summaries",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1584,
+        1056
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/news_cluster_summaries/_delete_by_query",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"query\": { \"match_all\": {} }\n}\n",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "8f7f326f-4603-460d-9efa-9f00d276ef3a",
+      "name": "delete news_cluster_summaries",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1584,
+        1248
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "//const prepareBatch = $('Prepare Batch').item.json;\n\nconst llmResponse = $json;\nconst payload = $json.llm_payload;\nconst batchData = $json.llm_batch_record;\n\nreturn [{\n  json: {\n    llm_response: llmResponse,\n    batch_data: batchData,\n    payload: payload,\n    error: llmResponse.error || null,  \n    has_error: !!llmResponse.error ? \"true\" : \"false\"\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2208,
+        512
+      ],
+      "id": "1c309839-d3a8-4cc4-81ca-15de257781a4",
+      "name": "Preserve Batch Data"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start Trigger": {
+      "main": [
+        [
+          {
+            "node": "Build OpenSearch Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build OpenSearch Query": {
+      "main": [
+        [
+          {
+            "node": "Read Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Articles": {
+      "main": [
+        [
+          {
+            "node": "Prepare Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Articles": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Batches": {
+      "main": [
+        [
+          {
+            "node": "Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Batch": {
+      "main": [
+        [
+          {
+            "node": "Store LLM Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store LLM Batch": {
+      "main": [
+        [
+          {
+            "node": "Call summarize_clustered",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call summarize_clustered": {
+      "main": [
+        [
+          {
+            "node": "Preserve Batch Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split and Retry": {
+      "main": [
+        [
+          {
+            "node": "Max Retry Reached",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Retry Data": {
+      "main": [
+        [
+          {
+            "node": "Store Retry Batch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Retry Call LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry Call LLM": {
+      "main": [
+        [
+          {
+            "node": "Preserve Retry Batch Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preserve Retry Batch Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format news_cluster_summaries": {
+      "main": [
+        [
+          {
+            "node": "Store news_cluster_summaries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store news_cluster_summaries": {
+      "main": [
+        [
+          {
+            "node": "Update LLM Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update LLM Batch": {
+      "main": [
+        [
+          {
+            "node": "Save LLM Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save LLM Status": {
+      "main": [
+        [
+          {
+            "node": "Continue Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Loop": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preserve Retry Batch Data": {
+      "main": [
+        [
+          {
+            "node": "Check for Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Max Retry Reached": {
+      "main": [
+        [
+          {
+            "node": "Continue Loop",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Retry Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Error": {
+      "main": [
+        [
+          {
+            "node": "Split and Retry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format news_cluster_summaries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3 am Trigger": {
+      "main": [
+        []
+      ]
+    },
+    "Preserve Batch Data": {
+      "main": [
+        [
+          {
+            "node": "Check for Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "ae482e94-0e98-4a07-9f6a-d13f734ed81b",
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "id": "fFNberfbmRKwxqWA6lR8y",
+  "tags": []
+}

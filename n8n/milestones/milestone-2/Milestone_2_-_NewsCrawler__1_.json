@@ -1,0 +1,468 @@
+{
+  "name": "Milestone 2 - NewsCrawler",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/articles/_doc/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=title",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "name": "body",
+              "value": "={{ $json.body }}"
+            },
+            {
+              "name": "language",
+              "value": "={{ $json.language }}"
+            },
+            {
+              "name": "source",
+              "value": "={{ $json.source }}"
+            },
+            {
+              "name": "published_at",
+              "value": "={{ $json.published_at }}"
+            },
+            {
+              "name": "id",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "url",
+              "value": "={{ $json.url }}"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        4416,
+        2000
+      ],
+      "id": "bd8838a2-d33e-4e0c-814f-a1b31fbefcc1",
+      "name": "Index Article in OpenSearch",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "f0c72772-5121-4833-bd90-19a96a4deaec",
+              "leftValue": "={{ $json[\"result\"] }}",
+              "rightValue": "created",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "e14fa1b7-ef50-46d6-846a-5a6c572192a6",
+              "leftValue": "={{ $json[\"result\"] }}",
+              "rightValue": "updated",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "6774a9df-7edd-4cf8-a75c-1342aef9717f",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        4640,
+        2000
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create Summary - Aggregate all articles\nconst allItems = $input.all();\n\nconsole.log('📦 Total items received:', allItems.length);\n\n// Group by source\nconst bySource = {};\n\nallItems.forEach(item => {\n  const article = item.json.original_article || item.json;\n  const source = article.crawler_source || 'unknown';\n  \n  if (!bySource[source]) {\n    bySource[source] = {\n      source_id: source,\n      source_name: article.crawler_source_name || article.source || source,\n      total: 0,\n      successful: 0,\n      failed: 0\n    };\n  }\n  \n  bySource[source].total++;\n  \n  if (item.json.error) {\n    bySource[source].failed++;\n  } else {\n    bySource[source].successful++;\n  }\n});\n\nconst summary = {\n  run_id: allItems[0]?.json.run_id || allItems[0]?.json.original_article?.run_id || Date.now(),\n  completed_at: new Date().toISOString(),\n  total_sources: Object.keys(bySource).length,\n  total_articles: allItems.length,\n  successful: allItems.filter(i => !i.json.error).length,\n  failed: allItems.filter(i => i.json.error).length,\n  by_source: Object.values(bySource)\n};\n\nconsole.log('📊 Final Summary:', JSON.stringify(summary, null, 2));\n\nreturn [{ json: summary }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4864,
+        2000
+      ],
+      "id": "52d24828-f958-4852-b867-69225299640e",
+      "name": "Create Summary1"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ $json.log_command }}"
+      },
+      "id": "4dfc966f-183c-4974-b452-185021a5a985",
+      "name": "Log Final Summary1",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        5312,
+        2000
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Summary Log - GET FROM CREATE SUMMARY\nconst summary = $('Create Summary1').first().json;\n\nconsole.log('📊 Summary:', JSON.stringify(summary, null, 2));\n\nlet logCommand = 'echo \"[$(date -Iseconds)] ========== RUN ' + summary.run_id + ' COMPLETED ==========\" >> /tmp/crawler/logs/master.log && ';\nlogCommand += 'echo \"[$(date -Iseconds)] Total Sources: ' + summary.total_sources + ', Total Articles: ' + summary.total_articles + ', Success: ' + summary.successful + ', Failed: ' + summary.failed + '\" >> /tmp/crawler/logs/master.log';\n\n// Per-source breakdown\nif (summary.by_source && summary.by_source.length > 0) {\n  summary.by_source.forEach(src => {\n    logCommand += ' && echo \"[$(date -Iseconds)] [' + src.source_id + '] Total: ' + src.total + ', Success: ' + src.successful + ', Failed: ' + src.failed + '\" >> /tmp/crawler/logs/master.log';\n  });\n}\n\nreturn [{\n  json: {\n    ...summary,\n    log_command: logCommand\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5088,
+        2000
+      ],
+      "id": "162aab87-22ca-412e-bb90-e7e72e9c7754",
+      "name": "Prepare Summary Log1"
+    },
+    {
+      "parameters": {
+        "command": "={{ $json.log_command }}"
+      },
+      "id": "3ad5517b-06bb-4869-96ae-214cae7769bd",
+      "name": "Log Article Saved1",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        5312,
+        1808
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Article Log - WITH INPUT DATA\nconst response = $json;\n\n// Original article data inputData'da olacak\nconst article = $input.item.json || $json;\n\nconsole.log('📦 Article keys:', Object.keys(article));\nconsole.log('📦 Source:', article.crawler_source);\nconsole.log('📦 ID:', article.id);\n\nconst source = article.crawler_source || 'unknown';\nconst articleId = (article.id || 'no-id').substring(0, 80);\nconst safeId = articleId.replace(/\"/g, '\\\\\"');\n\nconst logCommand = 'echo \"[$(date -Iseconds)] [' + source + '] Article saved - ID: ' + safeId + '\" >> /tmp/crawler/logs/' + source + '.log';\n\nreturn [{\n  json: {\n    ...response,\n    original_article: article,\n    log_command: logCommand\n  }\n}];"
+      },
+      "id": "32b7bd76-7589-46c9-ac90-e2a11fe6eec5",
+      "name": "Prepare Article Node1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5088,
+        1808
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cat /tmp/crawler/logs/master.log"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        5536,
+        1904
+      ],
+      "id": "626a281c-18ef-4581-8fe8-a18f554c46fb",
+      "name": "Execute Command1"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parse Articles - RUN ONCE FOR EACH ITEM\nconst articles = $json.data;\n\n// Error handling\nif (!articles) {\n  console.log('⚠️ Empty response from crawler');\n  throw new Error('Empty response from crawler');\n}\n\nlet parsedArticles;\nif (typeof articles === 'string') {\n  if (articles.trim() === '' || articles === '[]') {\n    throw new Error('Empty response from crawler');\n  }\n  try {\n    parsedArticles = JSON.parse(articles);\n  } catch (e) {\n    console.log('❌ JSON parse error:', e.message);\n    throw new Error('JSON parse failed: ' + e.message);\n  }\n} else {\n  parsedArticles = articles;\n}\n\nif (!Array.isArray(parsedArticles) || parsedArticles.length === 0) {\n  console.log('⚠️ No articles found');\n  throw new Error('No articles found for this source');\n}\n\n// Source bilgisini al\nconst allSourceInputs = $('Define All Sources').all();\nconst sourceInfo = allSourceInputs[$itemIndex].json;\n\nconsole.log('🔍 Processing Source #' + $itemIndex + ':', sourceInfo.id, '- Articles:', parsedArticles.length);\n\nconst runId = sourceInfo.run_id || Date.now();\nconst retrievedAt = new Date().toISOString();\n\nfunction simpleHash(str) {\n  let hash = 0;\n  for (let i = 0; i < str.length; i++) {\n    const char = str.charCodeAt(i);\n    hash = ((hash << 5) - hash) + char;\n    hash = hash & hash;\n  }\n  return Math.abs(hash).toString(36);\n}\n\n// ✅ ARRAY'İ BİR OBJECT İÇİNE KOYARAK DÖNDÜR\nconst processedArticles = parsedArticles.map((article, articleIndex) => {\n  const originalUrl = article.url || article.link || article.id;\n  \n  let uniqueString;\n  if (originalUrl && (originalUrl.startsWith('http://') || originalUrl.startsWith('https://'))) {\n    uniqueString = originalUrl.toLowerCase().trim();\n  } else {\n    const title = (article.title || '').toLowerCase().trim();\n    const date = article.published_date || article.date || '';\n    uniqueString = `${sourceInfo.id}-${title}-${date}`;\n  }\n  \n  const hash = simpleHash(uniqueString);\n  const cleanId = `${sourceInfo.id}-${hash}`;\n  \n  return {\n    ...article,\n    _opensearch_id: cleanId,\n    url: originalUrl,\n    id: originalUrl,\n    crawler_source: sourceInfo.id,\n    crawler_source_name: sourceInfo.name,\n    run_id: runId,\n    article_index: articleIndex,\n    total_for_this_source: parsedArticles.length,\n    retrieved_at: retrievedAt\n  };\n});\n\n// ✅ TEK OBJE DÖNDÜR (Run Once for Each Item kuralı)\nreturn {\n  json: {\n    source: sourceInfo.id,\n    articles: processedArticles  // Array içeride\n  }\n};"
+      },
+      "id": "0b02d479-0370-4b3d-b699-bb716c076465",
+      "name": "Parse Articles",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3968,
+        1904
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://crawler-api:8000/' + $json.endpoint }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 300000
+        }
+      },
+      "id": "56c77471-4410-4688-8bb9-deaf06504565",
+      "name": "Call Crawler API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3744,
+        1904
+      ],
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Define all news sources (only functional endpoints)\nconst sources = [\n  { name: 'CNN', id: 'cnn', endpoint: 'cnn' },\n  { name: 'ESPN', id: 'espn', endpoint: 'espn' },\n  { name: 'Fox News', id: 'foxnews', endpoint: 'foxnews' },\n  { name: 'Goal', id: 'goal', endpoint: 'goal' },\n  { name: 'Guardian', id: 'guardian', endpoint: 'guardian' },\n  { name: 'Guardian Sport', id: 'guardiansport', endpoint: 'guardiansport' },\n  { name: 'Japan Times', id: 'japantimes', endpoint: 'japantimes' },\n  { name: 'NBC', id: 'nbc', endpoint: 'nbc' },\n  { name: 'SBS', id: 'sbs', endpoint: 'sbs' },\n  { name: 'SCMP Economics', id: 'scmp_economics', endpoint: 'southchinamorningpost/economics' },\n  { name: 'SCMP Politics', id: 'scmp_politics', endpoint: 'southchinamorningpost/politics' },\n  { name: 'Tass', id: 'tass', endpoint: 'tass' },\n  { name: 'TeleSur', id: 'telesur', endpoint: 'telesur' },\n  { name: 'The News', id: 'thenews', endpoint: 'thenews' },\n  { name: 'Times of India', id: 'timesofindia', endpoint: 'timesofindia' },\n  { name: 'Yahoo Finance', id: 'yahoofinance', endpoint: 'yahoofinance' },\n  { name: 'Yahoo News', id: 'yahoonews', endpoint: 'yahoonews' },\n  { name: 'RSS Feeds', id: 'rss', endpoint: 'rss' }\n];\n\nconst runId = Date.now();\nreturn sources.map(source => ({\n  json: {\n    ...source,\n    run_id: runId,\n    started_at: new Date().toISOString()\n  },\n  pairedItem: { item: 0 }\n}));"
+      },
+      "id": "013d35a8-b06d-47c1-b5d0-0d251175cadb",
+      "name": "Define All Sources",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3520,
+        2000
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Master Crawler - All Sources\n\nProcesses all 15 news sources in parallel\nEach source is independent",
+        "height": 100,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3200,
+        1712
+      ],
+      "id": "770fba33-aac5-47f8-a1b7-bc22b5f91e65",
+      "name": "Info"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Split Articles - RUN ONCE FOR ALL ITEMS\nconst allItems = $input.all();\n\nconsole.log('📦 Total sources processed:', allItems.length);\n\nconst result = [];\n\nallItems.forEach((item, sourceIndex) => {\n  console.log('Processing source', sourceIndex, ':', item.json.source);\n  \n  const articles = item.json.articles;\n  \n  if (!articles) {\n    console.log('⚠️ No articles field found in item', sourceIndex);\n    return;\n  }\n  \n  if (!Array.isArray(articles)) {\n    console.log('⚠️ Articles is not an array in item', sourceIndex);\n    return;\n  }\n  \n  console.log('  → Found', articles.length, 'articles');\n  \n  articles.forEach((article, idx) => {\n    // ✅ TABLOYA UYGUN FIELD MAPPING\n    result.push({ \n      json: {\n        id: article._opensearch_id,                          // Keyword - unique ID\n        url: article.url,\n        title: article.title || '',                          // Text\n        body: article.body || article.description || '',     // Text\n        language: article.language || 'en',                  // Keyword - ISO code\n        source: article.crawler_source,                      // Keyword - Publisher\n        published_at: article.published_date || article.date || article.retrieved_at, // Date - ISO-8601\n        \n        // Extra metadata (opsiyonel)\n        _metadata: {\n          crawler_source_name: article.crawler_source_name,\n          article_index: article.article_index,\n          total_for_this_source: article.total_for_this_source,\n          run_id: article.run_id,\n          original_url: article.url\n        }\n      }\n    });\n  });\n});\n\nconsole.log('✅ Total articles to index:', result.length);\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4192,
+        1904
+      ],
+      "id": "64e6821a-0465-4b33-84a6-f506cd1903ca",
+      "name": "Split Articles"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "id": "06958dcb-7cfc-4725-a6de-5aa82a0171fd",
+      "typeVersion": 1.2,
+      "name": "Schedule Every 3 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        3296,
+        2000
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=mkdir -p /tmp/crawler/logs && date >> /tmp/crawler/logs/master.log"
+      },
+      "id": "2d820710-f57e-4567-a092-46fa8e010cfe",
+      "name": "Log Source Start",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        3808,
+        2192
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Index Article in OpenSearch": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Create Summary1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Summary1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Summary Log1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Summary Log1": {
+      "main": [
+        [
+          {
+            "node": "Log Final Summary1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Article Node1": {
+      "main": [
+        [
+          {
+            "node": "Log Article Saved1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Final Summary1": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Article Saved1": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Articles": {
+      "main": [
+        [
+          {
+            "node": "Split Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Crawler API": {
+      "main": [
+        [
+          {
+            "node": "Parse Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Define All Sources": {
+      "main": [
+        [
+          {
+            "node": "Call Crawler API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Source Start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command1": {
+      "main": [
+        []
+      ]
+    },
+    "Split Articles": {
+      "main": [
+        [
+          {
+            "node": "Index Article in OpenSearch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare Article Node1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Every 3 Hours": {
+      "main": [
+        [
+          {
+            "node": "Define All Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Source Start": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "1de78f4d-7610-4683-ad28-7b7f73d3e787",
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "id": "5DytrfGmTnTotDaR",
+  "tags": []
+}

@@ -1,0 +1,738 @@
+{
+  "updatedAt": "2026-02-11T12:23:35.797Z",
+  "createdAt": "2026-02-10T15:00:15.910Z",
+  "id": "GDMrNOkQKkkzD4rwUO5cl",
+  "name": "M3 - Categorize Clusters Workflow",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/clusters/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": {\n    \"bool\": {\n      \"must_not\": {\n        \"exists\": {\n          \"field\": \"category\"\n        }\n      }\n    }\n  },\n  \"_source\": [\"cluster_id\", \"article_count\", \"article_ids\"],\n  \"size\": 1000\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "1d530724-c5f4-492d-bc33-096abf1d57c6",
+      "name": "Get Clusters Without Category",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -48,
+        280
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "hits.hits",
+        "options": {}
+      },
+      "id": "af6abb08-7648-409b-8683-868ab4229b4b",
+      "name": "Split Clusters",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        176,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/cluster_summaries/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": {\n    \"term\": {\n      \"cluster_id\": \"{{ $json._source.cluster_id }}\"\n    }\n  },\n  \"_source\": [\"summary\", \"topic_label\", \"article_count\", \"article_ids\", \"cluster_id\"],\n  \"size\": 1\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "63747ddc-204a-4949-b237-3225ea485a72",
+      "name": "Get Cluster Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        400,
+        280
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.hits.total.value }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "254071c3-698d-4f47-b614-91760f7aeb70",
+      "name": "Check Summary Exists",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        624,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "content": "cluster summary subworkflow could be add here \nths parallel work need attetion righnow parallel removed\nproblm : loop just stop after 2 idk why\nalso summary is not seem to return anything sometimes??"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        784,
+        656
+      ],
+      "id": "6c5d9a31-7081-4ec8-b724-dfe2d6d3e71c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Extract the first summary document\nconst summaryDoc = $input.item.json.hits.hits[0]._source;\nconst clusterDoc = $('Split Clusters').item.json._source;\n\n// Get cluster_id and ensure it's valid\nlet clusterId = summaryDoc.cluster_id || clusterDoc.cluster_id;\n\n// Validate cluster_id - RETURN skip instead of throwing\nif (clusterId === null || clusterId === undefined || clusterId === '' || isNaN(clusterId)) {\n  const docId = $('Split Clusters').item.json._id;\n  console.log(`⚠️ SKIPPING cluster with invalid ID: ${docId}, cluster_id value: ${clusterId}`);\n  \n  // Return skip object instead of throwing error\n  return {\n    json: {\n      skip: true,\n      reason: 'invalid_cluster_id',\n      _cluster_doc_id: docId,\n      cluster_id: null\n    }\n  };\n}\n\n// Parse cluster_id to integer\nclusterId = parseInt(clusterId, 10);\n\n// Validate it's a valid number after parsing\nif (isNaN(clusterId)) {\n  const docId = $('Split Clusters').item.json._id;\n  console.log(`⚠️ SKIPPING cluster - cluster_id is NaN: ${docId}`);\n  \n  return {\n    json: {\n      skip: true,\n      reason: 'cluster_id_is_nan',\n      _cluster_doc_id: docId,\n      cluster_id: null\n    }\n  };\n}\n\n// Clean and escape summary\nlet summary = summaryDoc.summary || summaryDoc.topic_label || 'No summary available';\nsummary = summary\n  .replace(/[\\r\\n]+/g, ' ')\n  .replace(/\\s+/g, ' ')\n  .trim();\n\n// Return valid data\nreturn {\n  json: {\n    cluster_id: clusterId,\n    summary: summary,\n    topic_label: summaryDoc.topic_label,\n    article_count: parseInt(summaryDoc.article_count || clusterDoc.article_count || 1, 10),\n    article_ids: summaryDoc.article_ids || clusterDoc.article_ids || [],\n    _cluster_doc_id: $('Split Clusters').item.json._id\n  }\n};"
+      },
+      "id": "8cf3c8ae-686e-4a65-936f-1585ecdc4d26",
+      "name": "Prepare Request Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        136
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "KYAJn4vJ1sQr8zrP",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/KYAJn4vJ1sQr8zrP",
+          "cachedResultName": "category mapping for clusters"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "_cluster_doc_id": "={{ $('Prepare Request Data').item.json._cluster_doc_id }}",
+            "article_count": "={{ $json.article_count }}",
+            "article_ids": "={{ $json.article_ids }}",
+            "cluster_id": "={{ $json.cluster_id }}",
+            "summary": "={{ $json.summary }}"
+          },
+          "matchingColumns": [
+            "_cluster_doc_id",
+            "article_count",
+            "article_ids",
+            "cluster_id",
+            "summary"
+          ],
+          "schema": [
+            {
+              "id": "_cluster_doc_id",
+              "displayName": "_cluster_doc_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "article_count",
+              "displayName": "article_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "article_ids",
+              "displayName": "article_ids",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cluster_id",
+              "displayName": "cluster_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1520,
+        184
+      ],
+      "name": "Call category mapping for clusters",
+      "id": "d2479008-68f4-472b-9f33-3ce393f18acf",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "batchSize": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1296,
+        136
+      ],
+      "id": "48ad2b0c-dc6e-4e0f-9928-8b8f2385db35",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all items from the sub-workflow execution\nconst items = $input.all();\n\nconsole.log('='.repeat(60));\nconsole.log(`🔍 CONT LOOP DEBUG - Batch Info`);\nconsole.log('='.repeat(60));\nconsole.log(`Total items received: ${items.length}`);\n\n// Log each item\nitems.forEach((item, index) => {\n  const data = item.json;\n  console.log(`\\n--- Item ${index + 1}/${items.length} ---`);\n  console.log(`Cluster ID: ${data.cluster_id || 'NULL'}`);\n  console.log(`Had error: ${!!data.error}`);\n  console.log(`Was skipped: ${data.skip === true}`);\n  \n  if (data.error) {\n    console.log(`❌ ERROR DETAILS:`, data.error);\n  }\n});\n\n// Count results\nconst errors = items.filter(i => i.json.error || i.json.cluster_id === null).length;\nconst success = items.length - errors;\n\nconsole.log('\\n' + '='.repeat(60));\nconsole.log(`📊 BATCH SUMMARY`);\nconsole.log(`✅ Successful: ${success}`);\nconsole.log(`❌ Errors/Nulls: ${errors}`);\nconsole.log('='.repeat(60));\n\n// CRITICAL: Always return something valid, even if all items failed\n// This ensures the loop continues\nif (items.length === 0) {\n  console.log(`⚠️ No items received, but continuing loop...`);\n}\n\nconsole.log(`🔄 Continuing to next batch...`);\n\n// Return a simple continue signal\n// Don't return the actual items - just a signal\nreturn [{ json: { continue: true, batch_processed: items.length, errors: errors, success: success } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        256
+      ],
+      "id": "9dc0be3b-de52-45e8-b006-257a5ef4f7ec",
+      "name": "Cont loop"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c352a5d2-f263-47bb-ac7f-4df98066dccc",
+      "name": "Check Skip",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        136
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get clusters from Split Clusters node\nlet clustersToProcess = [];\n\ntry {\n  const splitClusterItems = $('Split Clusters').all();\n  \n  if (splitClusterItems && splitClusterItems.length > 0) {\n    console.log(`✅ Found ${splitClusterItems.length} clusters`);\n    \n    // Extract cluster info with article IDs\n    clustersToProcess = splitClusterItems.map(item => {\n      const source = item.json._source;\n      return {\n        cluster_id: source.cluster_id,\n        article_ids: source.article_ids || [],\n        _id: item.json._id\n      };\n    });\n  } else {\n    throw new Error('Split Clusters returned no items');\n  }\n} catch (e) {\n  console.error('❌ Error getting clusters:', e.message);\n  throw new Error('No cluster data available from Split Clusters');\n}\n\n// Get all unique article IDs across all clusters\nconst allArticleIds = [...new Set(clustersToProcess.flatMap(c => c.article_ids))];\n\nconsole.log('='.repeat(60));\nconsole.log('📊 EXTRACTED ARTICLE IDs FOR OPENSEARCH');\nconsole.log('='.repeat(60));\nconsole.log(`Total clusters: ${clustersToProcess.length}`);\nconsole.log(`Unique article IDs: ${allArticleIds.length}`);\nconsole.log(`Article IDs:`, allArticleIds.slice(0, 10), allArticleIds.length > 10 ? '...' : '');\nconsole.log('='.repeat(60));\n\n\nconsole.log(`📋 Querying ${allArticleIds.length} articles from article_summaries`);\n\n// Return single item with all article IDs\nreturn [{\n  json: {\n    article_ids: allArticleIds\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        544
+      ],
+      "id": "a07548ab-438f-4990-9cb1-c901eb44804d",
+      "name": "Prepare Summary Data"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/article_summaries/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": {\n    \"terms\": {\n      \"article_id\": {{ JSON.stringify($json.article_ids) }}\n    }\n  },\n  \"_source\": [\"article_id\", \"id\", \"summary\", \"language\", \"sentiment\"],\n  \"size\": {{ $json.article_ids.length }}\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "4f5dc8c1-0080-4625-8314-efaad1c804f1",
+      "name": "Get Cluster Summary1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1072,
+        544
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the OpenSearch response with article summaries\nconst input = $input.item.json;\n\n// Extract article summaries from the hits\nlet articleSummaries = {};\nlet foundArticleIds = [];\nlet articleLanguages = {}; // Store languages per article\n\nif (input.hits && input.hits.hits && input.hits.hits.length > 0) {\n  input.hits.hits.forEach(hit => {\n    const source = hit._source;\n    const articleId = source.article_id;\n    const summary = source.summary;\n    const language = source.language;\n    \n    if (articleId && summary) {\n      articleSummaries[articleId] = summary;\n      articleLanguages[articleId] = language || 'en';\n      foundArticleIds.push(articleId);\n    }\n  });\n  \n  console.log(`✅ Found ${Object.keys(articleSummaries).length} article summaries from OpenSearch`);\n} else {\n  console.warn('⚠️ No article summaries found in OpenSearch response');\n}\n\n// Get the clusters data (from Split Clusters node)\nlet clustersRaw = [];\ntry {\n  const splitClusterItems = $('Split Clusters').all();\n  \n  if (splitClusterItems && splitClusterItems.length > 0) {\n    clustersRaw = splitClusterItems.map(item => {\n      const source = item.json._source;\n      return {\n        cluster_id: source.cluster_id,\n        article_ids: source.article_ids || [],\n        _id: item.json._id\n      };\n    });\n    console.log(`✅ Found ${clustersRaw.length} raw clusters`);\n  }\n} catch (e) {\n  console.error('❌ Error getting clusters:', e.message);\n  throw new Error('No cluster data available from Split Clusters');\n}\n\n// Clean and validate clusters\nconst clusters = [];\nconst seenClusterIds = new Set();\nlet skippedClusters = 0;\n\nclustersRaw.forEach(cluster => {\n  const rawClusterId = cluster.cluster_id;\n  const articleIds = cluster.article_ids || [];\n  \n  // Skip if cluster_id is invalid (null, undefined, or empty string)\n  if (rawClusterId === null || rawClusterId === undefined || rawClusterId === '' || rawClusterId === 'undefined') {\n    console.warn(`⚠️ Skipping cluster with invalid ID: ${cluster._id}`);\n    skippedClusters++;\n    return;\n  }\n  \n  // Skip if no articles\n  if (articleIds.length === 0) {\n    console.warn(`⚠️ Skipping cluster ${rawClusterId} - no articles`);\n    skippedClusters++;\n    return;\n  }\n  \n  // ALWAYS convert to string (API requires string)\n  const clusterId = String(rawClusterId);\n  \n  // Skip duplicates\n  if (seenClusterIds.has(clusterId)) {\n    console.warn(`⚠️ Skipping duplicate cluster_id: ${clusterId}`);\n    skippedClusters++;\n    return;\n  }\n  \n  seenClusterIds.add(clusterId);\n  \n  // Add valid cluster\n  clusters.push({\n    cluster_id: clusterId, // ALWAYS STRING\n    article_ids: articleIds\n  });\n});\n\nconsole.log(`✅ Validated ${clusters.length} clusters (skipped ${skippedClusters})`);\n\n// Get all unique article IDs from clusters\nconst allArticleIds = [...new Set(clusters.flatMap(c => c.article_ids))];\nconsole.log(`📋 Total unique articles in clusters: ${allArticleIds.length}`);\n\n// Build articles array\nconst articles = allArticleIds.map(articleId => ({\n  id: articleId,\n  title: '', // Will be filled by LLM service\n  body: articleSummaries[articleId] || '', // Use cached summary as body\n  language: articleLanguages[articleId] || 'en'\n}));\n\n// Check coverage\nconst articlesWithSummaries = allArticleIds.filter(id => articleSummaries[id]).length;\nconst articlesWithoutSummaries = allArticleIds.length - articlesWithSummaries;\nconst missingIds = allArticleIds.filter(id => !articleSummaries[id]);\n\nconsole.log('\\n' + '='.repeat(60));\nconsole.log('📊 PAYLOAD SUMMARY FOR CLUSTER_SUMMARY_FROM_CLUSTERS');\nconsole.log('='.repeat(60));\nconsole.log(`Valid clusters to process: ${clusters.length}`);\nconsole.log(`Skipped invalid clusters: ${skippedClusters}`);\nconsole.log(`Total articles: ${allArticleIds.length}`);\nconsole.log(`Articles with cached summaries: ${articlesWithSummaries}`);\nconsole.log(`Articles needing new summaries: ${articlesWithoutSummaries}`);\n\nif (missingIds.length > 0) {\n  console.log(`\\n⚠️ Missing summaries for ${missingIds.length} articles:`);\n  console.log(missingIds.slice(0, 10).join(', '), missingIds.length > 10 ? '...' : '');\n}\nconsole.log('='.repeat(60));\n\n// Validate\nif (clusters.length === 0) {\n  throw new Error('No valid clusters to process after filtering');\n}\n\nif (allArticleIds.length === 0) {\n  throw new Error('No articles in clusters');\n}\n\n// Prepare the request payload\nconst requestId = `req_cluster_summary_${Date.now()}`;\nconst payload = {\n  request_id: requestId,\n  clusters: clusters,\n  articles: articles,\n  article_summaries: articleSummaries\n};\n\nconsole.log(`\\n📤 Payload ready for /cluster_summary_from_clusters`);\nconsole.log(`Request ID: ${requestId}`);\nconsole.log(`Will use ${articlesWithSummaries} cached summaries, generate ${articlesWithoutSummaries} new ones`);\n\nreturn [{ json: payload }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        544
+      ],
+      "id": "c207876b-ed9b-4456-a1e5-4a0e89789bec",
+      "name": "Prepare for Cluster Summary"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the prepared payload from previous node\nconst input = $input.item.json;\n\nconst clusters = input.clusters;\nconst articles = input.articles;\nconst articleSummaries = input.article_summaries;\n\n// Define batch size (how many clusters to process in parallel)\nconst BATCH_SIZE = 5; // Adjust based on your LLM service capacity\n\nconsole.log(`Creating batches for ${clusters.length} clusters`);\nconsole.log(`Batch size: ${BATCH_SIZE}`);\n\n// Calculate total batches\nconst totalBatches = Math.ceil(clusters.length / BATCH_SIZE);\n\n// Create batches\nconst batches = [];\nfor (let i = 0; i < clusters.length; i += BATCH_SIZE) {\n  const batchClusters = clusters.slice(i, i + BATCH_SIZE);\n  \n  // Get article IDs for this batch\n  const batchArticleIds = [...new Set(batchClusters.flatMap(c => c.article_ids))];\n  \n  // Filter articles for this batch\n  const batchArticles = articles.filter(a => batchArticleIds.includes(a.id));\n  \n  // Filter summaries for this batch\n  const batchSummaries = {};\n  batchArticleIds.forEach(id => {\n    if (articleSummaries[id]) {\n      batchSummaries[id] = articleSummaries[id];\n    }\n  });\n  \n  const batchNum = Math.floor(i / BATCH_SIZE) + 1;\n  \n  batches.push({\n    batch_number: batchNum,\n    total_batches: totalBatches,\n    request_id: `${input.request_id}_batch_${batchNum}`,\n    clusters: batchClusters,\n    articles: batchArticles,\n    article_summaries: batchSummaries\n  });\n  \n  console.log(`Batch ${batchNum}/${totalBatches}: ${batchClusters.length} clusters, ${batchArticles.length} articles`);\n}\n\nconsole.log(`\\n✅ Created ${batches.length} batches`);\nconsole.log(`Outputting ${batches.length} separate items for parallel processing`);\n\n// CRITICAL: Return array directly - n8n will convert each element to a separate item\nreturn batches;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        544
+      ],
+      "id": "a59eb1a9-31c6-472d-9db9-2c0edb1573df",
+      "name": "Sent in Batches"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1968,
+        16
+      ],
+      "id": "d5d0ab37-e4c3-4abd-801c-7a094075b6bd",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "t0axUOUgpQYcZyXC",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/t0axUOUgpQYcZyXC",
+          "cachedResultName": "cluster summary and label"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1744,
+        544
+      ],
+      "id": "8b0a0ff6-b313-420a-827b-f439eebe5d56",
+      "name": "Call 'cluster summary and label'1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "xprLf76Ve2AbQ5eH7-CLU",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/xprLf76Ve2AbQ5eH7-CLU",
+          "cachedResultName": "M3 - Mega Summary Workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1744,
+        112
+      ],
+      "id": "d52bc6fa-e4a1-4a10-bfde-f6d02105cb7a",
+      "name": "Call 'M3 - Mega Summary Workflow'"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -272,
+        376
+      ],
+      "id": "860924dc-5cef-4c26-b49d-185b764a734a",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -272,
+        184
+      ],
+      "id": "0b30d11a-501d-40b2-a2e9-3d1116c8c9d0",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "connections": {
+    "Get Clusters Without Category": {
+      "main": [
+        [
+          {
+            "node": "Split Clusters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Clusters": {
+      "main": [
+        [
+          {
+            "node": "Get Cluster Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Cluster Summary": {
+      "main": [
+        [
+          {
+            "node": "Check Summary Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Summary Exists": {
+      "main": [
+        [
+          {
+            "node": "Prepare Request Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Summary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Request Data": {
+      "main": [
+        [
+          {
+            "node": "Check Skip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call category mapping for clusters": {
+      "main": [
+        [
+          {
+            "node": "Call 'M3 - Mega Summary Workflow'",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cont loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call category mapping for clusters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cont loop": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Skip": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Summary Data": {
+      "main": [
+        [
+          {
+            "node": "Get Cluster Summary1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Cluster Summary1": {
+      "main": [
+        [
+          {
+            "node": "Prepare for Cluster Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare for Cluster Summary": {
+      "main": [
+        [
+          {
+            "node": "Sent in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sent in Batches": {
+      "main": [
+        [
+          {
+            "node": "Call 'cluster summary and label'1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        []
+      ]
+    },
+    "Call 'cluster summary and label'1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get Clusters Without Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Clusters Without Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'M3 - Mega Summary Workflow'": {
+      "main": [
+        [
+          {
+            "node": "Cont loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "pinData": {},
+  "versionId": "c23229e5-9f92-45f6-a2ca-5486e2eb3636",
+  "activeVersionId": "83ef6c0a-05b8-459b-9351-21962266dac9",
+  "versionCounter": 47,
+  "triggerCount": 1,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-02-10T15:00:15.912Z",
+      "createdAt": "2026-02-10T15:00:15.912Z",
+      "role": "workflow:owner",
+      "workflowId": "GDMrNOkQKkkzD4rwUO5cl",
+      "projectId": "Fym8lmiogviYTzpp",
+      "project": {
+        "updatedAt": "2026-02-11T13:41:09.163Z",
+        "createdAt": "2026-02-10T14:59:11.065Z",
+        "id": "Fym8lmiogviYTzpp",
+        "name": "enise colak <eniseirem@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "f2a82ed6-b64a-4ab3-b153-a72995fa761d"
+      }
+    }
+  ]
+}

@@ -1,0 +1,226 @@
+{
+  "name": "Mega Summary Pipeline (Individual Summaries)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/5 * * * *"
+            }
+          ]
+        }
+      },
+      "id": "805e7d95-3754-49d6-9af7-cf8db7b8899b",
+      "name": "Schedule Every 5 Minutes1",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "/crawler/articles.json",
+        "options": {}
+      },
+      "id": "5cc0f005-df13-4e63-9244-54e9c84705c6",
+      "name": "Read Articles JSON1",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the input data\nconst input = $input.first();\n\n// Try different ways to get the file content\nlet fileContent;\n\nif (input.json && input.json.data) {\n  fileContent = input.json.data;\n} else if (input.binary && input.binary.data) {\n  // If binary, convert to string\n  const binaryData = input.binary.data;\n  fileContent = Buffer.from(binaryData.data, 'base64').toString('utf8');\n} else if (typeof input.json === 'string') {\n  fileContent = input.json;\n} else {\n  throw new Error('Could not find file content. Input: ' + JSON.stringify(input));\n}\n\nconsole.log('File content type:', typeof fileContent);\nconsole.log('File content preview:', fileContent.substring(0, 100));\n\nconst articles = JSON.parse(fileContent);\n\nconsole.log('📊 Loaded articles from file:', articles.length);\n\n// Return each article as separate item\nreturn articles.map(article => ({\n  json: article\n}));"
+      },
+      "id": "4f7e8c95-a1e8-45c9-94ee-ee689644b464",
+      "name": "Parse JSON1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all articles\nconst articles = $input.all().map(item => item.json);\n\n// Filter criteria\nconst filtered = articles.filter(a => \n  a.body && \n  a.body.length > 100 && \n  a.body.length < 4000\n);\n\nconsole.log('📋 Total articles:', articles.length);\nconsole.log('✅ Filtered articles:', filtered.length);\n\n// Return filtered articles\nreturn filtered.map(article => ({\n  json: article\n}));"
+      },
+      "id": "ea070d6c-5634-4efd-adca-3b202ba83045",
+      "name": "Filter Articles1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        32,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Collect all filtered articles\nconst articles = $input.all().map(item => item.json);\n\nif (articles.length === 0) {\n  console.log('⚠️ No articles to process');\n  return [];\n}\n\n// Prepare batch request for LLM\nconst batchRequest = {\n  request_id: `batch_${Date.now()}`,\n  filters_used: {\n    timeframe: \"24h\",\n    source: \"all\"\n  },\n  articles: articles.map(a => ({\n    id: a.id || `article_${Date.now()}_${Math.random()}`,\n    title: a.title || \"Untitled\",\n    body: a.body,\n    language: a.language || \"en\",\n    source: a.source,\n    published_at: a.published_at\n  }))\n};\n\nconsole.log('📦 Prepared batch with', batchRequest.articles.length, 'articles');\nconsole.log('📝 Total characters:', batchRequest.articles.reduce((sum, a) => sum + a.body.length, 0));\n\nreturn [{\n  json: batchRequest\n}];"
+      },
+      "id": "f6166997-e523-448d-b064-28dbaa147859",
+      "name": "Prepare Batch Request1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8001/mega_summary",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          },
+          "timeout": 180000
+        }
+      },
+      "id": "80f4986b-ed48-4fe1-a249-1025e8f4f99f",
+      "name": "HTTP Request to Mega Summary1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        464,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\n\n// Extract mega-summary\nconst summary = response.final_summary;\nconst articleCount = response.article_count;\nconst processedAt = response.processed_at;\n\nconsole.log('✅ Summary received!');\nconsole.log('📊 Articles processed:', articleCount);\nconsole.log('📏 Summary length:', summary.length, 'chars');\nconsole.log('🕐 Processed at:', processedAt);\n\n// Format output\nreturn [{\n  json: {\n    summary: summary,\n    metadata: {\n      request_id: response.request_id,\n      article_count: articleCount,\n      model: response.model,\n      language: response.language,\n      processed_at: processedAt,\n      summary_length: summary.length\n    },\n    raw_response: response\n  }\n}];"
+      },
+      "id": "d2d63c88-ce23-4446-932c-d1d00865cc6c",
+      "name": "Process Summary1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\n// Format for display/storage\nconst output = {\n  title: `Mega Summary - ${data.metadata.article_count} Articles`,\n  summary: data.summary,\n  article_count: data.metadata.article_count,\n  model: data.metadata.model,\n  processed_at: data.metadata.processed_at,\n  summary_length: data.metadata.summary_length\n};\n\nconsole.log('\\n' + '='.repeat(60));\nconsole.log('📰 MEGA SUMMARY COMPLETE');\nconsole.log('='.repeat(60));\nconsole.log(`Articles: ${output.article_count}`);\nconsole.log(`Length: ${output.summary_length} characters`);\nconsole.log(`Model: ${output.model}`);\nconsole.log('='.repeat(60));\nconsole.log('\\nSUMMARY:');\nconsole.log(output.summary);\nconsole.log('\\n' + '='.repeat(60));\n\nreturn [{ json: output }];"
+      },
+      "id": "86aec147-ecea-42dd-b7ad-3aa437aee0c0",
+      "name": "Display Output1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        912,
+        -64
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Every 5 Minutes1": {
+      "main": [
+        [
+          {
+            "node": "Read Articles JSON1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Articles JSON1": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse JSON1": {
+      "main": [
+        [
+          {
+            "node": "Filter Articles1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Articles1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Batch Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Batch Request1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request to Mega Summary1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Summary1": {
+      "main": [
+        [
+          {
+            "node": "Display Output1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request to Mega Summary1": {
+      "main": [
+        [
+          {
+            "node": "Process Summary1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "eafe4fcb-6970-48da-a0db-16ff773909f7",
+  "meta": {
+    "instanceId": "1a3858aba68429b9782f815a4304eafd33a3c8405f954572f245dd36e44340b3"
+  },
+  "id": "iDq2tYjHvIFGKHnP",
+  "tags": []
+}

@@ -1,0 +1,1077 @@
+{
+  "name": "M3 - Clustering + Summary + Label",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "8347acf7-dc18-42db-99ea-28bb2f074bf7",
+      "name": "Start Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        944,
+        2016
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://llm-service:8001/cluster_create",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Prepare Batch1').item.json.llm_payload) }}",
+        "options": {
+          "timeout": 18000000
+        }
+      },
+      "id": "dafb0449-ff1f-4560-a545-8bd22c53f8f1",
+      "name": "Call LLM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2720,
+        2128
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputData = $input.item.json;\nconst batchRecord = $('Prepare Batch1').item.json.llm_batch_record;\nconst payload = $('Prepare Batch1').item.json.llm_payload;\n\nlet llmCallResult;\nif (Array.isArray(inputData)) {\n    llmCallResult = inputData[0] || {};\n} else {\n    llmCallResult = inputData;\n}\n\nif (typeof llmCallResult !== 'object' || llmCallResult === null) {\n    llmCallResult = {error: true, message: \"Invalid response type\"};\n}\n\nconst hasError = llmCallResult.error !== undefined;\nconsole.log(`🔍 Result: error=${hasError}`);\n\nreturn [{\n    json: {\n        ...llmCallResult,\n        batch_data: batchRecord,\n        payload: payload\n    }\n}];"
+      },
+      "id": "14091aa2-bd9d-4bb5-a3a4-df03da2decf2",
+      "name": "Preserve Batch Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        2128
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.error !== undefined }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "looseTypeValidation": true
+        }
+      },
+      "id": "836ca7c0-ca3a-4f5d-9029-178230679df6",
+      "name": "Check for Error",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3056,
+        2128
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/llm_batch/_update/{{ $json.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ doc: $json.update_doc }) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "161f5285-cd15-4685-ba52-30372605eddf",
+      "name": "Save Batch Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6560,
+        1952
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// RETRY LOGIC - Split batch into smaller pieces\nconst preservedData = $json;\nconst batchData = preservedData.batch_data;\nconst payload = preservedData.payload;\n\nif (!batchData || !payload || !payload.articles) {\n  return [{\n    json: {\n      error: true,\n      message: \"Missing data for retry\",\n      skipped: true\n    }\n  }];\n}\n\nconst originalArticles = payload.articles;\nconst retryCount = batchData.retry_count || 0;\nconst currentSize = batchData.current_batch_size;\n\nconsole.log(`❌ TIMEOUT: Batch failed with ${currentSize} articles. Retry count: ${retryCount}`);\n\nif (retryCount >= 3) {\n  console.log(`⚠️ Max retries reached.`);\n  return [{\n    json: {\n      error: true,\n      error_type: \"max_retry_exceeded\",\n      message: \"Max retries reached\",\n      request_id: batchData.request_id,\n      skipped: true\n    }\n  }];\n}\n\nconst newBatchSize = Math.max(5, Math.floor(currentSize / 2));\nconsole.log(`🔄 Splitting batch: ${currentSize} → ${newBatchSize} articles`);\n\nconst subBatches = [];\nfor (let i = 0; i < originalArticles.length; i += newBatchSize) {\n  subBatches.push(originalArticles.slice(i, i + newBatchSize));\n}\n\nconsole.log(`📦 Created ${subBatches.length} sub-batches`);\n\nreturn subBatches.map((articles, idx) => {\n  const subRequestId = `${batchData.request_id}_retry${retryCount + 1}_sub${idx + 1}`;\n  \n  return {\n    json: {\n      llm_payload: {\n        request_id: subRequestId,\n        articles: articles,\n        similarity_threshold: payload.similarity_threshold || 0.7,\n        use_existing_clusters: payload.use_existing_clusters !== false,\n        min_cluster_size: payload.min_cluster_size || 2\n      },\n      llm_batch_record: {\n        request_id: subRequestId,\n        parent_request_id: batchData.parent_request_id || batchData.request_id,\n        filters_used: batchData.filters_used,\n        options: batchData.options,\n        article_ids: articles.map(a => a.id).filter(Boolean),\n        article_count: articles.length,\n        status: \"pending_retry\",\n        ingested_at: new Date().toISOString(),\n        trigger_type: \"incremental_retry\",\n        llm_endpoint: \"/cluster_create\",\n        retry_count: retryCount + 1,\n        current_batch_size: articles.length,\n        original_batch_size: currentSize\n      }\n    }\n  };\n});"
+      },
+      "id": "0a86033f-6f8b-4e5c-b38a-bf60205c4df0",
+      "name": "Split and Retry",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3328,
+        2112
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.skipped === true }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "61d91a37-c950-4433-a584-c3761f33027b",
+      "name": "Max Retry Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3664,
+        2112
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://opensearch:9200/llm_batch/_doc/{{ $json.llm_batch_record.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.llm_batch_record) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "ae568f2b-7dbc-4151-aee3-7be3055d9916",
+      "name": "Store Retry Batch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3888,
+        2288
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://llm-service:8001/cluster_create",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.llm_payload) }}",
+        "options": {
+          "timeout": 18000000
+        }
+      },
+      "id": "78808ea9-2929-4b51-9631-23bfba75f57d",
+      "name": "Retry LLM Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4080,
+        2288
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const filters = {\n  time_window: null,\n  category: null,\n  keywords: [],\n  size: 1000\n};\nconst options = {\n  style_version: \"Neutral\",\n  sentiment_target: \"None\",\n  similarity_threshold: 0.7,\n  use_existing_clusters: true,\n  min_cluster_size: 2,\n  model: \"gpt-4o-mini\"\n};\n\n// Get clustered article IDs from the previous node\nconst clusteredIds = $('Extract IDs').first().json.clustered_article_ids || [];\n\n// Build query to exclude clustered articles\nconst query = {\n  bool: {\n    must: {\n      match_all: {}\n    },\n    must_not: {\n      terms: {\n        id: clusteredIds\n      }\n    }\n  }\n};\n\nreturn [{ json: {\n  filters,\n  options,\n  opensearch_query: {\n    size: filters.size,\n    _source: ['id', 'title', 'body', 'source', 'published_at', 'url', 'language'],\n    query,\n    sort: [{ published_at: { order: 'desc' }}]\n  }\n}}];"
+      },
+      "id": "f68ce769-5c7f-46fb-9c65-5a6f562bae2c",
+      "name": "Build OpenSearch Query1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        2016
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://opensearch:9200/articles/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.opensearch_query) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "072bc121-bdb3-4105-aabe-5197f28c1147",
+      "name": "Read Articles1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1728,
+        2016
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const hits = $json.hits?.hits ?? [];\nconst articles = hits.map(h => h._source).filter(a => a && a.body);\nconst processed = articles.map(a => ({...a, body_truncated: false}));\nconsole.log(`📊 Processing ${processed.length} articles`);\nreturn processed.map(a => ({ json: a }));"
+      },
+      "id": "3b1fda07-f4a0-4e11-a22c-e16ed6fa755b",
+      "name": "Prepare Articles1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        2016
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 15,
+        "options": {}
+      },
+      "id": "0bc09fb3-0751-479d-a988-7f56e8f09904",
+      "name": "Loop Over Batches1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2128,
+        2016
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().map(i => i.json);\nconst pad2 = n => String(n).padStart(2, '0');\nconst pad3 = n => String(n).padStart(3, '0');\nconst now = new Date();\nconst datePart = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}${pad2(now.getMinutes())}`;\nconst requestId = `n8n_incr_${datePart}_${pad3($runIndex+1)}`;\nconst filterData = $('Build OpenSearch Query1').first().json;\nconst filters = filterData?.filters || {};\nconst options = filterData?.options || {};\nconst articleIds = items.map(a => a.id).filter(Boolean);\nconst articles = items.map(a => ({\n  id: a.id || \"\",\n  url: a.url || \"\",\n  title: a.title || \"\",\n  body: a.body || \"\",\n  language: a.language || \"en\",\n  source: a.source || \"\",\n  published_at: a.published_at || null,\n  category: \"general\"\n}));\nif (articles.length > 100) throw new Error(`Too many: ${articles.length}`);\nif (articles.length === 0) throw new Error('No articles');\nconsole.log(`✅ BATCH ${$runIndex + 1}: ${articles.length} articles`);\nreturn [{\n  json: {\n    llm_payload: {\n      request_id: requestId,\n      articles: articles,\n      similarity_threshold: options.similarity_threshold || 0.7,\n      use_existing_clusters: options.use_existing_clusters !== true,\n      min_cluster_size: options.min_cluster_size || 2\n    },\n    llm_batch_record: {\n      request_id: requestId,\n      filters_used: filters,\n      options: options,\n      article_ids: articleIds,\n      article_count: articles.length,\n      status: \"pending\",\n      ingested_at: new Date().toISOString(),\n      trigger_type: \"incremental\",\n      llm_endpoint: \"/cluster_create\",\n      retry_count: 0,\n      current_batch_size: articles.length\n    }\n  }\n}];"
+      },
+      "id": "6d290642-468e-4465-ad7b-f52735574d5c",
+      "name": "Prepare Batch1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2352,
+        2128
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://opensearch:9200/llm_batch/_doc/{{ $json.llm_batch_record.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.llm_batch_record) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "1a4e9638-d390-4d8e-a440-4a168f06c230",
+      "name": "Store LLM Batch1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2528,
+        2128
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// This node should have TWO inputs: one from summaries, one from clusters\nconst allInputs = $input.all();\n\nconsole.log(`🔄 Merging results from ${allInputs.length} branches`);\n\nlet summariesCount = 0;\nlet clustersCount = 0;\n\nallInputs.forEach(input => {\n  if (input.json.branch === 'summaries') {\n    summariesCount = input.json.summaries_count || 0;\n  } else if (input.json.branch === 'clusters') {\n    clustersCount = input.json.clusters_count || 0;\n  }\n});\n\nconsole.log(`📊 Final counts: ${summariesCount} summaries, ${clustersCount} clusters`);\n\n// Get the original batch record\nconst batchRecord = $('Prepare Batch1').first().json.llm_batch_record;\n\nreturn [{\n  json: {\n    request_id: batchRecord.request_id,\n    update_doc: {\n      status: \"completed\",\n      completed_at: new Date().toISOString(),\n      article_summaries_count: summariesCount,\n      clusters_count: clustersCount\n    }\n  }\n}];\n"
+      },
+      "id": "f67f7e6c-6fa9-41cf-9421-0304a91ab12d",
+      "name": "Update LLM Batch1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5696,
+        1664
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log(`🔄 Continuing to next batch...`);\nreturn [{ json: {} }];"
+      },
+      "id": "1917f594-9dbf-4075-a7db-aa28229259fd",
+      "name": "Continue Loop1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5600,
+        2112
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://opensearch:9200/clusters/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"size\": 10000,\n  \"_source\": [\"article_ids\"],\n  \"query\": { \"match_all\": {} }\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "68b22857-7468-4192-a4f4-302e3a95fb74",
+      "name": "Clustered Article List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1136,
+        2016
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const hits = $json.hits?.hits || [];\nconst clusteredIds = new Set();\n\nhits.forEach(hit => {\n  const ids = hit._source?.article_ids || [];\n  ids.forEach(id => clusteredIds.add(id));\n});\n\nreturn [{\n  json: {\n    clustered_article_ids: Array.from(clusteredIds)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1312,
+        2016
+      ],
+      "id": "92e63c27-2df4-4243-8f5c-1330d529ba37",
+      "name": "Extract IDs"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\n\nreturn [{\n  json: data\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3328,
+        1936
+      ],
+      "id": "e2d4973c-463a-4c3a-9eca-9afcc2d3b3fb",
+      "name": "Split to Both"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Wait for all cluster inserts to complete\nconst allResults = $input.all();\n\nconsole.log(`✅ Inserted ${allResults.length} clusters`);\n\nconst successful = allResults.filter(r => r.json.result === 'created' || r.json.result === 'updated').length;\n\nreturn [{\n  json: {\n    branch: 'clusters',\n    clusters_count: successful,\n    clusters_processed: allResults.length\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4928,
+        1808
+      ],
+      "id": "026f6b8a-26fc-42fd-890a-049343bab096",
+      "name": "aggregate cluster"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Split clusters into individual items for KNN processing\nconst inputData = $input.all();\nconst outputItems = [];\n\nfor (const item of inputData) {\n  const data = item.json;\n  \n  // Check if this is cluster data with clusters array\n  if (data.clusters && Array.isArray(data.clusters)) {\n    const requestId = data.request_id;\n    \n    // Create one item per cluster\n    for (const cluster of data.clusters) {\n      // Validate centroid_embedding\n      let centroidEmbedding = cluster.centroid_embedding || [];\n      \n      if (centroidEmbedding.length < 384) {\n        console.log(`⚠️  Cluster ${cluster.cluster_id}: Padding ${centroidEmbedding.length} → 384`);\n        centroidEmbedding = [\n          ...centroidEmbedding,\n          ...Array(384 - centroidEmbedding.length).fill(0.0)\n        ];\n      } else if (centroidEmbedding.length > 384) {\n        console.log(`⚠️  Cluster ${cluster.cluster_id}: Truncating ${centroidEmbedding.length} → 384`);\n        centroidEmbedding = centroidEmbedding.slice(0, 384);\n      }\n      \n      outputItems.push({\n        json: {\n          original_cluster: cluster,\n          centroid_embedding: centroidEmbedding,\n          _request_id: requestId\n        },\n        pairedItem: { item: inputData.indexOf(item) }\n      });\n    }\n  }\n}\n\nconsole.log(`📊 Split into ${outputItems.length} clusters for individual KNN processing`);\nreturn outputItems;"
+      },
+      "id": "75d502c2-6da0-470c-8357-af3e0d05d9fa",
+      "name": "Process Response2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3616,
+        1808
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const knnResult = $json;\n\n// Get data from Process Response2 node\nconst processNode = $('Process Response2').item.json;\nconst originalCluster = processNode.original_cluster;\nconst centroidEmbedding = processNode.centroid_embedding;\nconst requestId = processNode._request_id;\n\nconst hits = knnResult.hits?.hits || [];\nconst totalMatches = knnResult.hits?.total?.value || 0;\n\nconsole.log(`🔍 Cluster ${originalCluster.cluster_id}: Found ${totalMatches} potential matches`);\n\n// Filter out inactive clusters and those with 0 articles\nconst validHits = hits.filter(hit => {\n  const status = hit._source?.status;\n  const articleCount = hit._source?.article_count || 0;\n  return status === 'active' && articleCount >= 1;\n});\n\nconsole.log(`✅ Valid matches after filtering: ${validHits.length}/${hits.length}`);\n\nlet action = 'create';\nlet targetClusterId = null;\nlet similarityScore = 0;\nlet existingCluster = null;\n\nif (validHits.length > 0) {\n  const topMatch = validHits[0];\n  similarityScore = topMatch._score || 0;\n  \n  console.log(`📊 Top match score: ${similarityScore.toFixed(4)} (threshold: 0.75)`);\n  \n  if (similarityScore >= 0.75) {\n    action = 'merge';\n    targetClusterId = topMatch._id;\n    existingCluster = topMatch._source;\n    console.log(`✅ MERGE: Similarity ${similarityScore.toFixed(4)} >= 0.75, merging with cluster ${targetClusterId}`);\n  } else {\n    console.log(`➕ CREATE: Similarity ${similarityScore.toFixed(4)} < 0.75, creating new cluster`);\n  }\n} else {\n  console.log(`➕ CREATE: No valid similar clusters found, creating new cluster`);\n}\n\nreturn [{\n  json: {\n    action: action,\n    original_cluster: originalCluster,\n    centroid_embedding: centroidEmbedding,\n    target_cluster_id: targetClusterId,\n    existing_cluster: existingCluster,\n    similarity_score: similarityScore,\n    knn_matches: validHits.length,\n    total_matches: hits.length,\n    _request_id: requestId\n  }\n}];"
+      },
+      "id": "c1cc254d-f3df-43cf-bcd2-de402d255593",
+      "name": "Decide Action1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4000,
+        1808
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://opensearch:9200/clusters/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  {\n    \"size\": 20,\n    \"query\": {\n      \"knn\": {\n        \"centroid_embedding\": {\n          \"vector\": $json.centroid_embedding,\n          \"k\": 20\n        }\n      }\n    },\n    \"_source\": [\"cluster_id\", \"article_ids\", \"article_count\", \"centroid_embedding\", \"created_at\", \"status\"]\n  }\n}}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "54d635cc-10f8-4ffa-9823-330d3b08430f",
+      "name": "KNN Search1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3824,
+        1808
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://opensearch:9200/clusters/_doc/{{ $json._id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "918568ab-0817-45cc-af18-5ff3e5518222",
+      "name": "Save Cluster",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4736,
+        1808
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const decision = $json;\nconst newCluster = decision.original_cluster;\nconst centroidEmbedding = decision.centroid_embedding;\nconst now = new Date().toISOString();\nconst requestId = decision._request_id || `req_${Date.now()}`;\n\n// Generate unique integer cluster_id from timestamp + random\nconst timestamp = Date.now();\nconst random = Math.floor(Math.random() * 1000);\nconst uniqueClusterId = parseInt(`${timestamp}${random}`.substring(0, 10), 10);\n\n// Document ID for OpenSearch\nconst docId = `${requestId}_${uniqueClusterId}`;\n\nconst clusterDoc = {\n  _id: docId,\n  body: {\n    cluster_id: uniqueClusterId,  // Unique integer based on timestamp\n    request_id: requestId,\n    article_ids: newCluster.article_ids || [],\n    article_count: newCluster.article_count || 0,\n    centroid_embedding: centroidEmbedding,\n    status: \"active\",\n    created_at: now,\n    last_updated_at: now,\n    ingested_at: now,\n    processed_at: now\n  }\n};\n\nconsole.log(`➕ CREATE: New cluster ${uniqueClusterId} with ${newCluster.article_count} articles`);\nreturn [{ json: clusterDoc }];"
+      },
+      "id": "e2302a8b-4bc9-479e-b8b5-ed29e7cfe134",
+      "name": "Create New Cluster",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4464,
+        1936
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const decision = $json;\nconst existing = decision.existing_cluster;\nconst newCluster = decision.original_cluster;\n\n// Merge article IDs (remove duplicates)\nconst mergedArticleIds = [...new Set([\n  ...(existing.article_ids || []),\n  ...(newCluster.article_ids || [])\n])];\n\n// Calculate new centroid (average of embeddings)\nconst existingEmbedding = existing.centroid_embedding || [];\nconst newEmbedding = decision.centroid_embedding || [];\n\nconst mergedEmbedding = existingEmbedding.map((val, idx) => {\n  return (val + (newEmbedding[idx] || 0)) / 2;\n});\n\nconst now = new Date().toISOString();\n\nconst mergedCluster = {\n  _id: decision.target_cluster_id,\n  body: {\n    cluster_id: existing.cluster_id,\n    article_ids: mergedArticleIds,\n    article_count: mergedArticleIds.length,\n    centroid_embedding: mergedEmbedding,\n    status: \"active\",\n    created_at: existing.created_at || now,\n    last_updated_at: now,\n    ingested_at: existing.ingested_at || now,\n    processed_at: now\n  }\n};\n\nconsole.log(`🔀 MERGE: ${existing.article_ids?.length || 0} + ${newCluster.article_ids?.length || 0} = ${mergedArticleIds.length} articles`);\nconsole.log(`📊 Similarity: ${decision.similarity_score.toFixed(4)}`);\n\nreturn [{ json: mergedCluster }];"
+      },
+      "id": "d18aa2c7-a3b2-40fe-b4be-c7227794b4db",
+      "name": "Merge Cluster",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4464,
+        1696
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "merge",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "45640d29-02f2-48b3-bf4a-00082e314a9d",
+      "name": "Check Action",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        4208,
+        1808
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Wait for all summary inserts to complete\nconst allResults = $input.all();\n\nconsole.log(`✅ Inserted ${allResults.length} article summaries`);\n\nconst successful = allResults.filter(r => r.json.result === 'created' || r.json.result === 'updated').length;\n\nreturn [{\n  json: {\n    branch: 'summaries',\n    summaries_count: successful,\n    summaries_processed: allResults.length\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4880,
+        1552
+      ],
+      "id": "8ac18f75-f7e7-4361-8b57-b9c9a7ce158c",
+      "name": "aggregate summary"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\nconst articleSummaries = data.article_summaries;\n\n// If no article_summaries, skip this branch\nif (!articleSummaries || typeof articleSummaries !== 'object' || Object.keys(articleSummaries).length === 0) {\n  console.log('⏭️  No article summaries to process, skipping');\n  return [];\n}\n\nconsole.log(`Preparing ${Object.keys(articleSummaries).length} summaries individually`);\n\n// Convert object to array of items\nconst summaryItems = [];\nfor (const [articleId, summary] of Object.entries(articleSummaries)) {\n  summaryItems.push({\n    json: {\n      _id: `${articleId}_summary`,\n      document: {\n        id: `${articleId}_summary`,\n        article_id: articleId,\n        summary: summary,\n        language: data.language || 'en',\n        model: data.model || 'gpt-4o-mini',\n        style_version: data.style_version || 'Neutral',\n        sentiment: data.sentiment || 'None',\n        processed_at: data.processed_at || new Date().toISOString()\n      }\n    }\n  });\n}\n\nreturn summaryItems;"
+      },
+      "id": "f8864414-5f8d-428d-a03b-cfc0d75854fc",
+      "name": "Process Response1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3600,
+        1552
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://opensearch:9200/article_summaries/_doc/{{ $json._id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.document) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "c83f8c68-e7aa-4d63-a539-e2ef7ab3285e",
+      "name": "Insert Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4720,
+        1552
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        5072,
+        1664
+      ],
+      "id": "6bb57738-0344-426d-be35-678fe174b71c",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare payload for cluster_summarize endpoint\nlet clusterData = [];\n\n// Try to get from Create New Cluster\ntry {\n  const createItems = $('Create New Cluster').all();\n  if (createItems && createItems.length > 0) {\n    clusterData = createItems.map(i => i.json);\n    console.log(`✅ Found ${clusterData.length} clusters from Create New Cluster`);\n  }\n} catch (e) {\n  console.log('⚠️ Create New Cluster node did not execute');\n}\n\n// If no data yet, try Merge Cluster\nif (clusterData.length === 0) {\n  try {\n    const mergeItems = $('Merge Cluster').all();\n    if (mergeItems && mergeItems.length > 0) {\n      clusterData = mergeItems.map(i => i.json);\n      console.log(`✅ Found ${clusterData.length} clusters from Merge Cluster`);\n    }\n  } catch (e) {\n    console.log('⚠️ Merge Cluster node did not execute');\n  }\n}\n\n// Validate we have cluster data\nif (clusterData.length === 0) {\n  throw new Error('No cluster data available from Create New Cluster or Merge Cluster');\n}\n\n// Process clusters and ALWAYS convert cluster_id to string\nconst clusters = clusterData\n  .filter(item => {\n    // Skip items with invalid cluster_id or no article_ids\n    const clusterId = item.body?.cluster_id;\n    const articleIds = item.body?.article_ids;\n    \n    if (clusterId === null || clusterId === undefined || clusterId === '' || clusterId === 'undefined') {\n      console.warn(`⚠️ Skipping cluster with invalid cluster_id`);\n      return false;\n    }\n    \n    if (!articleIds || articleIds.length === 0) {\n      console.warn(`⚠️ Skipping cluster ${clusterId} with no articles`);\n      return false;\n    }\n    \n    return true;\n  })\n  .map(item => {\n    return {\n      cluster_id: String(item.body.cluster_id), // ALWAYS convert to string\n      article_ids: item.body.article_ids\n    };\n  });\n\nconsole.log(`✅ Processed ${clusters.length} valid clusters`);\n\n// Get article summaries from \"Process Response1\" node\nlet articleSummaries = {};\ntry {\n  const summaryItems = $('Process Response1').all();\n  \n  if (summaryItems && summaryItems.length > 0) {\n    summaryItems.forEach(item => {\n      const data = item.json.document || item.json;\n      const articleId = data.article_id;\n      const summary = data.summary;\n      \n      if (articleId && summary) {\n        articleSummaries[articleId] = summary;\n      }\n    });\n    console.log(`✅ Found ${Object.keys(articleSummaries).length} article summaries`);\n  }\n} catch (e) {\n  console.warn('⚠️ Could not get article summaries from Process Response1:', e.message);\n}\n\n// Get full article objects from \"Loop Over Batches1\"\nlet allArticles = [];\ntry {\n  const batchArticles = $('Loop Over Batches1').all();\n  \n  if (batchArticles && batchArticles.length > 0) {\n    allArticles = batchArticles.map(item => item.json);\n    console.log(`✅ Found ${allArticles.length} articles from Loop Over Batches1`);\n  }\n} catch (e) {\n  console.warn('⚠️ Could not get articles from Loop Over Batches1:', e.message);\n}\n\n// Filter to only articles that are in our clusters\nconst articleIds = [...new Set(clusters.flatMap(c => c.article_ids))];\nconst articles = allArticles\n  .filter(a => articleIds.includes(a.id))\n  .map(a => ({\n    id: a.id,\n    title: a.title || '',\n    body: a.body || '',\n    language: a.language || 'en'\n  }));\n\nconsole.log(`✅ Filtered to ${articles.length} articles that are in clusters`);\n\n// Validate final payload\nif (clusters.length === 0) {\n  throw new Error('No valid clusters to process');\n}\n\nif (articles.length === 0) {\n  console.warn('⚠️ No articles found - LLM service will need to fetch them');\n}\n\nconst requestId = `req_${Date.now()}`;\nconst payload = {\n  request_id: requestId,\n  clusters: clusters,\n  articles: articles,\n  article_summaries: articleSummaries\n};\n\nconsole.log('\\n' + '='.repeat(60));\nconsole.log('📊 PAYLOAD SUMMARY');\nconsole.log('='.repeat(60));\nconsole.log(`Request ID: ${requestId}`);\nconsole.log(`Clusters: ${clusters.length}`);\nconsole.log(`Articles: ${articles.length}`);\nconsole.log(`Article summaries: ${Object.keys(articleSummaries).length}`);\nconsole.log('='.repeat(60));\n\nreturn [{ json: payload }];"
+      },
+      "id": "7e3bf36c-65a8-4c42-9753-1075aafcc9db",
+      "name": "Prepare Cluster Summarize1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5280,
+        1664
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "t0axUOUgpQYcZyXC",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/t0axUOUgpQYcZyXC",
+          "cachedResultName": "cluster summary"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        5472,
+        1664
+      ],
+      "id": "29d19122-08ff-42e1-9925-ccb314d1fb8c",
+      "name": "Call 'cluster summary and label'",
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start Trigger": {
+      "main": [
+        [
+          {
+            "node": "Clustered Article List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call LLM": {
+      "main": [
+        [
+          {
+            "node": "Preserve Batch Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preserve Batch Data": {
+      "main": [
+        [
+          {
+            "node": "Check for Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Error": {
+      "main": [
+        [
+          {
+            "node": "Split and Retry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split to Both",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Batch Status": {
+      "main": [
+        [
+          {
+            "node": "Continue Loop1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split and Retry": {
+      "main": [
+        [
+          {
+            "node": "Max Retry Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Max Retry Check": {
+      "main": [
+        [
+          {
+            "node": "Continue Loop1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Store Retry Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Retry Batch": {
+      "main": [
+        [
+          {
+            "node": "Retry LLM Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry LLM Call": {
+      "main": [
+        [
+          {
+            "node": "Call LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build OpenSearch Query1": {
+      "main": [
+        [
+          {
+            "node": "Read Articles1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Articles1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Articles1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Articles1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Batches1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Batches1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Prepare Batch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Batch1": {
+      "main": [
+        [
+          {
+            "node": "Store LLM Batch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store LLM Batch1": {
+      "main": [
+        [
+          {
+            "node": "Call LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update LLM Batch1": {
+      "main": [
+        [
+          {
+            "node": "Save Batch Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Loop1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Batches1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clustered Article List": {
+      "main": [
+        [
+          {
+            "node": "Extract IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract IDs": {
+      "main": [
+        [
+          {
+            "node": "Build OpenSearch Query1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split to Both": {
+      "main": [
+        [
+          {
+            "node": "Process Response2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Process Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Response2": {
+      "main": [
+        [
+          {
+            "node": "KNN Search1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decide Action1": {
+      "main": [
+        [
+          {
+            "node": "Check Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KNN Search1": {
+      "main": [
+        [
+          {
+            "node": "Decide Action1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Cluster": {
+      "main": [
+        [
+          {
+            "node": "aggregate cluster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create New Cluster": {
+      "main": [
+        [
+          {
+            "node": "Save Cluster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Cluster": {
+      "main": [
+        [
+          {
+            "node": "Save Cluster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Action": {
+      "main": [
+        [
+          {
+            "node": "Merge Cluster",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create New Cluster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "aggregate cluster": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Process Response1": {
+      "main": [
+        [
+          {
+            "node": "Insert Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Summary": {
+      "main": [
+        [
+          {
+            "node": "aggregate summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "aggregate summary": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Prepare Cluster Summarize1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Cluster Summarize1": {
+      "main": [
+        [
+          {
+            "node": "Call 'cluster summary and label'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'cluster summary and label'": {
+      "main": [
+        [
+          {
+            "node": "Update LLM Batch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "4b164b32-e41c-4509-9cce-76c5e69f5e2c",
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "id": "F1V4epzdPhq4fb3Y",
+  "tags": []
+}

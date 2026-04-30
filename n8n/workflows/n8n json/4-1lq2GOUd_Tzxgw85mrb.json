@@ -1,0 +1,435 @@
+{
+  "updatedAt": "2026-02-11T10:43:50.411Z",
+  "createdAt": "2026-02-10T15:00:21.612Z",
+  "id": "4-1lq2GOUd_Tzxgw85mrb",
+  "name": "M3 - translation",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Build OS Query (replace whole jsCode)\n\nconst size = 1000;\n\n\nconst queries = [\n  { index: \"cluster_summaries\", existsField: \"summary\" },\n  { index: \"mega_summaries\", existsField: \"mega_summary\" },\n  { index: \"news_cluster_summaries\", existsField: \"summary\" },\n  { index: \"category_label\", existsField: \"category\" },\n];\n\nreturn queries.map(({ index, existsField }) => {\n  const query = {\n    bool: {\n      must: [{ exists: { field: existsField } }],\n    },\n  };\n\n  return {\n    json: {\n      _meta: { index, size, existsField },\n      os_query: {\n        size,\n        _source: [\n          \"cluster_id\",\n          \"article_ids\",\n          \"summary\",\n          \"mega_summary\",\n          \"category\",\n          \"processed_at\",\n          \"language\",\n        ],\n        query,\n        sort: [{ processed_at: { order: \"desc\" } }],\n      },\n    },\n  };\n});\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1392,
+        64
+      ],
+      "id": "1d822821-9bf6-4305-9e15-f4fce6b521b4",
+      "name": "Build OS Query"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputs = $input.all();\n\nconst out = [];\n\nfor (const it of inputs) {\n  const res = it.json ?? {};\n  const hits = res?.hits?.hits ?? [];\n\n  for (const h of hits) {\n    out.push({\n      json: {\n        os_index: h._index,\n        doc_id: h._id,\n\n\n        ...(h._source ?? {}),\n\n\n        _hit: {\n          _index: h._index,\n          _id: h._id,\n          _score: h._score ?? null,\n        },\n      },\n    });\n  }\n}\n\nreturn out;\n\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -944,
+        64
+      ],
+      "id": "450b8a4e-ae45-4260-a7ec-b36247e13bb1",
+      "name": "Explode Hits"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://opensearch:9200/' + $json._meta.index + '/_search' }}\n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.os_query) }}\n",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "37fe65eb-aaa1-4661-94cf-d616da9752db",
+      "name": "Cluster Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1168,
+        64
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 10,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -720,
+        64
+      ],
+      "id": "7a878a10-03e9-4844-9b32-50f4eee587da",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date().toISOString();\nconsole.log(\"Translation workflow finished\");\n\nreturn [{\n  json: {\n    log_data: {\n      request_id: `translation_run_${now}`.replace(/[:.]/g, \"-\"),\n      source: \"translation_workflow\",\n      endpoint: \"run_summary\",\n      http_method: \"N/A\",\n      status: \"success\",\n      created_at: now,\n      triggered_by: \"n8n\",\n      payload_excerpt: { note: \"Translation workflow completed\" }\n    }\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -496,
+        -128
+      ],
+      "id": "de174bf0-68df-43e9-83c4-794fc39a6869",
+      "name": "Finalize Run Summary"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(it => {\n  const j = it.json ?? {};\n  return {\n    json: {\n      meta: j.meta,  \n    }\n  };\n});\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        -32
+      ],
+      "id": "94624ecb-b634-4d58-9a11-500de77353ec",
+      "name": "Preserve Mata"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -48,
+        64
+      ],
+      "id": "94ca4c10-5944-4ef4-9299-74c20705b871",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "url": "https://opensearch:9200/cluster_summaries/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "405a02b5-c719-48cb-8f7c-4cdb8b0843e5",
+      "name": "Check Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1616,
+        384
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Translate Payload - 推荐结构（确保 Save 阶段有 meta）\n\nconst items = $input.all();\nconst TARGET_LANG = \"de\";\n\nconst RULES = {\n  cluster_summaries: {\n    sourceField: \"summary\",\n    targetField: \"summary_translated\",\n    targetLangField: \"summary_translated_language\",\n  },\n  mega_summaries: {\n    sourceField: \"mega_summary\",\n    targetField: \"mega_summary_translated\",\n    targetLangField: \"mega_summary_translated_language\",\n  },\n  news_cluster_summaries: {\n    sourceField: \"summary\",\n    targetField: \"summary_translated\",\n    targetLangField: \"summary_translated_language\",\n  },\n  category_label: {\n    sourceField: \"category\",\n    targetField: \"category_translated\",\n    targetLangField: \"category_translated_language\",\n  },\n};\n\nreturn items.map((it) => {\n  const j = it.json ?? {};\n  const os_index = String(j.os_index ?? j._hit?._index ?? j._index ?? \"cluster_summaries\");\n  const rule = RULES[os_index];\n  if (!rule) throw new Error(`No rule for os_index=${os_index}`);\n\n  const doc_id = String(j.doc_id ?? j._hit?._id ?? j._id ?? j.cluster_id ?? \"\").trim();\n  if (!doc_id) throw new Error(`Missing doc_id for index=${os_index}`);\n\n  const srcText = String(j[rule.sourceField] ?? \"\").trim();\n  if (!srcText) throw new Error(`Missing ${rule.sourceField} for doc_id=${doc_id} index=${os_index}`);\n\n  return {\n    json: {\n      meta: {\n        os_index,\n        doc_id,\n        rule,               \n        target_language: TARGET_LANG,\n      },\n      // endpoint 需要的输入\n      payload: {\n        cluster_summary: {\n          summary: srcText,\n          cluster_id: String(j.cluster_id ?? doc_id),\n          article_ids: Array.isArray(j.article_ids) ? j.article_ids : [],\n        },\n      },\n    },\n  };\n});\n\n\n\n\n\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -496,
+        64
+      ],
+      "id": "88191dfc-e966-4f90-8b54-841b152deeb8",
+      "name": "Prepare Translate Payload"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://llm-service:8001/translate_cluster_summary",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ payload: $json.payload }) }}\n",
+        "options": {
+          "timeout": 18000000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -272,
+        160
+      ],
+      "id": "bf67073f-e0b7-4697-abbd-cf00506f4efe",
+      "name": "Call Translation Endpoint"
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date().toISOString();\n\nfunction get(obj, path) {\n  let cur = obj;\n  for (const k of path) {\n    if (cur == null) return undefined;\n    cur = cur[k];\n  }\n  return cur;\n}\n\nreturn $input.all().map(it => {\n  const j = it.json ?? {};\n\n  const meta = j.meta ?? {};\n  const doc_id = String(meta.doc_id ?? \"\").trim();\n  const os_index = String(meta.os_index ?? \"\").trim();\n  const rule = meta.rule;\n\n  if (!doc_id || !os_index || !rule?.targetField || !rule?.targetLangField) {\n    throw new Error(`Missing meta for save. keys=${Object.keys(j).join(\",\")}`);\n  }\n\n  const translated = String(\n    get(j, [\"payload\", \"cluster_summary\", \"summary_de\"]) ??\n    get(j, [\"body\", \"payload\", \"cluster_summary\", \"summary_de\"]) ??\n    \"\"\n  ).trim();\n\n  if (!translated) {\n    throw new Error(`Missing summary_de. doc_id=${doc_id} os_index=${os_index}`);\n  }\n\n  return {\n    json: {\n      doc_id,\n      os_index,\n      update_body: {\n        doc: {\n          [rule.targetField]: translated,\n          [rule.targetLangField]: \"de\",\n          translated_processed_at: now,\n        },\n        doc_as_upsert: true,\n      },\n    },\n  };\n});\n\n\n\n\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        64
+      ],
+      "id": "e92b3a59-7485-4c31-9a89-b6028d0d225c",
+      "name": "Prepare Save Translation"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://opensearch:9200/' + $json.os_index + '/_update/' + $json.doc_id }}\n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.update_body) }}\n",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        400,
+        144
+      ],
+      "id": "f7c0c23b-ca76-4ef1-8204-a9581c696e73",
+      "name": "Save Translation to Opensearch",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1632,
+        48
+      ],
+      "id": "30a98b1e-409e-436a-83c4-be674d43823a",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1648,
+        224
+      ],
+      "id": "78ef752a-3ff3-495e-a83c-80732908853f",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "connections": {
+    "Build OS Query": {
+      "main": [
+        [
+          {
+            "node": "Cluster Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cluster Summary": {
+      "main": [
+        [
+          {
+            "node": "Explode Hits",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Explode Hits": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Finalize Run Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Translate Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Prepare Save Translation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preserve Mata": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Translate Payload": {
+      "main": [
+        [
+          {
+            "node": "Call Translation Endpoint",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Preserve Mata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Translation Endpoint": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Prepare Save Translation": {
+      "main": [
+        [
+          {
+            "node": "Save Translation to Opensearch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Translation to Opensearch": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Build OS Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Build OS Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "pinData": {},
+  "versionId": "020c83f9-4e50-4591-992a-709ec511a189",
+  "activeVersionId": "6b8d9e12-21fc-4bf7-b4bc-f41c4f8b574c",
+  "versionCounter": 38,
+  "triggerCount": 1,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-02-10T15:00:21.615Z",
+      "createdAt": "2026-02-10T15:00:21.615Z",
+      "role": "workflow:owner",
+      "workflowId": "4-1lq2GOUd_Tzxgw85mrb",
+      "projectId": "Fym8lmiogviYTzpp",
+      "project": {
+        "updatedAt": "2026-02-11T13:41:09.163Z",
+        "createdAt": "2026-02-10T14:59:11.065Z",
+        "id": "Fym8lmiogviYTzpp",
+        "name": "enise colak <eniseirem@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "f2a82ed6-b64a-4ab3-b153-a72995fa761d"
+      }
+    }
+  ]
+}

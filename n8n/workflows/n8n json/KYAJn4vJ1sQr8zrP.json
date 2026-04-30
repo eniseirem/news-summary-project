@@ -1,0 +1,231 @@
+{
+  "updatedAt": "2026-02-11T06:27:38.322Z",
+  "createdAt": "2026-02-10T15:00:24.401Z",
+  "id": "KYAJn4vJ1sQr8zrP",
+  "name": "category mapping for clusters",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.result }}",
+              "rightValue": "updated",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "bd7b874d-00e1-4fdf-a39b-3b68cba00606",
+      "name": "Check Update Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://llm-service:8001/category_label",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"request_id\": \"{{ $json._cluster_doc_id }}\",\n  \"summary\": \"{{ $json.summary.replace(/\\n/g, ' ').replace(/\"/g, '\\\\\"') }}\",\n  \"article_count\": {{ $json.article_count }},\n  \"article_ids\": {{ JSON.stringify($json.article_ids) }},\n  \"cluster_id\": {{ $json.cluster_id }}\n}",
+        "options": {}
+      },
+      "id": "965b916b-2359-4722-978d-a5a8f8765715",
+      "name": "Get Category Label",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        864,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "_cluster_doc_id",
+              "type": "any"
+            },
+            {
+              "name": "article_count",
+              "type": "any"
+            },
+            {
+              "name": "article_ids",
+              "type": "any"
+            },
+            {
+              "name": "cluster_id",
+              "type": "any"
+            },
+            {
+              "name": "summary",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "id": "1e6ac58b-0c1d-4737-b5d8-874afe062a47",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        656,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "e555004e-872a-4919-802a-4743926b615c",
+      "name": "Collect Success Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1520,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/clusters/_update/{{ $('Start').item.json._cluster_doc_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"doc\": {\n    \"category\": \"{{ $json.category }}\",\n    \"updated_at\": \"{{ new Date().toISOString() }}\"\n  }\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "ba78e992-6c32-4e81-8400-bb75738f22e5",
+      "name": "Update Cluster Category1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1088,
+        144
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Check Update Success": {
+      "main": [
+        []
+      ]
+    },
+    "Get Category Label": {
+      "main": [
+        [
+          {
+            "node": "Update Cluster Category1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get Category Label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Cluster Category1": {
+      "main": [
+        [
+          {
+            "node": "Check Update Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "pinData": {},
+  "versionId": "d1a8bff0-ca07-491c-8051-79ab39eed2a0",
+  "activeVersionId": "d1a8bff0-ca07-491c-8051-79ab39eed2a0",
+  "versionCounter": 16,
+  "triggerCount": 0,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-02-10T15:00:24.405Z",
+      "createdAt": "2026-02-10T15:00:24.405Z",
+      "role": "workflow:owner",
+      "workflowId": "KYAJn4vJ1sQr8zrP",
+      "projectId": "Fym8lmiogviYTzpp",
+      "project": {
+        "updatedAt": "2026-02-11T13:41:09.163Z",
+        "createdAt": "2026-02-10T14:59:11.065Z",
+        "id": "Fym8lmiogviYTzpp",
+        "name": "enise colak <eniseirem@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "f2a82ed6-b64a-4ab3-b153-a72995fa761d"
+      }
+    }
+  ]
+}

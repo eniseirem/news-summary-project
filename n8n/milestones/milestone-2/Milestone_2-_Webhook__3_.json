@@ -1,0 +1,669 @@
+{
+  "name": "Milestone 2- Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cluster-summary",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "af6d50a2-28c1-4009-9e05-506d6b530f32",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1424,
+        1184
+      ],
+      "webhookId": "cluster-summary-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json.body || {};\nconst filters = {\n  time_window: body.time_window || null,\n  category: body.category || null,\n  subcategory: body.subcategory || null,\n  keywords: body.keywords || [],\n  size: body.size || 1000,\n  use_cluster_filter: body.use_cluster_filter !== false\n};\n\nconst options = {\n  style_version: body.style_version || \"Neutral\",\n  sentiment_target: body.sentiment_target || \"None\"\n};\n\n// Build query for news_cluster_summaries to get article_ids\nconst cluster_must = [];\n\n// UPDATED: Support new time windows (6h, 12h, 24h, 3d, 7d)\nif (filters.time_window) {\n  const now = new Date();\n  let gte;\n  switch(filters.time_window.toLowerCase()) {\n    case 'last_6_hours':\n    case 'last_6h':\n      gte = new Date(now.getTime() - 6*60*60*1000);\n      break;\n    case 'last_12_hours':\n    case 'last_12h':\n      gte = new Date(now.getTime() - 12*60*60*1000);\n      break;\n    case 'last_24_hours':\n    case 'last_24h':\n      gte = new Date(now.getTime() - 24*60*60*1000);\n      break;\n    case 'last_3_days':\n    case 'last_3d':\n      gte = new Date(now.getTime() - 3*24*60*60*1000);\n      break;\n    case 'last_7_days':\n    case 'last_7d':\n      gte = new Date(now.getTime() - 7*24*60*60*1000);\n      break;\n    case 'last_30_days':\n    case 'last_30d':\n      gte = new Date(now.getTime() - 30*24*60*60*1000);\n      break;\n  }\n  if (gte) {\n    cluster_must.push({ range: { processed_at: { gte: gte.toISOString() }}});\n    console.log(`⏰ Time filter: ${filters.time_window} (from ${gte.toISOString()})`);\n  }\n}\n\n// FIXED: Use term query with .keyword for exact match\nif (filters.category) {\n  cluster_must.push({ term: { \"category.keyword\": filters.category }});\n  console.log(`📂 Category filter: ${filters.category}`);\n}\n\n// FIXED: Use term query with .keyword for exact match\nif (filters.subcategory) {\n  cluster_must.push({ term: { \"subcategory.keyword\": filters.subcategory }});\n  console.log(`📁 Subcategory filter: ${filters.subcategory}`);\n}\n\n// UPDATED: Keyword filtering on cluster summaries\nif (filters.keywords && filters.keywords.length > 0) {\n  cluster_must.push({ \n    bool: { \n      should: filters.keywords.map(k => ({ \n        multi_match: { \n          query: k, \n          fields: ['topic_summary', 'mega_summary', 'category', 'subcategory', 'topic_label'],\n          operator: 'or'\n        }\n      })), \n      minimum_should_match: 1 \n    }\n  });\n  console.log(`🔍 Keyword filter: ${filters.keywords.join(', ')}`);\n}\n\nconst cluster_query = cluster_must.length > 0 \n  ? { bool: { must: cluster_must }} \n  : { match_all: {} };\n\nconst shouldUseClusterFilter = filters.use_cluster_filter && (filters.category || filters.subcategory || filters.time_window || (filters.keywords && filters.keywords.length > 0));\n\nconsole.log(`🔍 Use cluster filter: ${shouldUseClusterFilter}`);\nconsole.log(`📊 Total filters applied: ${cluster_must.length}`);\n\nreturn [{\n  json: {\n    filters,\n    options,\n    use_cluster_filter: shouldUseClusterFilter,\n    cluster_query: {\n      size: 1000,\n      _source: ['articles.id', 'category', 'subcategory', 'cluster_id', 'request_id', 'topic_summary'],\n      query: cluster_query,\n      sort: [{ processed_at: { order: 'desc' }}]\n    }\n  }\n}];"
+      },
+      "id": "ffba5554-02f8-434b-ae15-b24b3385dafc",
+      "name": "Parse Webhook Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1200,
+        1184
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://opensearch:9200/news_cluster_summaries/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.cluster_query) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "23e6af18-7f2a-4688-88d8-a61d2c287691",
+      "name": "Get Article IDs from Clusters",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -976,
+        1184
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const parseData = $('Parse Webhook Request').first().json;\nconst useClusterFilter = parseData.use_cluster_filter;\n\nif (!useClusterFilter) {\n  console.log('⚠️ Cluster filter disabled, will use direct article filtering');\n  return [{ json: { article_ids: null, filters: parseData.filters, options: parseData.options }}];\n}\n\nconst hits = $json.hits?.hits ?? [];\nconst allArticleIds = new Set();\nconst clusterInfo = [];\n\nhits.forEach(hit => {\n  const source = hit._source || {};\n  const articles = source.articles || [];\n  \n  clusterInfo.push({\n    cluster_id: source.cluster_id,\n    request_id: source.request_id,\n    category: source.category,\n    subcategory: source.subcategory,\n    article_count: articles.length\n  });\n  \n  articles.forEach(id => {\n    if (id) allArticleIds.add(id);\n  });\n});\n\nconst uniqueIds = Array.from(allArticleIds);\nconsole.log(`📋 Found ${uniqueIds.length} unique article IDs from ${hits.length} clusters`);\nconsole.log(`📊 Cluster info: ${JSON.stringify(clusterInfo.slice(0, 3))}`);\n\nif (uniqueIds.length === 0) {\n  console.log('⚠️ No article IDs found in clusters, will use direct article filtering');\n  return [{\n    json: {\n      article_ids: null,\n      filters: parseData.filters,\n      options: parseData.options,\n      cluster_count: 0\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    article_ids: uniqueIds,\n    filters: parseData.filters,\n    options: parseData.options,\n    cluster_count: hits.length,\n    cluster_info: clusterInfo\n  }\n}];"
+      },
+      "id": "ba89ac2c-1bc2-40c5-ba59-a4e149bb0b55",
+      "name": "Extract Article IDs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        1184
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://opensearch:9200/articles/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "= {{ JSON.stringify($json.opensearch_query) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "0ec777c9-297d-4bae-b5e6-fbce9437795b",
+      "name": "Read Articles",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -304,
+        1184
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const hits = $json.hits?.hits ?? [];\n\n// Check if this was a \"no clusters found\" case\nconst buildQueryData = $('Build Articles Query').first().json;\nif (buildQueryData?.no_clusters_found) {\n  console.log('📭 No clusters found - throwing error for empty result');\n  throw new Error('NO_CLUSTERS_FOUND: No clusters matched your search criteria. Try different filters or categories.');\n}\n\nif (hits.length === 0) {\n  console.log('⚠️ No articles found matching the query - throwing error');\n  throw new Error('NO_ARTICLES_FOUND: No articles found for the selected clusters. The articles may have been removed from the index.');\n}\n\nconst articles = hits.map(h => h._source).filter(a => a && a.body);\n\nif (articles.length === 0) {\n  console.log('⚠️ No valid articles (all missing body) - throwing error');\n  throw new Error('NO_VALID_ARTICLES: Articles found but all are missing content.');\n}\n\n// UPDATED: More aggressive body truncation for large articles\nconst MAX_BODY_LENGTH = 5000;  // Reduced from 10000 to 5000 characters\nconst MIN_BODY_LENGTH = 100;   // Minimum length to keep\n\nconst processed = articles.map((a, index) => {\n  const originalLength = a.body ? a.body.length : 0;\n  \n  // Skip articles with very short or empty bodies\n  if (originalLength < MIN_BODY_LENGTH) {\n    console.log(`⚠️ Article ${index + 1} has very short body (${originalLength} chars) - keeping as is`);\n    return { ...a, body_truncated: false, original_body_length: originalLength };\n  }\n  \n  // Truncate long articles\n  if (originalLength > MAX_BODY_LENGTH) {\n    const truncatedBody = a.body.substring(0, MAX_BODY_LENGTH);\n    \n    // Try to cut at a sentence boundary for cleaner truncation\n    const lastPeriod = truncatedBody.lastIndexOf('.');\n    const lastExclamation = truncatedBody.lastIndexOf('!');\n    const lastQuestion = truncatedBody.lastIndexOf('?');\n    const lastSentenceEnd = Math.max(lastPeriod, lastExclamation, lastQuestion);\n    \n    // If we found a sentence boundary in the last 20% of the truncated text, cut there\n    const cutoffPoint = MAX_BODY_LENGTH * 0.8;\n    const finalBody = (lastSentenceEnd > cutoffPoint) \n      ? truncatedBody.substring(0, lastSentenceEnd + 1)\n      : truncatedBody;\n    \n    console.log(`✂️ Article ${index + 1} truncated: ${originalLength} → ${finalBody.length} chars (${((finalBody.length / originalLength) * 100).toFixed(1)}%)`);\n    \n    return { \n      ...a, \n      body: finalBody,\n      body_truncated: true, \n      original_body_length: originalLength,\n      truncation_ratio: finalBody.length / originalLength\n    };\n  }\n  \n  // Article is within acceptable length\n  return { \n    ...a, \n    body_truncated: false, \n    original_body_length: originalLength \n  };\n});\n\nconst totalOriginalChars = processed.reduce((sum, a) => sum + (a.original_body_length || 0), 0);\nconst totalProcessedChars = processed.reduce((sum, a) => sum + (a.body ? a.body.length : 0), 0);\nconst truncatedCount = processed.filter(a => a.body_truncated).length;\n\nconsole.log(`📊 Processing ${processed.length} articles`);\nconsole.log(`✂️ Truncated ${truncatedCount} articles`);\nconsole.log(`📏 Total text: ${totalOriginalChars.toLocaleString()} → ${totalProcessedChars.toLocaleString()} chars (${((totalProcessedChars / totalOriginalChars) * 100).toFixed(1)}%)`);\n\nreturn processed.map(a => ({ json: a }));"
+      },
+      "id": "fd005953-426d-4fab-829c-63e266bea2f0",
+      "name": "Prepare Articles",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        1184
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "batchSize": 15,
+        "options": {}
+      },
+      "id": "78ed5ef2-4857-4ae4-8058-71651585f117",
+      "name": "Loop Over Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        144,
+        1360
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().map(i => i.json);\nconst pad2 = n => String(n).padStart(2, '0');\nconst pad3 = n => String(n).padStart(3, '0');\nconst now = new Date();\nconst datePart = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}_${pad2(now.getHours())}${pad2(now.getMinutes())}`;\nconst requestId = `n8n_webhook_${datePart}_${pad3($runIndex+1)}`;\n\n// Get filter data from earlier node\nconst filterData = $('Parse Webhook Request').first().json;\nconst filters = filterData?.filters || {};\nconst options = filterData?.options || {};\n\n// Get cluster info from Extract Article IDs node\nconst extractData = $('Extract Article IDs').first().json;\nconst clusterInfo = extractData?.cluster_info || [];\n\nconst articleIds = items.map(a => a.id).filter(Boolean);\nconst articles = items.map(a => ({\n  id: a.id || \"\",\n  url: \"\",\n  title: a.title || \"\",\n  body: a.body || \"\",\n  language: a.language || \"en\",\n  source: a.source || \"\",\n  published_at: a.published_at || new Date().toISOString(),\n  category: \"general\"\n}));\n\nif (articles.length > 100) throw new Error(`Too many: ${articles.length}`);\nif (articles.length === 0) throw new Error('No articles');\n\nconsole.log(`✅ WEBHOOK BATCH ${$runIndex + 1}: ${articles.length} articles from ${extractData?.cluster_count || 0} clusters`);\n\nreturn [{\n  json: {\n    llm_payload: {\n      request_id: requestId,\n      filters_used: filters,\n      articles: articles\n    },\n    llm_batch_record: {\n      request_id: requestId,\n      filters_used: filters,\n      options: options,\n      article_ids: articleIds,\n      article_count: articles.length,\n      source_cluster_count: extractData?.cluster_count || 0,\n      source_clusters: clusterInfo,\n      status: \"pending\",\n      ingested_at: new Date().toISOString(),\n      trigger_type: \"webhook\",\n      llm_endpoint: \"/cluster_summary\",\n      output_index: \"batch_summaries\"\n    }\n  }\n}];"
+      },
+      "id": "476c3b7b-c570-4750-8cfb-194cbe665067",
+      "name": "Prepare Batch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        1360
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://opensearch:9200/llm_batch/_doc/{{ $json.llm_batch_record.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.llm_batch_record) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "a2a249a7-2fec-4001-8b9e-a8dfbde4f1d8",
+      "name": "Store LLM Batch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        1456
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// FORMAT BATCH SUMMARIES - FINAL SOLUTION\n// This completely ignores LLM article responses and uses original articles\n\nconst resp = $json;\nconst request_id = resp.request_id || \"\";\nconst clusters = resp.clusters || [];\n\n// Get the ORIGINAL articles that were sent to LLM\nconst prepareBatchData = $('Prepare Batch').first().json;\nconst originalArticles = prepareBatchData?.llm_payload?.articles || [];\n\nconsole.log(`\\n${'='.repeat(80)}`);\nconsole.log(`📋 FORMAT BATCH SUMMARIES`);\nconsole.log(`${'='.repeat(80)}`);\nconsole.log(`Request ID: ${request_id}`);\nconsole.log(`Clusters from LLM: ${clusters.length}`);\nconsole.log(`Original articles from Prepare Batch: ${originalArticles.length}`);\n\n// Strategy: Evenly distribute the original articles across all clusters\n// This way we keep the LLM's summaries but use the correct articles\nconst articlesPerCluster = Math.ceil(originalArticles.length / clusters.length);\n\nconst enrichedClusters = clusters.map((cluster, idx) => {\n  // Calculate which original articles belong to this cluster\n  const startIdx = idx * articlesPerCluster;\n  const endIdx = Math.min(startIdx + articlesPerCluster, originalArticles.length);\n  const clusterArticles = originalArticles.slice(startIdx, endIdx);\n  \n  console.log(`Cluster ${cluster.cluster_id}: ${clusterArticles.length} articles (${startIdx} to ${endIdx-1})`);\n  \n  return {\n    cluster_id: cluster.cluster_id,\n    category: cluster.category || \"Events\",\n    subcategory: cluster.subcategory || \"\",\n    topic_summary: cluster.topic_summary || \"\",\n    articles: clusterArticles,  // ← Use ORIGINAL articles, not LLM's\n    article_count: clusterArticles.length,\n    keywords: cluster.keywords || { lda: [], tfidf: [] }\n  };\n});\n\n// IMPORTANT: Use only the FIRST cluster's summary to avoid duplication\n// All clusters have the same summary anyway\nconst final_summary = enrichedClusters.length > 0 && enrichedClusters[0].topic_summary\n  ? enrichedClusters[0].topic_summary\n  : \"No summary available\";\n\nconsole.log(`Final summary length: ${final_summary.length} chars`);\nconsole.log(`Total clusters: ${enrichedClusters.length}`);\nconsole.log(`Total articles distributed: ${enrichedClusters.reduce((sum, c) => sum + c.article_count, 0)}`);\nconsole.log(`${'='.repeat(80)}\\n`);\n\nreturn [{\n  json: {\n    _source: {\n      request_id: request_id,\n      summary_type: \"cluster_summary\",\n      cluster_count: enrichedClusters.length,\n      clusters: enrichedClusters,\n      final_summary: final_summary,\n      final_summary_keyword: \"cluster_summary\",\n      ingested_at: new Date().toISOString()\n    },\n    processing_time: resp.processing_time || 0\n  }\n}];"
+      },
+      "id": "10c4ab86-c5ff-4af0-9c53-e68c667f839e",
+      "name": "Format batch_summaries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://opensearch:9200/batch_summaries/_doc/{{ $json._source.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json._source) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "6239327b-4b04-4cbd-ad6d-b515a67b05c8",
+      "name": "Store batch_summaries",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        1264
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const batchData = $('Prepare Batch').first().json.llm_batch_record;\nconst llmResponse = $('Call cluster_summary').first().json;\n\nreturn [{\n  json: {\n    request_id: batchData.request_id,\n    update: {\n      ...batchData,\n      status: \"completed\",\n      processed_at: new Date().toISOString(),\n      processing_time: llmResponse.processing_time || 0,\n      cluster_count: llmResponse.cluster_count || 0,\n      clusters_generated: llmResponse.clusters?.length || 0\n    }\n  }\n}];"
+      },
+      "id": "5ec8c5c2-ca1a-46d7-af8b-edd45ad3e223",
+      "name": "Update LLM Batch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        1264
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://opensearch:9200/llm_batch/_doc/{{ $json.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ doc: $json.update }) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "79cc2a82-093d-4047-87a9-409e19495386",
+      "name": "Save LLM Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1488,
+        1264
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { success: true, batches_processed: $runIndex }}];"
+      },
+      "id": "f11f05bf-423f-4c98-8ee2-ea262273c169",
+      "name": "Complete",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        1072
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const allSummaries = [];\nconst loopResults = $('Format batch_summaries').all();\n\nloopResults.forEach(item => {\n  const summary = item.json._source;\n  allSummaries.push({\n    request_id: summary.request_id,\n    summary: summary.final_summary,\n    cluster_count: summary.cluster_count,\n    clusters: summary.clusters,\n    ingested_at: summary.ingested_at\n  });\n});\n\n// FIXED: Don't duplicate - just use the first summary (they're all the same topic)\n// The final_summary already contains all cluster summaries joined together\nconst combinedSummary = allSummaries.length > 0 \n  ? allSummaries[0].summary \n  : \"\";\n\n// Get all clusters and deduplicate by cluster_id\nconst allClustersRaw = allSummaries.flatMap(s => s.clusters || []);\n\n// FIXED: Deduplicate clusters by cluster_id\nconst clusterMap = new Map();\nallClustersRaw.forEach(cluster => {\n  const key = `${cluster.cluster_id}`;\n  if (!clusterMap.has(key)) {\n    clusterMap.set(key, cluster);\n  }\n});\nconst allClusters = Array.from(clusterMap.values());\n\nconsole.log(`📊 Total clusters after deduplication: ${allClusters.length}`);\nconsole.log(`📊 Total batches processed: ${allSummaries.length}`);\n\n// Count total unique articles across all clusters\nlet totalArticles = 0;\nconst articleIdSet = new Set();\n\nallClusters.forEach(cluster => {\n  const articles = cluster.articles || [];\n  articles.forEach(article => {\n    // Use title + body as unique identifier (since IDs might be missing)\n    const articleKey = `${article.title}_${article.source}_${article.published_at}`;\n    articleIdSet.add(articleKey);\n  });\n  totalArticles += articles.length;\n});\n\nconsole.log(`📊 Total article references: ${totalArticles}`);\nconsole.log(`📊 Unique articles: ${articleIdSet.size}`);\n\n// Get original filters\nconst parseData = $('Parse Webhook Request').first().json;\nconst extractData = $('Extract Article IDs').first().json;\nconst filters = parseData?.filters || {};\n\nreturn [{\n  json: {\n    success: true,\n    batches_processed: allSummaries.length,\n    filters_applied: filters,\n    source_clusters: extractData?.cluster_count || 0,\n    cluster_info: extractData?.cluster_info || [],\n    total_article_clusters: allClusters.length,\n    total_unique_articles: articleIdSet.size,\n    final_summary: combinedSummary,\n    individual_summaries: allSummaries,\n    all_clusters: allClusters,\n    processed_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "b1218498-695e-42c9-802b-a0ba302c2720",
+      "name": "Collect Summaries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        1072
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "a741a379-0a81-4c3e-b4b7-07737478683f",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        992
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "2ab03009-e306-4d9e-801b-b8cecbfa42eb",
+      "name": "Continue Loop1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        1424
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\nconst articleIds = data.article_ids;\nconst filters = data.filters || {};\n\n// If no article IDs and cluster filter was used, return error\nif (filters.use_cluster_filter && (!articleIds || articleIds.length === 0)) {\n  console.log('⚠️ No article IDs from clusters - no matching clusters found');\n  \n  // Return a query that will find nothing (cleaner than throwing error)\n  const emptyQuery = {\n    size: 0,\n    _source: ['id'],\n    query: {\n      bool: {\n        must: [\n          { term: { \"id.keyword\": \"NO_CLUSTERS_FOUND\" }}\n        ]\n      }\n    }\n  };\n  \n  return [{\n    json: {\n      opensearch_query: emptyQuery,\n      filters: filters,\n      options: data.options,\n      no_clusters_found: true\n    }\n  }];\n}\n\nlet query;\nif (articleIds && articleIds.length > 0) {\n  console.log(`🎯 Fetching ${articleIds.length} articles by ID from clusters`);\n  \n  // Build base query with article IDs\n  const must = [\n    { terms: { \"id.keyword\": articleIds }}\n  ];\n  \n  // UPDATED: Add keyword filtering on articles even when using cluster IDs\n  // This ensures articles match both cluster criteria AND keyword criteria\n  if (filters.keywords && filters.keywords.length > 0) {\n    console.log(`🔍 Adding keyword filter to article query: ${filters.keywords.join(', ')}`);\n    must.push({ \n      bool: { \n        should: filters.keywords.map(k => ({ \n          multi_match: { \n            query: k, \n            fields: ['title^2', 'body'],\n            operator: 'or'\n          }\n        })), \n        minimum_should_match: 1 \n      }\n    });\n  }\n  \n  query = { bool: { must } };\n  \n} else {\n  console.log('🔍 Using direct article filtering (no cluster IDs)');\n  const must = [];\n  \n  // UPDATED: Support new time windows\n  if (filters.time_window) {\n    const now = new Date();\n    let gte;\n    switch(filters.time_window.toLowerCase()) {\n      case 'last_6_hours':\n      case 'last_6h':\n        gte = new Date(now.getTime() - 6*60*60*1000);\n        break;\n      case 'last_12_hours':\n      case 'last_12h':\n        gte = new Date(now.getTime() - 12*60*60*1000);\n        break;\n      case 'last_24_hours':\n      case 'last_24h':\n        gte = new Date(now.getTime() - 24*60*60*1000);\n        break;\n      case 'last_3_days':\n      case 'last_3d':\n        gte = new Date(now.getTime() - 3*24*60*60*1000);\n        break;\n      case 'last_7_days':\n      case 'last_7d':\n        gte = new Date(now.getTime() - 7*24*60*60*1000);\n        break;\n      case 'last_30_days':\n      case 'last_30d':\n        gte = new Date(now.getTime() - 30*24*60*60*1000);\n        break;\n    }\n    if (gte) {\n      must.push({ range: { published_at: { gte: gte.toISOString() }}});\n      console.log(`⏰ Article time filter: ${filters.time_window} (from ${gte.toISOString()})`);\n    }\n  }\n  \n  // UPDATED: Keyword filtering with better field weighting\n  if (filters.keywords && filters.keywords.length > 0) {\n    console.log(`🔍 Article keyword filter: ${filters.keywords.join(', ')}`);\n    must.push({ \n      bool: { \n        should: filters.keywords.map(k => ({ \n          multi_match: { \n            query: k, \n            fields: ['title^3', 'body^1'],  // Title has 3x weight\n            operator: 'or',\n            type: 'best_fields'\n          }\n        })), \n        minimum_should_match: 1 \n      }\n    });\n  }\n  \n  query = must.length > 0 ? { bool: { must }} : { match_all: {} };\n}\n\nconst opensearch_query = {\n  size: filters.size || 1000,\n  _source: ['id', 'title', 'body', 'source', 'published_at', 'language'],\n  query: query,\n  sort: [{ published_at: { order: 'desc' }}]\n};\n\nconsole.log(`📊 Article query built with ${Object.keys(query).length > 0 ? 'filters' : 'match_all'}`);\n\nreturn [{\n  json: {\n    opensearch_query: opensearch_query,\n    filters: filters,\n    options: data.options,\n    no_clusters_found: false\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -528,
+        1184
+      ],
+      "id": "379f2ac9-776e-4954-b949-4401f4448848",
+      "name": "Build Articles Query"
+    },
+    {
+      "parameters": {
+        "jsCode": "// This runs when Prepare Articles errors\nconst error = $json.error || {};\nconst errorMessage = error.message || \"Unknown error\";\n\nconsole.log(`❌ Error caught: ${errorMessage}`);\n\n// Parse the error type\nlet userMessage = \"No results found\";\nlet errorType = \"UNKNOWN\";\n\nif (errorMessage.includes('NO_CLUSTERS_FOUND')) {\n  errorType = \"NO_CLUSTERS_FOUND\";\n  userMessage = \"No clusters matched your search criteria. Try different filters or categories.\";\n} else if (errorMessage.includes('NO_ARTICLES_FOUND')) {\n  errorType = \"NO_ARTICLES_FOUND\";\n  userMessage = \"No articles found for the selected clusters. The articles may have been removed.\";\n} else if (errorMessage.includes('NO_VALID_ARTICLES')) {\n  errorType = \"NO_VALID_ARTICLES\";\n  userMessage = \"Articles found but all are missing content.\";\n}\n\nconst parseData = $('Parse Webhook Request').first().json;\nconst filters = parseData?.filters || {};\n\nreturn [{\n  json: {\n    success: false,\n    error_type: errorType,\n    message: userMessage,\n    batches_processed: 0,\n    filters_applied: filters,\n    source_clusters: 0,\n    final_summary: \"\",\n    processed_at: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        928
+      ],
+      "id": "578598bb-b8cc-41d1-acce-6bc09efdc425",
+      "name": "Handle Empty Results"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://opensearch:9200/articles/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"size\": 5,\n  \"_source\": [\n    \"id\",\n    \"title\",\n    \"body\",\n    \"source\",\n    \"published_at\",\n    \"language\"\n  ],\n  \"query\": {\n    \"match_all\": {}\n  },\n  \"sort\": [\n    {\n      \"published_at\": {\n        \"order\": \"desc\"\n      }\n    }\n  ]\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "9c124146-4349-46bc-a3cd-ab518e3b9ec8",
+      "name": "TEST Read Articles1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -608,
+        3328
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "diYej3c96eLm9B4D",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const hits = $json.hits?.hits ?? [];\n\n// Check if this was a \"no clusters found\" case\n\n\nif (hits.length === 0) {\n  console.log('⚠️ No articles found matching the query - throwing error');\n  throw new Error('NO_ARTICLES_FOUND: No articles found for the selected clusters. The articles may have been removed from the index.');\n}\n\nconst articles = hits.map(h => h._source).filter(a => a && a.body);\n\nif (articles.length === 0) {\n  console.log('⚠️ No valid articles (all missing body) - throwing error');\n  throw new Error('NO_VALID_ARTICLES: Articles found but all are missing content.');\n}\n\nconst MAX_BODY_LENGTH = 10000;\nconst processed = articles.map(a => {\n  if (a.body && a.body.length > MAX_BODY_LENGTH) {\n    return { ...a, body: a.body.substring(0, MAX_BODY_LENGTH), body_truncated: true };\n  }\n  return { ...a, body_truncated: false };\n});\n\nconsole.log(`📊 Processing ${processed.length} articles`);\nreturn processed.map(a => ({ json: a }));"
+      },
+      "id": "d83564c0-e1e6-4697-b3be-b1f73dfa0370",
+      "name": "TEST Prepare Articles1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        3328
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://llm-service:8001/cluster_summary",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "articles",
+              "value": "={{ $json.llm_payload.articles }}"
+            },
+            {
+              "name": "filters_used",
+              "value": "={{ $json.llm_payload.filters_used }}"
+            },
+            {
+              "name": "request_id",
+              "value": "={{ $json.llm_payload.request_id }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 900000
+        }
+      },
+      "id": "3784f440-b8fa-4a97-b93c-7e9ad3a18865",
+      "name": "Call cluster_summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        1264
+      ],
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Webhook Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Webhook Request": {
+      "main": [
+        [
+          {
+            "node": "Get Article IDs from Clusters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Article IDs from Clusters": {
+      "main": [
+        [
+          {
+            "node": "Extract Article IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Article IDs": {
+      "main": [
+        [
+          {
+            "node": "Build Articles Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Articles": {
+      "main": [
+        [
+          {
+            "node": "Prepare Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Articles": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Batches",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Empty Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Batches": {
+      "main": [
+        [
+          {
+            "node": "Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Batch": {
+      "main": [
+        [
+          {
+            "node": "Store LLM Batch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Call cluster_summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store LLM Batch": {
+      "main": [
+        []
+      ]
+    },
+    "Format batch_summaries": {
+      "main": [
+        [
+          {
+            "node": "Store batch_summaries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store batch_summaries": {
+      "main": [
+        [
+          {
+            "node": "Update LLM Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update LLM Batch": {
+      "main": [
+        [
+          {
+            "node": "Save LLM Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save LLM Status": {
+      "main": [
+        [
+          {
+            "node": "Continue Loop1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complete": {
+      "main": [
+        [
+          {
+            "node": "Collect Summaries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Summaries": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Loop1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Articles Query": {
+      "main": [
+        [
+          {
+            "node": "Read Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Empty Results": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TEST Read Articles1": {
+      "main": [
+        [
+          {
+            "node": "TEST Prepare Articles1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TEST Prepare Articles1": {
+      "main": [
+        []
+      ]
+    },
+    "Call cluster_summary": {
+      "main": [
+        [
+          {
+            "node": "Format batch_summaries",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "f271142c-f25c-4707-8f6d-a20d14827705",
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "id": "7PCQD8l17QBqNg0mmrtRP",
+  "tags": []
+}

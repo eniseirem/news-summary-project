@@ -1,0 +1,664 @@
+{
+  "name": "NewsCrawler RSS v2",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        608,
+        416
+      ],
+      "id": "5e000fec-78d2-49f1-a6e9-538b6f9522bd",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get both the HTML and the original source info\nconst items = $input.all();\nconst html = items[0].json.data || '';\n// Access the source info from the previous node (Route by Type)\nconst sourceInfo = $node[\"Route by Type\"].json;\n\n// Make sure we have the baseUrl\nconst baseUrl = sourceInfo.baseUrl || 'https://www.tagesspiegel.de';\nconst sourceName = sourceInfo.name || 'Tagesspiegel';\nconst language = sourceInfo.language || 'de';\nconst retrievedAt = sourceInfo.retrievedAt || new Date().toISOString().split('T')[0];\n\n// Parse HTML to extract article links\nconst articlePattern = /<article[^>]*>([\\s\\S]*?)<\\/article>/gi;\nconst linkPattern = /href=\"([^\"]+)\"/gi;\n\nconst articles = [];\nconst uniqueLinks = new Set();\n\nlet articleMatch;\nwhile ((articleMatch = articlePattern.exec(html)) !== null) {\n  const articleHtml = articleMatch[1];\n  let linkMatch;\n  while ((linkMatch = linkPattern.exec(articleHtml)) !== null) {\n    const href = linkMatch[1];\n    // Only process relative links that start with /\n    if (href && href.startsWith('/') && !href.startsWith('//') && !uniqueLinks.has(href)) {\n      uniqueLinks.add(href);\n      articles.push({\n        json: {\n          url: baseUrl + href,\n          source: sourceName,\n          language: language,\n          retrievedAt: retrievedAt,\n          baseUrl: baseUrl\n        }\n      });\n    }\n  }\n}\n\n// Return first 20 articles\nreturn articles.slice(0, 20);"
+      },
+      "id": "0f51df30-c1b4-45d2-93ce-11d0569ef8b2",
+      "name": "Extract Tagesspiegel Links1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.url}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "7ed26a97-fbbe-490c-a266-c201b4159d32",
+      "name": "Filter Valid URLs ",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.url}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "b1563cb4-3d64-4c3b-87ee-cc11bfef9625",
+      "name": "Filter Valid URLs 4",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.url}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "70e7a8f4-c696-452b-9815-68420ba1dc6e",
+      "name": "Filter Valid URLs 5",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        592
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Configuration for all news sources\nconst sources = [\n  {\n    name: 'Tagesspiegel',\n    baseUrl: 'https://www.tagesspiegel.de',\n    language: 'de',\n    type: 'scraping'\n  },\n  {\n    name: 'Bild',\n    rssUrl: 'https://www.bild.de/feed/alles.xml',\n    language: 'de',\n    type: 'rss_scraping'\n  },\n  {\n    name: 'BBC',\n    rssUrl: 'https://feeds.bbci.co.uk/news/world/rss.xml',\n    language: 'en',\n    type: 'rss'\n  }\n];\n\nreturn sources.map(config => ({\n  json: {\n    ...config,\n    retrievedAt: new Date().toISOString().split('T')[0]\n  }\n}));"
+      },
+      "id": "e9eab59d-b29b-4de7-b5ee-69ae3be543fb",
+      "name": "Configure Sources",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json.type}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "scraping"
+            },
+            {
+              "value2": "rss",
+              "output": 1
+            },
+            {
+              "value2": "rss_scraping",
+              "output": 2
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "id": "6024d2cc-73ec-4929-9d01-6e018494d5e0",
+      "name": "Route by Type",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.baseUrl}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "b0730fd9-ca4f-402b-8bb8-4f9c349529cc",
+      "name": "Fetch Tagesspiegel Homepage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1296,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "id": "829581ce-ad24-4eac-b456-763d4b63c49e",
+      "name": "Fetch Article",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1888,
+        192
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const html = $input.item.json.data || '';\nconst meta = $input.item.json;\n\n// If there's an error, skip this item\nif ($input.item.json.error || !html) {\n  return {\n    json: {\n      ...meta,\n      skip: true\n    }\n  };\n}\n\n// Check for paywall\nif (html.includes('id=\"paywall\"')) {\n  return {\n    json: {\n      ...meta,\n      skip: true\n    }\n  };\n}\n\nlet title = '';\nlet content = '';\nlet publishedAt = null;\n\n// Extract title\nconst titleMatch = html.match(/<h1[^>]*>([^<]+)<\\/h1>/);\nif (titleMatch) {\n  title = titleMatch[1].trim();\n}\n\n// Extract publish date\nconst timeMatch = html.match(/<time[^>]*datetime=\"([^\"]+)\"/);\nif (timeMatch) {\n  publishedAt = timeMatch[1].split('T')[0];\n}\n\n// Extract paragraphs\nconst paragraphPattern = /<p[^>]*>([^<]+)<\\/p>/gi;\nconst paragraphs = [];\nlet match;\n\nwhile ((match = paragraphPattern.exec(html)) !== null) {\n  const text = match[1].trim();\n  if (text.length > 10) {\n    paragraphs.push(text);\n  }\n}\n\n// Skip first and last 2 paragraphs as in original code\nif (paragraphs.length > 3) {\n  content = paragraphs.slice(1, -2).join(' ');\n} else {\n  content = paragraphs.join(' ');\n}\n\nconst id = `${meta.source}-${publishedAt || meta.retrievedAt}-${Math.floor(Math.random() * 1000)}`;\n\nreturn {\n  json: {\n    id: id,\n    source: meta.source,\n    url: meta.url,\n    title: title,\n    body: content,\n    language: meta.language,\n    published_at: publishedAt,\n    retrieved_at: meta.retrievedAt,\n    skip: false\n  }\n};"
+      },
+      "id": "a9ea2616-740d-4976-9f0e-8adc96dab4c2",
+      "name": "Parse Tagesspiegel",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2096,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.rssUrl}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "83234c48-d774-4fa6-ae89-5ff401e9a3a4",
+      "name": "Fetch RSS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1296,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst xml = items[0].json.data || '';\n// Get source info from the Route node\nconst sourceInfo = $node[\"Route by Type\"].json;\n\nconst itemPattern = /<item>([\\s\\S]*?)<\\/item>/gi;\nconst titlePattern = /<title><!\\[CDATA\\[([^\\]]+)\\]\\]><\\/title>|<title>([^<]+)<\\/title>/;\nconst linkPattern = /<link>([^<]+)<\\/link>/;\nconst pubDatePattern = /<pubDate>([^<]+)<\\/pubDate>/;\n\nconst articles = [];\nlet match;\nlet counter = 0;\n\nwhile ((match = itemPattern.exec(xml)) !== null && counter < 10) {\n  const itemXml = match[1];\n  \n  const titleMatch = itemXml.match(titlePattern);\n  const linkMatch = itemXml.match(linkPattern);\n  const pubDateMatch = itemXml.match(pubDatePattern);\n  \n  if (titleMatch && linkMatch) {\n    const title = titleMatch[1] || titleMatch[2];\n    const url = linkMatch[1].trim();\n    let publishedAt = null;\n    \n    if (pubDateMatch) {\n      try {\n        publishedAt = new Date(pubDateMatch[1]).toISOString().split('T')[0];\n      } catch (e) {\n        publishedAt = sourceInfo.retrievedAt;\n      }\n    }\n    \n    if (url) { // Only add if URL exists\n      articles.push({\n        json: {\n          url: url,\n          title: title,\n          source: sourceInfo.name,\n          language: sourceInfo.language,\n          published_at: publishedAt,\n          retrieved_at: sourceInfo.retrievedAt\n        }\n      });\n      counter++;\n    }\n  }\n}\n\nreturn articles;"
+      },
+      "id": "c7ff0f08-184c-4ba0-88fe-ed1b1461f111",
+      "name": "Parse RSS",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "id": "f5819013-dc56-4e45-8df7-fe71f42ddc5e",
+      "name": "Fetch RSS Article",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1888,
+        400
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const html = $input.item.json.data || '';\nconst meta = $input.item.json;\n\n// If there's an error, skip this item\nif ($input.item.json.error || !html) {\n  return {\n    json: {\n      ...meta,\n      skip: true\n    }\n  };\n}\n\nlet content = '';\n\n// Try to find article body in common containers\nconst bodySelectors = [\n  /<article[^>]*>([\\s\\S]*?)<\\/article>/,\n  /<div[^>]*class=\"[^\"]*article-body[^\"]*\"[^>]*>([\\s\\S]*?)<\\/div>/,\n  /<div[^>]*class=\"[^\"]*content[^\"]*\"[^>]*>([\\s\\S]*?)<\\/div>/,\n  /<main[^>]*>([\\s\\S]*?)<\\/main>/\n];\n\nlet bodyHtml = '';\nfor (const selector of bodySelectors) {\n  const match = html.match(selector);\n  if (match) {\n    bodyHtml = match[1];\n    break;\n  }\n}\n\nif (!bodyHtml) {\n  bodyHtml = html;\n}\n\n// Extract all paragraphs\nconst paragraphPattern = /<p[^>]*>([^<]+)<\\/p>/gi;\nconst paragraphs = [];\nlet match;\n\nwhile ((match = paragraphPattern.exec(bodyHtml)) !== null) {\n  const text = match[1].trim()\n    .replace(/&nbsp;/g, ' ')\n    .replace(/&amp;/g, '&')\n    .replace(/&lt;/g, '<')\n    .replace(/&gt;/g, '>')\n    .replace(/&quot;/g, '\"')\n    .replace(/&#39;/g, \"'\");\n  \n  if (text.length > 20) {\n    paragraphs.push(text);\n  }\n}\n\ncontent = paragraphs.join(' ');\n\n// Update title if we can find a better one\nlet title = meta.title;\nconst h1Match = html.match(/<h1[^>]*>([^<]+)<\\/h1>/);\nif (h1Match) {\n  title = h1Match[1].trim();\n}\n\nconst id = `${meta.source}-${meta.published_at || meta.retrieved_at}-${Math.floor(Math.random() * 1000)}`;\n\nreturn {\n  json: {\n    id: id,\n    source: meta.source,\n    url: meta.url,\n    title: title,\n    body: content,\n    language: meta.language,\n    published_at: meta.published_at,\n    retrieved_at: meta.retrieved_at\n  }\n};"
+      },
+      "id": "eceb0fb8-1e9a-4ef6-9449-fe07055bc5d7",
+      "name": "Parse RSS Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2096,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.rssUrl}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "c2706c23-286e-4ba2-80b5-62bd15abcc2d",
+      "name": "Fetch Bild RSS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1296,
+        592
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst xml = items[0].json.data || '';\n// Get source info from the Route node\nconst sourceInfo = $node[\"Route by Type\"].json;\n\nconst itemPattern = /<item>([\\s\\S]*?)<\\/item>/gi;\nconst linkPattern = /<link>([^<]+)<\\/link>/;\n\nconst articles = [];\nlet match;\nlet counter = 0;\n\nwhile ((match = itemPattern.exec(xml)) !== null && counter < 15) {\n  const itemXml = match[1];\n  const linkMatch = itemXml.match(linkPattern);\n  \n  if (linkMatch) {\n    const url = linkMatch[1].trim();\n    \n    if (url) { // Only add if URL exists\n      articles.push({\n        json: {\n          url: url,\n          source: sourceInfo.name,\n          language: sourceInfo.language,\n          retrievedAt: sourceInfo.retrievedAt\n        }\n      });\n      counter++;\n    }\n  }\n}\n\nreturn articles;"
+      },
+      "id": "6aa73085-595c-4905-b918-f0cbe305b137",
+      "name": "Parse Bild RSS",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        592
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "id": "5f09c218-7248-4537-9811-7de6fc01d1a8",
+      "name": "Fetch Bild Article",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1888,
+        592
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const html = $input.item.json.data || '';\nconst meta = $input.item.json;\n\n// If there's an error, skip this item\nif ($input.item.json.error || !html) {\n  return {\n    json: {\n      ...meta,\n      skip: true\n    }\n  };\n}\n\n// Check for Bild paywall\nif (html.includes('class=\"offer-module\"')) {\n  return {\n    json: {\n      ...meta,\n      skip: true\n    }\n  };\n}\n\nlet title = '';\nlet content = '';\nlet publishedAt = null;\n\n// Extract title from Bild-specific selector\nconst titleMatch = html.match(/<span[^>]*class=\"[^\"]*headline[^\"]*\"[^>]*>([^<]+)<\\/span>/);\nif (titleMatch) {\n  title = titleMatch[1].trim();\n}\n\n// Extract publish date\nconst timeMatch = html.match(/<time[^>]*datetime=\"([^\"]+)\"/);\nif (timeMatch) {\n  publishedAt = timeMatch[1].split('T')[0];\n}\n\n// Extract paragraphs from article body\nconst articleBodyMatch = html.match(/<div[^>]*class=\"[^\"]*article-body[^\"]*\"[^>]*>([\\s\\S]*?)<\\/div>/);\nif (articleBodyMatch) {\n  const bodyHtml = articleBodyMatch[1];\n  const paragraphPattern = /<p[^>]*>([^<]+)<\\/p>/gi;\n  const paragraphs = [];\n  let match;\n  \n  while ((match = paragraphPattern.exec(bodyHtml)) !== null) {\n    const text = match[1].trim();\n    if (text.length > 10) {\n      paragraphs.push(text);\n    }\n  }\n  \n  content = paragraphs.join(' ');\n}\n\n// Skip if content is too short (less than 1000 chars)\nif (content.length <= 1000) {\n  return {\n    json: {\n      ...meta,\n      skip: true\n    }\n  };\n}\n\nconst id = `${meta.source}-${publishedAt || meta.retrievedAt}-${Math.floor(Math.random() * 1000)}`;\n\nreturn {\n  json: {\n    id: id,\n    source: meta.source,\n    url: meta.url,\n    title: title,\n    body: content,\n    language: meta.language,\n    published_at: publishedAt,\n    retrieved_at: meta.retrievedAt,\n    skip: false\n  }\n};"
+      },
+      "id": "3e70f6fd-a695-4382-93a1-a7b6bbd0d90b",
+      "name": "Parse Bild Article",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2096,
+        592
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{!$json.skip}}"
+            }
+          ]
+        }
+      },
+      "id": "02efd607-16e7-4d75-a498-89dea61a8d5a",
+      "name": "Filter Valid",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 1,
+      "position": [
+        2288,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const articles = $input.all().map(item => item.json);\n\n// Clean articles - remove skip field and ensure all required fields\nconst cleanedArticles = articles\n  .filter(article => article.url && article.source) // Extra safety check\n  .map(article => ({\n    id: article.id,\n    source: article.source,\n    url: article.url,\n    title: article.title || '',\n    body: article.body || '',\n    language: article.language,\n    published_at: article.published_at || null,\n    retrieved_at: article.retrieved_at\n  }));\n\n// Return both JSON string and array\nreturn [{\n  json: {\n    fileContent: JSON.stringify(cleanedArticles, null, 2),\n    articles: cleanedArticles,\n    count: cleanedArticles.length,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "663a819b-96b8-477c-b381-6e69ede0fa49",
+      "name": "Combine Articles",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2496,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true,
+          "fileName": "articles1.json"
+        }
+      },
+      "id": "a2ec43e4-cc17-46d0-a60b-4035f70a307b",
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1,
+      "position": [
+        2688,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "content": "fix here - somehow code breaks and cant combine together, \nkeep returns little ",
+        "height": 96,
+        "width": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        592
+      ],
+      "id": "0e2ccad3-2179-4006-9c48-bcc3d1c358a9",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/llm/data/errors/test1.json",
+        "options": {}
+      },
+      "id": "76e0bb5b-da46-4e23-847b-0a71a9785f82",
+      "name": "Write Error1",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        400
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Configure Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Tagesspiegel Links1": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid URLs ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Valid URLs ": {
+      "main": [
+        [
+          {
+            "node": "Fetch Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Valid URLs 4": {
+      "main": [
+        [
+          {
+            "node": "Fetch RSS Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Valid URLs 5": {
+      "main": [
+        [
+          {
+            "node": "Fetch Bild Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configure Sources": {
+      "main": [
+        [
+          {
+            "node": "Route by Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Type": {
+      "main": [
+        [
+          {
+            "node": "Fetch Tagesspiegel Homepage",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch RSS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch Bild RSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Tagesspiegel Homepage": {
+      "main": [
+        [
+          {
+            "node": "Extract Tagesspiegel Links1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Article": {
+      "main": [
+        [
+          {
+            "node": "Parse Tagesspiegel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Tagesspiegel": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch RSS": {
+      "main": [
+        [
+          {
+            "node": "Parse RSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse RSS": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid URLs 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch RSS Article": {
+      "main": [
+        [
+          {
+            "node": "Parse RSS Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse RSS Content": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Bild RSS": {
+      "main": [
+        [
+          {
+            "node": "Parse Bild RSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Bild RSS": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid URLs 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Bild Article": {
+      "main": [
+        [
+          {
+            "node": "Parse Bild Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Valid": {
+      "main": [
+        [
+          {
+            "node": "Combine Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Articles": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Bild Article": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Write Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "da0667fb-9c14-4e20-9f98-d24b23f6d233",
+  "meta": {
+    "instanceId": "1a3858aba68429b9782f815a4304eafd33a3c8405f954572f245dd36e44340b3"
+  },
+  "id": "gZ2z7cSwoVUlkgmP",
+  "tags": []
+}

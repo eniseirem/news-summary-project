@@ -1,0 +1,61 @@
+{
+  "name": "Dashboard",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "json-view",
+        "responseMode": "lastNode",
+        "options": {
+          "responsePropertyName": "stdout",
+          "responseContentType": "text/html"
+        }
+      },
+      "id": "0f867db6-c385-4b2f-8a63-8956388f866b",
+      "name": "Crawler HTML Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        976,
+        80
+      ],
+      "webhookId": "6a91768c-20fa-4e56-867a-0d15fb0f7a9f"
+    },
+    {
+      "parameters": {
+        "command": "python3 /dashboard/render_html.py"
+      },
+      "id": "51f362fe-6263-4be9-9d92-3b8d73253935",
+      "name": "Render HTML via Python",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        80
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Crawler HTML Webhook": {
+      "main": [
+        [
+          {
+            "node": "Render HTML via Python",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c4b8603e-a32c-4a0c-a384-b7fd43d9e22d",
+  "meta": {
+    "instanceId": "1a3858aba68429b9782f815a4304eafd33a3c8405f954572f245dd36e44340b3"
+  },
+  "id": "tMWIcZqscqRd7fVE",
+  "tags": []
+}

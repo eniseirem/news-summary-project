@@ -1,0 +1,297 @@
+{
+  "name": "M3 - Mega Summary Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "62f1213c-efc2-4280-bdaf-ee70b3c059bb",
+      "name": "When clicking 'Test workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/clusters/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": {\n    \"bool\": {\n      \"must\": [\n        {\n          \"exists\": {\n            \"field\": \"category\"\n          }\n        }\n      ]\n    }\n  },\n  \"_source\": [\"cluster_id\", \"category\", \"article_count\"],\n  \"size\": 10000\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "7c5c5244-9afd-40dd-a123-95fb8a2ebd1a",
+      "name": "Get Clusters with Category",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -464,
+        480
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Trv8tso5MyKF1SQR",
+          "name": "Unnamed credential 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Group clusters by category\nconst input = $input.item.json;\n\nif (!input.hits || !input.hits.hits || input.hits.hits.length === 0) {\n  console.log('⚠️ No clusters found with categories');\n  return [];\n}\n\nconst clustersByCategory = {};\n\ninput.hits.hits.forEach(hit => {\n  const source = hit._source;\n  const category = source.category;\n  const clusterId = source.cluster_id;\n  \n  if (!category || !clusterId) {\n    return; // Skip invalid entries\n  }\n  \n  if (!clustersByCategory[category]) {\n    clustersByCategory[category] = {\n      category_name: category,\n      cluster_ids: [],\n      cluster_count: 0\n    };\n  }\n  \n  clustersByCategory[category].cluster_ids.push(clusterId);\n  clustersByCategory[category].cluster_count++;\n});\n\n// Convert to array\nconst categories = Object.values(clustersByCategory);\n\nconsole.log('='.repeat(60));\nconsole.log('📊 CLUSTERS GROUPED BY CATEGORY');\nconsole.log('='.repeat(60));\ncategories.forEach(cat => {\n  console.log(`${cat.category_name}: ${cat.cluster_count} clusters`);\n});\nconsole.log('='.repeat(60));\nconsole.log(`Total categories: ${categories.length}`);\nconsole.log(`Total clusters: ${input.hits.total.value}`);\nconsole.log('='.repeat(60));\n\nif (categories.length === 0) {\n  console.log('⚠️ No valid categories found');\n  return [];\n}\n\n// Return array - n8n will create separate items for each category\nreturn categories;"
+      },
+      "id": "beff7372-7df5-4c3e-9b6a-3bc458f3d172",
+      "name": "Group Clusters by Category",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/cluster_summaries/_search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": {\n    \"terms\": {\n      \"cluster_id\": {{ JSON.stringify($json.cluster_ids) }}\n    }\n  },\n  \"_source\": [\"cluster_id\", \"summary\"],\n  \"size\": {{ $json.cluster_ids.length }}\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "4bc133f7-c1d7-4799-b41c-923db1a85581",
+      "name": "Get Cluster Summaries for Category",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        16,
+        480
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Trv8tso5MyKF1SQR",
+          "name": "Unnamed credential 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Build cluster_summaries map and prepare API request\nconst opensearchResponse = $input.item.json;\nconst categoryData = $('Group Clusters by Category').item.json;\n\nconst clusterSummaries = {};\nlet foundCount = 0;\n\nif (opensearchResponse.hits && opensearchResponse.hits.hits && opensearchResponse.hits.hits.length > 0) {\n  opensearchResponse.hits.hits.forEach(hit => {\n    const source = hit._source;\n    if (source.cluster_id && source.summary) {\n      clusterSummaries[source.cluster_id] = source.summary;\n      foundCount++;\n    }\n  });\n}\n\nconst requestId = `mega_${categoryData.category_name}_${Date.now()}`;\n\nconsole.log('='.repeat(60));\nconsole.log(`📋 PREPARING MEGA SUMMARY REQUEST`);\nconsole.log('='.repeat(60));\nconsole.log(`Category: ${categoryData.category_name}`);\nconsole.log(`Request ID: ${requestId}`);\nconsole.log(`Clusters requested: ${categoryData.cluster_ids.length}`);\nconsole.log(`Summaries found: ${foundCount}`);\nconsole.log(`Missing summaries: ${categoryData.cluster_ids.length - foundCount}`);\nconsole.log('='.repeat(60));\n\nif (foundCount === 0) {\n  console.warn(`⚠️ No summaries found for category \"${categoryData.category_name}\" - skipping`);\n  return {\n    json: {\n      skip: true,\n      category_name: categoryData.category_name,\n      reason: 'no_summaries_found'\n    }\n  };\n}\n\n// Return payload for API\nreturn {\n  json: {\n    request_id: requestId,\n    category_name: categoryData.category_name,\n    cluster_ids: categoryData.cluster_ids,\n    cluster_summaries: clusterSummaries\n  }\n};"
+      },
+      "id": "f87c6a8e-8cf0-4535-8f4c-eb1361c5e13b",
+      "name": "Prepare Mega Summary Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7e14cf23-1384-4bc6-a449-ba2748ce137d",
+      "name": "Check if Should Skip",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        496,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ncmTMNFvPv5Jt8Sj",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ncmTMNFvPv5Jt8Sj",
+          "cachedResultName": "mega summary"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "": "={{ $('Prepare Mega Summary Request').item.json }}",
+            "cluster_summaries": "={{ $json.cluster_summaries }}",
+            "request_id": "={{ $json.request_id }}"
+          },
+          "matchingColumns": [
+            "",
+            "cluster_summaries",
+            "request_id"
+          ],
+          "schema": [
+            {
+              "id": "",
+              "displayName": "",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cluster_summaries",
+              "displayName": "cluster_summaries",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "request_id",
+              "displayName": "request_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        832,
+        352
+      ],
+      "name": "Call mega summary",
+      "id": "c73b3e2b-2ecb-43d7-b205-9842b838854a"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Test workflow'": {
+      "main": [
+        [
+          {
+            "node": "Get Clusters with Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Clusters with Category": {
+      "main": [
+        [
+          {
+            "node": "Group Clusters by Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Group Clusters by Category": {
+      "main": [
+        [
+          {
+            "node": "Get Cluster Summaries for Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Cluster Summaries for Category": {
+      "main": [
+        [
+          {
+            "node": "Prepare Mega Summary Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Mega Summary Request": {
+      "main": [
+        [
+          {
+            "node": "Check if Should Skip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Should Skip": {
+      "main": [
+        [
+          {
+            "node": "Call mega summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "a638bba9-9e51-4c8d-8f83-378d6665c968",
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "id": "xprLf76Ve2AbQ5eH7-CLU",
+  "tags": []
+}

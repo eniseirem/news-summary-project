@@ -1,0 +1,391 @@
+{
+  "name": "M1 News Pipeline_bysource",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 */2 * * *"
+            }
+          ]
+        }
+      },
+      "id": "bdde6275-ee88-4242-9b69-7a242d860fff",
+      "name": "Every 2 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -752,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "content": "-- Runs every 2 hours -\n1. Fetch articles\n2. Trigger summarization\n3. Create mega summary\n4. Update dashboard",
+        "height": 140,
+        "width": 200,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1008,
+        0
+      ],
+      "id": "7c6dfdc2-6ff2-4d33-90b0-dc92dd526c43",
+      "name": "Schedule Info"
+    },
+    {
+      "parameters": {
+        "content": "-- Dashboard --Webhook\nAlways active\nServes HTML on /json-view",
+        "height": 148,
+        "width": 180,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1008,
+        304
+      ],
+      "id": "6c0fd487-cefd-4667-b679-d9ff0d0b97c8",
+      "name": "Dashboard Info"
+    },
+    {
+      "parameters": {
+        "command": "sh -c \"cd /crawler && PYTHONPATH=/crawler /home/node/crawler-venv/bin/python main.py\""
+      },
+      "id": "c88c0325-9301-4bda-9042-7cc6c9b1541f",
+      "name": "1. Run Crawler",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const exitCode = $json.exitCode || 0;\nconst stdout = $json.stdout || '';\n\nconsole.log('✅ Crawler finished');\nconsole.log('📁 Articles saved to /crawler/articles.json');\n\nreturn [{\n  json: {\n    success: exitCode === 0,\n    message: 'Crawler completed',\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "6abf4774-aa41-4919-9f0c-1247131a9ba7",
+      "name": "Check Crawler Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -304,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log('✅ Individual summaries complete');\nconsole.log('📁 Files in /llm/data/successes/');\n\nreturn $input.all();"
+      },
+      "id": "62b4f681-b489-4aa6-8eb3-d42a2df746ea",
+      "name": "Check LLM Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nconsole.log('\\n' + '='.repeat(60));\nconsole.log('🎉 PIPELINE COMPLETE');\nconsole.log('='.repeat(60));\nconsole.log('✅ Articles fetched');\nconsole.log('✅ Individual summaries created');\nconsole.log('✅ Mega summary generated');\nconsole.log('📊 View dashboard: http://localhost:5678/webhook/json-view');\nconsole.log('='.repeat(60) + '\\n');\n\nreturn [{\n  json: {\n    pipeline: 'complete',\n    timestamp: new Date().toISOString(),\n    message: 'All tasks completed successfully'\n  }\n}];"
+      },
+      "id": "c0e084c4-1673-411c-8028-2a012b4d754b",
+      "name": "Pipeline Complete",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "path": "json-view-source",
+        "responseMode": "lastNode",
+        "options": {
+          "responsePropertyName": "stdout",
+          "responseContentType": "text/html"
+        }
+      },
+      "id": "c818c11d-45fe-4d5c-915f-558ade88b46f",
+      "name": "Dashboard Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -976,
+        240
+      ],
+      "webhookId": "a3a01e35-b646-4f5a-bf1f-b493debe8130"
+    },
+    {
+      "parameters": {
+        "command": "python3 /dashboard/render_bysource_html.py"
+      },
+      "id": "8abfdd66-c59a-48fc-bd36-1ae5b60c5c49",
+      "name": "Render Dashboard HTML",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -752,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "content": "--Pipeline Flow --\n\n1 Crawler runs every 2h\n2 Creates articles.json\n3 LM summarizes each\n4 Mega summary combines\n5 Dashboard always ready\n\n  ",
+        "height": 168,
+        "width": 284,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        16,
+        -320
+      ],
+      "id": "21ea3937-38d3-43e6-a76b-17bedb9652b2",
+      "name": "Flow Info"
+    },
+    {
+      "parameters": {
+        "content": "--Manual Trigger--\nClick 'Test workflow'\nto run full pipeline ",
+        "height": 100,
+        "width": 180,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        -176
+      ],
+      "id": "94b42672-b51c-4bc2-afe3-c8c2bba4e7bb",
+      "name": "Manual Trigger Info"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "ceea4bf0-658e-445c-aced-4f5d43570a4b",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -976,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log('🚀 Starting manual pipeline run...');\nreturn $input.all();"
+      },
+      "id": "dae983e7-8572-4041-934e-56bc7ee4a08e",
+      "name": "Start Manual Run",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "0eFRtBa7tuprhtbI",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/0eFRtBa7tuprhtbI",
+          "cachedResultName": "LLM-Summarization"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        -80
+      ],
+      "name": "2. Call LLM-Summarization",
+      "id": "2326d246-12d5-44f5-a183-0b761cfa702e"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "4egPD1MOVxATKm0D",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/4egPD1MOVxATKm0D",
+          "cachedResultName": "3. Mega Summary by source"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        -80
+      ],
+      "name": "3. Mega Summary by source",
+      "id": "903e6782-7f96-49e7-b5a2-8ffcf4a129d5"
+    },
+    {
+      "parameters": {
+        "command": "rm -f /llm/data/successes/* /llm/data/errors/*"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -80
+      ],
+      "id": "f3d402c4-5cc3-455a-a16f-cbb64520b664",
+      "name": "Delete Files"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every 2 Hours": {
+      "main": [
+        [
+          {
+            "node": "1. Run Crawler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Run Crawler": {
+      "main": [
+        [
+          {
+            "node": "Check Crawler Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Crawler Result": {
+      "main": [
+        [
+          {
+            "node": "Delete Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check LLM Result": {
+      "main": [
+        [
+          {
+            "node": "3. Mega Summary by source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dashboard Webhook": {
+      "main": [
+        [
+          {
+            "node": "Render Dashboard HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Start Manual Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Manual Run": {
+      "main": [
+        [
+          {
+            "node": "1. Run Crawler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Call LLM-Summarization": {
+      "main": [
+        [
+          {
+            "node": "Check LLM Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Mega Summary by source": {
+      "main": [
+        [
+          {
+            "node": "Pipeline Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Files": {
+      "main": [
+        [
+          {
+            "node": "2. Call LLM-Summarization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4f2fbade-2ed4-42b0-b93a-5fcfef218636",
+  "meta": {
+    "instanceId": "1a3858aba68429b9782f815a4304eafd33a3c8405f954572f245dd36e44340b3"
+  },
+  "id": "4VPPodO3zXwwCVRe",
+  "tags": []
+}

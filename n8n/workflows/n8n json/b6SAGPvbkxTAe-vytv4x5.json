@@ -1,0 +1,1147 @@
+{
+  "updatedAt": "2026-02-11T15:25:33.458Z",
+  "createdAt": "2026-02-10T15:27:13.488Z",
+  "id": "b6SAGPvbkxTAe-vytv4x5",
+  "name": "M3 - News Crawler",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/articles/_doc/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=title",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "name": "body",
+              "value": "={{ $json.body }}"
+            },
+            {
+              "name": "language",
+              "value": "={{ $json.language }}"
+            },
+            {
+              "name": "source",
+              "value": "={{ $json.source }}"
+            },
+            {
+              "name": "published_at",
+              "value": "={{ $json.published_at }}"
+            },
+            {
+              "name": "id",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "url",
+              "value": "={{ $json.url }}"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1184,
+        288
+      ],
+      "id": "0855e695-0fa6-4d5a-a444-f1bc7e465a43",
+      "name": "Index Article in OpenSearch",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "f0c72772-5121-4833-bd90-19a96a4deaec",
+              "leftValue": "={{ $json[\"result\"] }}",
+              "rightValue": "created",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "e14fa1b7-ef50-46d6-846a-5a6c572192a6",
+              "leftValue": "={{ $json[\"result\"] }}",
+              "rightValue": "updated",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "802f6b00-830e-40a3-84e2-e514829ba310",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create Summary - Aggregate all articles\nconst allItems = $input.all();\n\nconsole.log('📦 Total items received:', allItems.length);\n\n// Group by source\nconst bySource = {};\n\nallItems.forEach(item => {\n  const article = item.json.original_article || item.json;\n  const source = article.crawler_source || 'unknown';\n  \n  if (!bySource[source]) {\n    bySource[source] = {\n      source_id: source,\n      source_name: article.crawler_source_name || article.source || source,\n      total: 0,\n      successful: 0,\n      failed: 0\n    };\n  }\n  \n  bySource[source].total++;\n  \n  if (item.json.error) {\n    bySource[source].failed++;\n  } else {\n    bySource[source].successful++;\n  }\n});\n\nconst summary = {\n  run_id: allItems[0]?.json.run_id || allItems[0]?.json.original_article?.run_id || Date.now(),\n  completed_at: new Date().toISOString(),\n  total_sources: Object.keys(bySource).length,\n  total_articles: allItems.length,\n  successful: allItems.filter(i => !i.json.error).length,\n  failed: allItems.filter(i => i.json.error).length,\n  by_source: Object.values(bySource)\n};\n\nconsole.log('📊 Final Summary:', JSON.stringify(summary, null, 2));\n\nreturn [{ json: summary }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        272
+      ],
+      "id": "694393c0-eed0-481e-acf3-45e986060040",
+      "name": "Create Summary1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/articles_request/_doc/{{ $json.log_data.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "request_id",
+              "value": "={{ $json.log_data.request_id }}"
+            },
+            {
+              "name": "source",
+              "value": "={{ $json.log_data.source }}"
+            },
+            {
+              "name": "endpoint",
+              "value": "={{ $json.log_data.endpoint }}"
+            },
+            {
+              "name": "http_method",
+              "value": "={{ $json.log_data.http_method }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.log_data.status }}"
+            },
+            {
+              "name": "http_code",
+              "value": "={{ $json.log_data.http_code }}"
+            },
+            {
+              "name": "created_at",
+              "value": "={{ $json.log_data.created_at }}"
+            },
+            {
+              "name": "triggered_by",
+              "value": "={{ $json.log_data.triggered_by }}"
+            },
+            {
+              "name": "payload_excerpt",
+              "value": "={{ $json.log_data.payload_excerpt }}"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "6e165e54-0324-488e-99d4-493b0634bb59",
+      "name": "Log Final Summary1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2112,
+        272
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Summary Log - FOR OPENSEARCH\nconst summary = $('Create Summary1').first().json;\n\nconst logData = {\n  request_id: summary.run_id + '-summary',\n  source: 'news_crawler',\n  endpoint: '/crawl/summary',\n  http_method: 'POST',\n  status: summary.failed > 0 ? 'partial_success' : 'success',\n  http_code: 200,\n  created_at: summary.completed_at,\n  triggered_by: 'n8n',\n  payload_excerpt: {\n    total_sources: summary.total_sources,\n    total_articles: summary.total_articles,\n    successful: summary.successful,\n    failed: summary.failed,\n    by_source: summary.by_source\n  }\n};\n\nreturn [{\n  json: {\n    ...summary,\n    log_data: logData\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1872,
+        272
+      ],
+      "id": "7d6839a1-7604-4fe8-9039-73e6a7275e23",
+      "name": "Prepare Summary Log1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/articles_request/_doc/{{ $json.log_data.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "request_id",
+              "value": "={{ $json.log_data.request_id }}"
+            },
+            {
+              "name": "source",
+              "value": "={{ $json.log_data.source }}"
+            },
+            {
+              "name": "endpoint",
+              "value": "={{ $json.log_data.endpoint }}"
+            },
+            {
+              "name": "http_method",
+              "value": "={{ $json.log_data.http_method }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.log_data.status }}"
+            },
+            {
+              "name": "http_code",
+              "value": "={{ $json.log_data.http_code }}"
+            },
+            {
+              "name": "created_at",
+              "value": "={{ $json.log_data.created_at }}"
+            },
+            {
+              "name": "error_type",
+              "value": "={{ $json.log_data.error_type }}"
+            },
+            {
+              "name": "error_message",
+              "value": "={{ $json.log_data.error_message }}"
+            },
+            {
+              "name": "triggered_by",
+              "value": "={{ $json.log_data.triggered_by }}"
+            },
+            {
+              "name": "payload_excerpt",
+              "value": "={{ $json.log_data.payload_excerpt }}"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "69e61ed6-8511-4cb6-abc6-882899051fc3",
+      "name": "Log Article Saved1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2112,
+        96
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Article Log - FOR OPENSEARCH\nconst response = $json;\nconst article = $input.item.json || $json;\n\nconst source = article.crawler_source || 'unknown';\nconst articleId = (article.id || 'no-id').substring(0, 80);\n\nconst logData = {\n  request_id: article.run_id + '-' + articleId.substring(0, 20),\n  source: 'news_crawler',\n  endpoint: '/crawl/' + source,\n  http_method: 'GET',\n  status: response.error ? 'failed' : 'success',\n  http_code: response.error ? 500 : 200,\n  created_at: new Date().toISOString(),\n  error_type: response.error ? 'INDEX_ERROR' : null,\n  error_message: response.error ? String(response.error) : null,\n  triggered_by: 'n8n',\n  payload_excerpt: {\n    article_id: articleId,\n    source: source,\n    title: (article.title || '').substring(0, 100)\n  }\n};\n\nreturn [{\n  json: {\n    ...response,\n    original_article: article,\n    log_data: logData\n  }\n}];"
+      },
+      "id": "97fbbae5-fa25-42fc-9398-dede373165ed",
+      "name": "Prepare Article Node1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cat /tmp/crawler/logs/master.log"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2368,
+        480
+      ],
+      "id": "6f43ed67-6b76-42d2-a53a-ee9a7fd6c6be",
+      "name": "Execute Command1",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parse Articles - RUN ONCE FOR EACH ITEM\nconst articles = $json.data;\n\n// Error handling\nif (!articles) {\n  console.log('⚠️ Empty response from crawler');\n  throw new Error('Empty response from crawler');\n}\n\nlet parsedArticles;\nif (typeof articles === 'string') {\n  if (articles.trim() === '' || articles === '[]') {\n    throw new Error('Empty response from crawler');\n  }\n  try {\n    parsedArticles = JSON.parse(articles);\n  } catch (e) {\n    console.log('❌ JSON parse error:', e.message);\n    throw new Error('JSON parse failed: ' + e.message);\n  }\n} else {\n  parsedArticles = articles;\n}\n\nif (!Array.isArray(parsedArticles) || parsedArticles.length === 0) {\n  console.log('⚠️ No articles found');\n  throw new Error('No articles found for this source');\n}\n\n// Source bilgisini al\nconst allSourceInputs = $('Define All Sources').all();\nconst sourceInfo = allSourceInputs[$itemIndex].json;\n\nconsole.log('🔍 Processing Source #' + $itemIndex + ':', sourceInfo.id, '- Articles:', parsedArticles.length);\n\nconst runId = sourceInfo.run_id || Date.now();\nconst retrievedAt = new Date().toISOString();\n\nfunction simpleHash(str) {\n  let hash = 0;\n  for (let i = 0; i < str.length; i++) {\n    const char = str.charCodeAt(i);\n    hash = ((hash << 5) - hash) + char;\n    hash = hash & hash;\n  }\n  return Math.abs(hash).toString(36);\n}\n\nconst processedArticles = parsedArticles.map((article, articleIndex) => {\n  const originalUrl = article.url || article.link || article.id;\n  \n  let uniqueString;\n  if (originalUrl && (originalUrl.startsWith('http://') || originalUrl.startsWith('https://'))) {\n    uniqueString = originalUrl.toLowerCase().trim();\n  } else {\n    const title = (article.title || '').toLowerCase().trim();\n    const date = article.published_date || article.date || '';\n    uniqueString = `${sourceInfo.id}-${title}-${date}`;\n  }\n  \n  const hash = simpleHash(uniqueString);\n  const cleanId = `${sourceInfo.id}-${hash}`;\n  \n  return {\n    ...article,\n    _opensearch_id: cleanId,\n    url: originalUrl,\n    id: originalUrl,\n    crawler_source: sourceInfo.id,\n    crawler_source_name: sourceInfo.name,\n    language: sourceInfo.language,  // ✅ Language added here\n    run_id: runId,\n    article_index: articleIndex,\n    total_for_this_source: parsedArticles.length,\n    retrieved_at: retrievedAt\n  };\n});\n\n// ✅ TEK OBJE DÖNDÜR (Run Once for Each Item kuralı)\nreturn {\n  json: {\n    source: sourceInfo.id,\n    language: sourceInfo.language,  // ✅ Language added here too\n    articles: processedArticles  // Array içeride\n  }\n};"
+      },
+      "id": "21b09547-7909-4e0b-9024-ae9e9c94c6c2",
+      "name": "Parse Articles",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        304
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://crawler-api:8000/' + $json.endpoint }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 300000
+        }
+      },
+      "id": "c69ab0e4-9729-4690-add2-de6863bebae6",
+      "name": "Call Crawler API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        592,
+        320
+      ],
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Define all news sources (only functional endpoints)\nconst sources = [\n  // English sources\n  { name: 'CNN', id: 'cnn', endpoint: 'cnn', language: 'en' },\n  { name: 'ESPN', id: 'espn', endpoint: 'espn', language: 'en' },\n  { name: 'Fox News', id: 'foxnews', endpoint: 'foxnews', language: 'en' },\n  { name: 'Goal', id: 'goal', endpoint: 'goal', language: 'en' },\n  { name: 'Guardian', id: 'guardian', endpoint: 'guardian', language: 'en' },\n  { name: 'Guardian Sport', id: 'guardiansport', endpoint: 'guardiansport', language: 'en' },\n  { name: 'Japan Times', id: 'japantimes', endpoint: 'japantimes', language: 'en' },\n  { name: 'NBC', id: 'nbc', endpoint: 'nbc', language: 'en' },\n  { name: 'SBS', id: 'sbs', endpoint: 'sbs', language: 'en' },\n  { name: 'SCMP Economics', id: 'scmp_economics', endpoint: 'southchinamorningpost/economics', language: 'en' },\n  { name: 'SCMP Politics', id: 'scmp_politics', endpoint: 'southchinamorningpost/politics', language: 'en' },\n  { name: 'Tass', id: 'tass', endpoint: 'tass', language: 'en' },\n  { name: 'TeleSur', id: 'telesur', endpoint: 'telesur', language: 'en' },\n  { name: 'The News', id: 'thenews', endpoint: 'thenews', language: 'en' },\n  { name: 'Times of India', id: 'timesofindia', endpoint: 'timesofindia', language: 'en' },\n  { name: 'Yahoo Finance', id: 'yahoofinance', endpoint: 'yahoofinance', language: 'en' },\n  { name: 'Yahoo News', id: 'yahoonews', endpoint: 'yahoonews', language: 'en' },\n  \n  // German sources\n  { name: 'Bild', id: 'bild', endpoint: 'bild', language: 'de' },\n  { name: 'FAZ', id: 'faz', endpoint: 'faz', language: 'de' },\n  { name: 'Focus', id: 'focus', endpoint: 'focus', language: 'de' },\n  { name: 'NTV', id: 'ntv', endpoint: 'ntv', language: 'de' },\n  { name: 'Spiegel', id: 'spiegel', endpoint: 'spiegel', language: 'de' },\n  { name: 'Stern', id: 'stern', endpoint: 'stern', language: 'de' },\n  { name: 'Tagesspiegel', id: 'tagesspiegel', endpoint: 'tagesspiegel', language: 'de' },\n  { name: 'Welt', id: 'welt', endpoint: 'welt', language: 'de' },\n  \n  // Other\n  { name: 'RSS Feeds', id: 'rss', endpoint: 'rss', language: 'multi' }\n];\n\nconst runId = Date.now();\nreturn sources.map(source => ({\n  json: {\n    ...source,\n    run_id: runId,\n    started_at: new Date().toISOString()\n  },\n  pairedItem: { item: 0 }\n}));"
+      },
+      "id": "ad8dec67-8fb9-4264-ac15-5fc0a58563c8",
+      "name": "Define All Sources",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Master Crawler - All Sources\n\nProcesses all 15 news sources in parallel\nEach source is independent",
+        "height": 100,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8d8e87cb-3291-43e3-95a1-5a00ad90b87e",
+      "name": "Info"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Split Articles - RUN ONCE FOR ALL ITEMS\nconst allItems = $input.all();\n\nconsole.log('📦 Total sources processed:', allItems.length);\n\nconst result = [];\n\nallItems.forEach((item, sourceIndex) => {\n  console.log('Processing source', sourceIndex, ':', item.json.source);\n  \n  const articles = item.json.articles;\n  \n  if (!articles) {\n    console.log('⚠️ No articles field found in item', sourceIndex);\n    return;\n  }\n  \n  if (!Array.isArray(articles)) {\n    console.log('⚠️ Articles is not an array in item', sourceIndex);\n    return;\n  }\n  \n  console.log('  → Found', articles.length, 'articles');\n  \n  articles.forEach((article, idx) => {\n    // ✅ TABLOYA UYGUN FIELD MAPPING\n    result.push({ \n      json: {\n        id: article._opensearch_id,                          // Keyword - unique ID\n        url: article.url,\n        title: article.title || '',                          // Text\n        body: article.body || article.description || '',     // Text\n        language: article.language || 'en',                  // Keyword - ISO code\n        source: article.crawler_source,                      // Keyword - Publisher\n        published_at: article.published_date || article.date || article.retrieved_at, // Date - ISO-8601\n        \n        // Extra metadata (opsiyonel)\n        _metadata: {\n          crawler_source_name: article.crawler_source_name,\n          article_index: article.article_index,\n          total_for_this_source: article.total_for_this_source,\n          run_id: article.run_id,\n          original_url: article.url\n        }\n      }\n    });\n  });\n});\n\nconsole.log('✅ Total articles to index:', result.length);\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        288
+      ],
+      "id": "23ec44e2-5f64-4d67-acb5-5dfb4b429855",
+      "name": "Split Articles"
+    },
+    {
+      "parameters": {
+        "command": "=mkdir -p /tmp/crawler/logs && date >> /tmp/crawler/logs/master.log"
+      },
+      "id": "f4ec2e2b-8ffa-4548-a79d-eaa7b11e9c35",
+      "name": "Log Source Start",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        544,
+        656
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Error Log for Crawler API\n// When error occurs, the input is the error object and source data is in the same item\nconst inputData = $input.first().json;\n\n// Extract source info - it's in the same object when error occurs\nconst sourceInfo = {\n  id: inputData.id || 'unknown',\n  name: inputData.name || 'unknown',\n  endpoint: inputData.endpoint || 'unknown',\n  run_id: inputData.run_id || Date.now()\n};\n\nconst error = inputData.error || {};\n\nconst logData = {\n  request_id: sourceInfo.run_id + '-' + sourceInfo.id + '-error',\n  source: 'news_crawler',\n  endpoint: '/crawl/' + sourceInfo.id,\n  http_method: 'GET',\n  status: 'failed',\n  http_code: error.status || 500,\n  created_at: new Date().toISOString(),\n  error_type: error.code || error.name || 'API_ERROR',\n  error_message: error.message || String(error),\n  attempt: 1,\n  triggered_by: 'n8n',\n  payload_excerpt: {\n    source_id: sourceInfo.id,\n    source_name: sourceInfo.name,\n    endpoint: sourceInfo.endpoint\n  }\n};\n\nreturn [{\n  json: {\n    log_data: logData,\n    error: error,\n    source_info: sourceInfo\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        992
+      ],
+      "id": "d2d1d9f1-2bd0-40c4-b1d6-129f830bcf18",
+      "name": "Prepare Error Log - Crawler API"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/articles_request/_doc/{{ $json.log_data.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "request_id",
+              "value": "={{ $json.log_data.request_id }}"
+            },
+            {
+              "name": "source",
+              "value": "={{ $json.log_data.source }}"
+            },
+            {
+              "name": "endpoint",
+              "value": "={{ $json.log_data.endpoint }}"
+            },
+            {
+              "name": "http_method",
+              "value": "={{ $json.log_data.http_method }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.log_data.status }}"
+            },
+            {
+              "name": "http_code",
+              "value": "={{ $json.log_data.http_code }}"
+            },
+            {
+              "name": "created_at",
+              "value": "={{ $json.log_data.created_at }}"
+            },
+            {
+              "name": "error_type",
+              "value": "={{ $json.log_data.error_type }}"
+            },
+            {
+              "name": "error_message",
+              "value": "={{ $json.log_data.error_message }}"
+            },
+            {
+              "name": "attempt",
+              "value": "={{ $json.log_data.attempt }}"
+            },
+            {
+              "name": "triggered_by",
+              "value": "={{ $json.log_data.triggered_by }}"
+            },
+            {
+              "name": "payload_excerpt",
+              "value": "={{ $json.log_data.payload_excerpt }}"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1024,
+        992
+      ],
+      "id": "0527769e-cacf-4e63-93b2-d2b61fc10a98",
+      "name": "Log Error - Crawler API",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Error Log for Parse Articles\nconst error = $json;\nconst sourceData = $input.item.json;\n\nconst logData = {\n  request_id: (sourceData.run_id || Date.now()) + '-parse-error',\n  source: 'news_crawler',\n  endpoint: '/parse/' + (sourceData.source || 'unknown'),\n  http_method: 'POST',\n  status: 'failed',\n  http_code: 500,\n  created_at: new Date().toISOString(),\n  error_type: 'PARSE_ERROR',\n  error_message: error.message || String(error),\n  attempt: 1,\n  triggered_by: 'n8n',\n  payload_excerpt: {\n    source: sourceData.source || 'unknown',\n    data_received: typeof sourceData.data === 'string' ? sourceData.data.substring(0, 200) : 'object'\n  }\n};\n\nreturn [{\n  json: {\n    log_data: logData,\n    error: error\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        768
+      ],
+      "id": "3cafc848-6830-4ab3-a586-a7b47a652631",
+      "name": "Prepare Error Log - Parse"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/articles_request/_doc/{{ $json.log_data.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "request_id",
+              "value": "={{ $json.log_data.request_id }}"
+            },
+            {
+              "name": "source",
+              "value": "={{ $json.log_data.source }}"
+            },
+            {
+              "name": "endpoint",
+              "value": "={{ $json.log_data.endpoint }}"
+            },
+            {
+              "name": "http_method",
+              "value": "={{ $json.log_data.http_method }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.log_data.status }}"
+            },
+            {
+              "name": "http_code",
+              "value": "={{ $json.log_data.http_code }}"
+            },
+            {
+              "name": "created_at",
+              "value": "={{ $json.log_data.created_at }}"
+            },
+            {
+              "name": "error_type",
+              "value": "={{ $json.log_data.error_type }}"
+            },
+            {
+              "name": "error_message",
+              "value": "={{ $json.log_data.error_message }}"
+            },
+            {
+              "name": "attempt",
+              "value": "={{ $json.log_data.attempt }}"
+            },
+            {
+              "name": "triggered_by",
+              "value": "={{ $json.log_data.triggered_by }}"
+            },
+            {
+              "name": "payload_excerpt",
+              "value": "={{ $json.log_data.payload_excerpt }}"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1248,
+        768
+      ],
+      "id": "ff461a28-33c4-4f21-bb16-64966b571340",
+      "name": "Log Error - Parse",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Error Log for Index Article\nconst error = $json;\nconst article = $input.item.json;\n\nconst logData = {\n  request_id: (article.run_id || Date.now()) + '-index-' + (article.id || 'unknown').substring(0, 20) + '-error',\n  source: 'news_crawler',\n  endpoint: '/index/' + (article.crawler_source || 'unknown'),\n  http_method: 'POST',\n  status: 'failed',\n  http_code: error.httpCode || 500,\n  created_at: new Date().toISOString(),\n  error_type: 'INDEX_ERROR',\n  error_message: error.message || String(error),\n  attempt: 1,\n  triggered_by: 'n8n',\n  payload_excerpt: {\n    article_id: (article.id || '').substring(0, 80),\n    source: article.crawler_source || 'unknown',\n    title: (article.title || '').substring(0, 100)\n  }\n};\n\nreturn [{\n  json: {\n    log_data: logData,\n    error: error,\n    original_article: article\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        528
+      ],
+      "id": "f7f2d215-7b8f-45a2-b82d-01d70f3a32dd",
+      "name": "Prepare Error Log - Index"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/articles_request/_doc/{{ $json.log_data.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "request_id",
+              "value": "={{ $json.log_data.request_id }}"
+            },
+            {
+              "name": "source",
+              "value": "={{ $json.log_data.source }}"
+            },
+            {
+              "name": "endpoint",
+              "value": "={{ $json.log_data.endpoint }}"
+            },
+            {
+              "name": "http_method",
+              "value": "={{ $json.log_data.http_method }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.log_data.status }}"
+            },
+            {
+              "name": "http_code",
+              "value": "={{ $json.log_data.http_code }}"
+            },
+            {
+              "name": "created_at",
+              "value": "={{ $json.log_data.created_at }}"
+            },
+            {
+              "name": "error_type",
+              "value": "={{ $json.log_data.error_type }}"
+            },
+            {
+              "name": "error_message",
+              "value": "={{ $json.log_data.error_message }}"
+            },
+            {
+              "name": "attempt",
+              "value": "={{ $json.log_data.attempt }}"
+            },
+            {
+              "name": "triggered_by",
+              "value": "={{ $json.log_data.triggered_by }}"
+            },
+            {
+              "name": "payload_excerpt",
+              "value": "={{ $json.log_data.payload_excerpt }}"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1632,
+        528
+      ],
+      "id": "fbecb54a-ee39-44b9-a9a2-7476de04d4a8",
+      "name": "Log Error - Index",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CDwtLvj0oKDTzkUr",
+          "name": "Unnamed credential"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "e93eeebf-35e3-4ea3-8b1b-e9bdbe1b6461",
+      "typeVersion": 1.2,
+      "name": "Schedule Every 6 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        96,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "F1V4epzdPhq4fb3Y",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/F1V4epzdPhq4fb3Y",
+          "cachedResultName": "M3 - Clustering + Summary + Label"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        2784,
+        320
+      ],
+      "id": "d8354e7e-c1f1-4a08-a6b1-83c12698a1cb",
+      "name": "Call 'M3 - Clustering + Summary + Label'"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2592,
+        304
+      ],
+      "id": "607a7767-597d-439d-a676-9608844e45a6",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "GDMrNOkQKkkzD4rwUO5cl",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/GDMrNOkQKkkzD4rwUO5cl",
+          "cachedResultName": "M3 - Categorize Clusters Workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        2992,
+        320
+      ],
+      "id": "3ff675e2-4503-4f2a-a202-c141b0fa5a9e",
+      "name": "Call 'M3 - Categorize Clusters Workflow'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "xprLf76Ve2AbQ5eH7-CLU",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/xprLf76Ve2AbQ5eH7-CLU",
+          "cachedResultName": "M3 - Mega Summary Workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        3200,
+        320
+      ],
+      "id": "31901445-6ef2-4473-8acd-6474575c91aa",
+      "name": "Call 'M3 - Mega Summary Workflow'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "4-1lq2GOUd_Tzxgw85mrb",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/4-1lq2GOUd_Tzxgw85mrb",
+          "cachedResultName": "M3 - translation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        3408,
+        320
+      ],
+      "id": "81521d11-f43d-4c33-8f34-ed7ec1be5bf7",
+      "name": "Call 'M3 - translation'"
+    }
+  ],
+  "connections": {
+    "Index Article in OpenSearch": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Log - Index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Create Summary1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Summary1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Summary Log1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Summary Log1": {
+      "main": [
+        [
+          {
+            "node": "Log Final Summary1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Article Node1": {
+      "main": [
+        [
+          {
+            "node": "Log Article Saved1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Final Summary1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Log Article Saved1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Articles": {
+      "main": [
+        [
+          {
+            "node": "Split Articles",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Log - Parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Crawler API": {
+      "main": [
+        [
+          {
+            "node": "Parse Articles",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Error Log - Crawler API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Define All Sources": {
+      "main": [
+        [
+          {
+            "node": "Call Crawler API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Source Start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Articles": {
+      "main": [
+        [
+          {
+            "node": "Prepare Article Node1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Index Article in OpenSearch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Log - Crawler API": {
+      "main": [
+        [
+          {
+            "node": "Log Error - Crawler API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error - Crawler API": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Log - Parse": {
+      "main": [
+        [
+          {
+            "node": "Log Error - Parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error - Parse": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Error Log - Index": {
+      "main": [
+        [
+          {
+            "node": "Log Error - Index",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error - Index": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Every 6 Hours": {
+      "main": [
+        [
+          {
+            "node": "Define All Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Call 'M3 - Clustering + Summary + Label'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'M3 - Clustering + Summary + Label'": {
+      "main": [
+        [
+          {
+            "node": "Call 'M3 - Categorize Clusters Workflow'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'M3 - Categorize Clusters Workflow'": {
+      "main": [
+        [
+          {
+            "node": "Call 'M3 - Mega Summary Workflow'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'M3 - Mega Summary Workflow'": {
+      "main": [
+        [
+          {
+            "node": "Call 'M3 - translation'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": {
+    "node:Schedule Every 6 Hours": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": null,
+  "pinData": {},
+  "versionId": "301b5c86-7cb0-414e-9b62-66a674af88dc",
+  "activeVersionId": "301b5c86-7cb0-414e-9b62-66a674af88dc",
+  "versionCounter": 64,
+  "triggerCount": 1,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-02-10T15:27:13.491Z",
+      "createdAt": "2026-02-10T15:27:13.491Z",
+      "role": "workflow:owner",
+      "workflowId": "b6SAGPvbkxTAe-vytv4x5",
+      "projectId": "Fym8lmiogviYTzpp",
+      "project": {
+        "updatedAt": "2026-02-11T13:41:09.163Z",
+        "createdAt": "2026-02-10T14:59:11.065Z",
+        "id": "Fym8lmiogviYTzpp",
+        "name": "enise colak <eniseirem@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "f2a82ed6-b64a-4ab3-b153-a72995fa761d"
+      }
+    }
+  ]
+}

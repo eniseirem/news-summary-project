@@ -1,0 +1,179 @@
+{
+  "name": "mega summary",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Final logging\nconst savedDoc = $input.item.json;\nconst megaSummaryData = $('Add Category Name').item.json;\n\nconsole.log('='.repeat(60));\nconsole.log(`💾 MEGA SUMMARY SAVED TO OPENSEARCH`);\nconsole.log('='.repeat(60));\nconsole.log(`Document ID: ${savedDoc._id}`);\nconsole.log(`Index: ${savedDoc._index}`);\nconsole.log(`Category: ${megaSummaryData.category_name}`);\nconsole.log(`Result: ${savedDoc.result}`);\nconsole.log('='.repeat(60));\n\nreturn $input.all();"
+      },
+      "id": "85a35e3d-b3a3-47c6-b83f-ca27c59a9965",
+      "name": "Log Success",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1456,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://opensearch:9200/mega_summaries/_doc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"request_id\": \"{{ $json.request_id }}\",\n  \"category_name\": \"{{ $json.category_name }}\",\n  \"mega_summary\": {{ JSON.stringify($json.mega_summary) }},\n  \"cluster_count\": {{ $json.cluster_count }},\n  \"cluster_ids\": {{ JSON.stringify($json.cluster_ids) }},\n  \"processed_at\": \"{{ $json.processed_at }}\",\n  \"ingested_at\": \"{{ $now.toISO() }}\"\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "9c8c1a68-4fe5-432a-8d0a-b798ca70c07b",
+      "name": "Save Mega Summary to OpenSearch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1216,
+        368
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Trv8tso5MyKF1SQR",
+          "name": "Unnamed credential 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Add category name back to API response\nconst apiResponse = $input.item.json;\n\n// Extract category_name from request_id (format: mega_CATEGORYNAME_TIMESTAMP)\nconst requestId = apiResponse.request_id;\nconst categoryName = requestId.replace(/^mega_/, '').replace(/_\\d+$/, '');\n\nconsole.log('='.repeat(60));\nconsole.log(`✅ MEGA SUMMARY GENERATED`);\nconsole.log('='.repeat(60));\nconsole.log(`Category: ${categoryName}`);\nconsole.log(`Request ID: ${apiResponse.request_id}`);\nconsole.log(`Cluster count: ${apiResponse.cluster_count}`);\nconsole.log(`Mega summary length: ${apiResponse.mega_summary?.length || 0} chars`);\nconsole.log(`Processed at: ${apiResponse.processed_at}`);\nconsole.log('='.repeat(60));\n\n// Combine API response with category name\nreturn {\n  json: {\n    request_id: apiResponse.request_id,\n    category_name: categoryName,\n    mega_summary: apiResponse.mega_summary,\n    cluster_count: apiResponse.cluster_count,\n    cluster_ids: apiResponse.cluster_ids,\n    processed_at: apiResponse.processed_at\n  }\n};"
+      },
+      "id": "fd2c62cf-a01b-485c-b410-bd543a64388a",
+      "name": "Add Category Name",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        976,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://llm-service:8001/mega_summarize",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"request_id\": \"{{ $json.request_id }}\",\n  \"cluster_summaries\": {{ JSON.stringify($json.cluster_summaries) }}\n}",
+        "options": {
+          "timeout": 1000000
+        }
+      },
+      "id": "d93702be-f580-41ae-981b-bee2881f66a5",
+      "name": "Call Mega Summary API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        736,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "cluster_summaries",
+              "type": "any"
+            },
+            {
+              "name": "request_id",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "id": "8fd04090-7dca-4179-b955-c0ae701b22e2",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        528,
+        368
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Save Mega Summary to OpenSearch": {
+      "main": [
+        [
+          {
+            "node": "Log Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Category Name": {
+      "main": [
+        [
+          {
+            "node": "Save Mega Summary to OpenSearch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Mega Summary API": {
+      "main": [
+        [
+          {
+            "node": "Add Category Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Call Mega Summary API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "f344682c-df77-4e32-9751-14e8ea59d7e4",
+  "meta": {
+    "instanceId": "14e0915c135b1c848a689952dd56c5bff14b3a94d16edbaf2169dc9f7a2437fc"
+  },
+  "id": "ncmTMNFvPv5Jt8Sj",
+  "tags": []
+}
