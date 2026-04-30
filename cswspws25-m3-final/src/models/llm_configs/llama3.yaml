@@ -1,0 +1,30 @@
+# llama3.yaml
+# ===========
+# Configuration file for LLaMA 3 in this project.
+
+name: llama3
+backend: ollama
+
+default_variant: dev_3b
+
+variants:
+  dev_3b:
+    model_name: llama3.2:3b
+    # 8K tokens context window
+    context_tokens: 8192
+
+  # prod_8b:
+  #   model_name: llama3.1:8b
+  #   # 8K tokens context window
+  #   context_tokens: 8192
+
+generation:
+  temperature: 0.0
+  top_p: 1.0
+  top_k: 0
+  seed: 42
+
+  length_control:
+    per_cluster_words: 150
+    max_words: 1200
+    tokens_per_word: 1.3

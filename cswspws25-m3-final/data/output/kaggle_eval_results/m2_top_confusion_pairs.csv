@@ -1,0 +1,16 @@
+true_category,predicted_category,count
+entertainment,business,104
+entertainment,politics,80
+sport,politics,67
+business,politics,62
+tech,business,58
+sport,,54
+sport,business,38
+politics,business,16
+business,tech,10
+sport,tech,10
+entertainment,tech,8
+tech,politics,4
+politics,tech,2
+entertainment,sport,1
+tech,entertainment,1

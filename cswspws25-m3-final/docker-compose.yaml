@@ -1,0 +1,89 @@
+# docker-compose.yaml
+# ====================
+# Docker Compose configuration for the LLM Processing Pipeline.
+#
+# Purpose:
+# --------
+# This file defines the full runtime environment for Milestone 2:
+# - Starts the local LLaMA inference backend (Ollama)
+# - Starts the FastAPI server for preprocessing + summarization
+# - Connects both services via a shared Docker network
+# - Persists LLaMA model weights across restarts (volume mount)
+
+version: "3.9"
+
+services:
+  # ----------------------------------------------------
+  # OLLAMA SERVICE — LLaMA inference backend
+  # This container runs the local LLaMA-3 model
+  # and exposes /api/generate for FastAPI to call.
+  # ----------------------------------------------------
+  ollama:
+    container_name: llama_inference_server
+    image: ollama/ollama:latest
+    restart: unless-stopped
+
+    # Expose Ollama internal API (default 11434)
+    ports:
+      - "11434:11434"
+
+    # Persist model weights so they are not re-downloaded every run
+    volumes:
+      - ollama_models:/root/.ollama
+
+    # Optional — you can preload models here
+    # e.g. "ollama pull llama3.2:3b"
+    # command: >
+    #   /bin/sh -c "ollama pull llama3.2:3b && ollama serve"
+
+    networks:
+      - llmnet
+
+  # ----------------------------------------------------
+  # FASTAPI SERVICE — Our LLM processing pipeline
+  # Calls Ollama to run LLaMA summarization
+  # ----------------------------------------------------
+  api:
+    container_name: llm_pipeline_api
+
+    # Build from our Dockerfile.api
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+
+    restart: unless-stopped
+    depends_on:
+      - ollama
+
+    # FastAPI default port
+    ports:
+      - "8000:8000"
+
+    environment:
+      # URL of the Ollama service inside Docker network
+      OLLAMA_HOST: "http://ollama:11434"
+
+      # Activate LLaMA as default summarization backend
+      LLM_BACKEND: "llama"
+      LLM_MODEL_CONFIG: "llama3"
+
+    volumes:
+      # Mount project directory for hot-reload during development
+      - ../:/app
+
+    networks:
+      - llmnet
+
+# ----------------------------------------------------
+# SHARED DOCKER NETWORK
+# Both services must be able to see each other.
+# ----------------------------------------------------
+networks:
+  llmnet:
+
+# ----------------------------------------------------
+# SHARED VOLUME FOR MODELS
+# Ensures the 3B/8B models are cached between runs.
+# ----------------------------------------------------
+volumes:
+  ollama_models:

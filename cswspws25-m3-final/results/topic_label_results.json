@@ -1,0 +1,813 @@
+[
+  {
+    "title": "Israel has ‘de facto state policy’ of organised torture, says UN report",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news",
+      "human rights"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Donald Trump says airspace above and around Venezuela is closed",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news",
+      "conflict"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Russian attack on Kyiv cuts power to half of city and leaves two dead",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "conflict",
+      "politics"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "At least 460 killed in south-east Asia floods and landslides, reports say",
+    "crawler_category": "world",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "floods"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Convincing evidence Israel backed aid convoy looters in Gaza, historian says",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "conflict",
+      "policy"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Ukrainian soldiers see Trump plan as capitulation, even as they dream of peace",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "conflict",
+      "diplomacy"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "National Guard member killed in D.C. shooting remembered for 'heart of gold'",
+    "crawler_category": "us-news",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "What we know about the National Guard members who were victims of the D.C. shooting",
+    "crawler_category": "us-news",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "The campaign to make Richard Nixon great again",
+    "crawler_category": "politics",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "politics",
+      "history"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Trump tells airlines Venezuela's airspace is 'closed in its entirety' in latest escalation",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "military",
+      "conflict"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "After 46 years, a family thought they had closure in the disappearance of their 6-year-old. Now, they’ll face another trial",
+    "crawler_category": "none",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "From mobile phones to cooked frogs, inside London's biggest lost property office",
+    "crawler_category": "none",
+    "llm_category": "events",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Oregon teacher accused of sexual misconduct that school district was ‘fully aware’ of",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "global politics"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Man Keeps Rock For Years, Hoping It's Gold. It Turned Out to Be Way More Valuable.",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "science"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Scientists sound alarm over unprecedented conditions in capital city: 'We may have to evacuate'",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "global politics",
+      "environment"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Settlement reached in Fox vs Dominion lawsuit",
+    "crawler_category": "business",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "law",
+      "media"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Settlement reached in Fox vs Dominion lawsuit",
+    "crawler_category": "business",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "global politics"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Here are the Fox broadcasts and tweets Dominion says were defamatory",
+    "crawler_category": "media",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Fox News settles with Dominion for $787 million, averting defamation trial over its 2020 election lies",
+    "crawler_category": "media",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "global politics"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "The US economy could depend on McCarthy corralling his extremist Republican troops",
+    "crawler_category": "politics",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "economics",
+      "politics"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Israel has ‘de facto state policy’ of organised torture, says UN report",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Donald Trump says airspace above and around Venezuela is closed",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Russian attack on Kyiv cuts power to half of city and leaves two dead",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "conflict",
+      "diplomacy"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "At least 460 killed in south-east Asia floods and landslides, reports say",
+    "crawler_category": "world",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "natural disasters"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Convincing evidence Israel backed aid convoy looters in Gaza, historian says",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "conflict",
+      "diplomacy"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Zelenskyy faces ‘mini-revolution’ as Yermak’s fall reshapes Ukraine’s wartime power system",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Your Party conference thrown into chaos as Zarah Sultana boycotts first day",
+    "crawler_category": "politics",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "party politics"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Impasse over EHRC single-sex spaces guidance ‘distracting from other issues’",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "UK MPs push for extra aid and visas as Jamaica reels from Hurricane Melissa",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Sri Lanka death toll from floods and landslides reaches 153",
+    "crawler_category": "world",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "floods",
+      "natural disaster"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Talks for UK to join EU defence fund collapse in blow to Starmer’s bid to reset relations",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "europe"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Rebel nuns who busted out of Austrian care home win reprieve – if they stay off social media",
+    "crawler_category": "world",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "global politics"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Ukrainian soldiers see Trump plan as capitulation, even as they dream of peace",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "conflict",
+      "diplomacy"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "National Guard member killed in D.C. shooting remembered for 'heart of gold'",
+    "crawler_category": "us-news",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news",
+      "events"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "What we know about the National Guard members who were victims of the D.C. shooting",
+    "crawler_category": "us-news",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "The campaign to make Richard Nixon great again",
+    "crawler_category": "politics",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news",
+      "politics"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Trump tells airlines Venezuela's airspace is 'closed in its entirety' in latest escalation",
+    "crawler_category": "world",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news",
+      "conflict"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Ritz-Carlton's $5,000-a-night safari lodge threatens critical wildlife corridor, conservationists warn",
+    "crawler_category": "world",
+    "llm_category": "events",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Chinese EVs Won't Cost $10,000 In The US: Here's Why",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "economics"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "After 46 years, a family thought they had closure in the disappearance of their 6-year-old. Now, they’ll face another trial",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "global politics"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "From mobile phones to cooked frogs, inside London's biggest lost property office",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "events"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Man Keeps Rock For Years, Hoping It's Gold. It Turned Out to Be Way More Valuable.",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "science"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Scientists sound alarm over unprecedented conditions in capital city: 'We may have to evacuate'",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "global politics"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "\"There Is An Epidemic\": Medical Professionals Are Revealing The \"Bad\" Everyday Habits That Are Slowly Ruining Your Health Over Time",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "health"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Missing Virginia high school football coach Travis Turner disappeared into woods with gun after child-sex allegations: family",
+    "crawler_category": "none",
+    "llm_category": "events",
+    "llm_secondary_tags": [
+      "news",
+      "crime"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "In brief glimpses of Tehran, an AP journalist sees a changing and challenged Iran",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "global politics"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Scientists pull up first riches from 'Holy Grail of shipwrecks' that sank off Colombia in 1708",
+    "crawler_category": "none",
+    "llm_category": "events",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Billionaire sparks outrage after pulling up to seaside town in color-shifting yacht: 'As if they were playing Monopoly'",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "environment"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Dutch chipmaker Nexperia urges Chinese units to help restore supply chain",
+    "crawler_category": "none",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "economy"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "You've Been Warned: Consumer Reports Says These Popular SUVs Are Also The Least Reliable",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "economics"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "3 shot at Westfield Valley Fair mall in San Jose; investigation underway",
+    "crawler_category": "none",
+    "llm_category": "events",
+    "llm_secondary_tags": [
+      "news",
+      "crime"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Australian prime minister Albanese becomes the first ever to marry in office",
+    "crawler_category": "none",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Tim Walz Hits Back At Trump's Shocking Slur With Pointed 4-Word Challenge",
+    "crawler_category": "none",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Scientists make shocking discovery after interviewing fishermen at Panama Canal: 'We'll just keep running out of them'",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "environment",
+      "science"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Donald Trump Uses Shocking Slur in Late-Night Thanksgiving Message",
+    "crawler_category": "none",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "us-news",
+      "politics"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Trump says he wants to 'permanently pause' migration to the US from poorer countries",
+    "crawler_category": "none",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "politics",
+      "immigration"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Heavy snow coming to Indiana, NWS says. When and how much Indy could see",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "weather"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Russia accidentally destroys its only way of sending astronauts to space",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "space"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Settlement reached in Fox vs Dominion lawsuit",
+    "crawler_category": "business",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Settlement reached in Fox vs Dominion lawsuit",
+    "crawler_category": "business",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Here are the Fox broadcasts and tweets Dominion says were defamatory",
+    "crawler_category": "media",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Fox News settles with Dominion for $787 million, averting defamation trial over its 2020 election lies",
+    "crawler_category": "media",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "The US economy could depend on McCarthy corralling his extremist Republican troops",
+    "crawler_category": "politics",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "economics"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "The White homeowner accused of shooting a Black teen who rang his doorbell turns himself in and is released on bail",
+    "crawler_category": "none",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news",
+      "human rights"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Jake Gyllenhaal and Jamie Lee Curtis spent the Covid-19 lockdown together",
+    "crawler_category": "none",
+    "llm_category": "events",
+    "llm_secondary_tags": [
+      "celebrity",
+      "entertainment"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Tiny troubles: Toddler infiltrates White House grounds",
+    "crawler_category": "politics",
+    "llm_category": "events",
+    "llm_secondary_tags": [
+      "technology"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Jamie Foxx remains hospitalized nearly a week after experiencing ‘medical complication’",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "celebrities",
+      "health"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "Benadryl TikTok ‘challenge’: A 13-year-old died in Ohio after participating",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "health"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Netflix is winding down its DVD business after 25 years",
+    "crawler_category": "media",
+    "llm_category": "events",
+    "llm_secondary_tags": [
+      "technology"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "FTC chair Lina Khan warns AI could ‘turbocharge’ fraud and scams",
+    "crawler_category": "none",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "global politics",
+      "economics"
+    ],
+    "llm_confidence": "0.8",
+    "match": false
+  },
+  {
+    "title": "Refined carbs and meat driving global rise in type 2 diabetes, study says",
+    "crawler_category": "health",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "health"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "ADHD medication abuse in schools is a ‘wake-up call’",
+    "crawler_category": "health",
+    "llm_category": "news",
+    "llm_secondary_tags": [
+      "health"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Democrats bash Justice Clarence Thomas but their plan to investigate ethics allegations is unclear",
+    "crawler_category": "politics",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "politics",
+      "government"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "April 18, 2023 - Russia-Ukraine news",
+    "crawler_category": "none",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "security",
+      "nuclear"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Two Russians claiming to be former Wagner commanders admit killing children and civilians in Ukraine",
+    "crawler_category": "none",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "conflict",
+      "human rights"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "GOP blocks Democratic effort to replace Feinstein on Judiciary panel",
+    "crawler_category": "politics",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "us-news",
+      "politics"
+    ],
+    "llm_confidence": "0.9",
+    "match": false
+  },
+  {
+    "title": "McCurtain County, Oklahoma, recording: Governor calls on officials to resign over recording of racist and threatening remarks",
+    "crawler_category": "none",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  },
+  {
+    "title": "Zaporizhzhia nuclear plant: US warns Russia not to touch American nuclear technology at Ukrainian nuclear plant",
+    "crawler_category": "politics",
+    "llm_category": "global politics",
+    "llm_secondary_tags": [
+      "news",
+      "nuclear"
+    ],
+    "llm_confidence": "1.0",
+    "match": false
+  }
+]
