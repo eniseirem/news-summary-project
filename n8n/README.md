@@ -93,13 +93,14 @@ The current LLM stack runs via **Ollama**, with the active model configured by `
 
 ## Installation & Base Layout
 
-The GitLab repository is the **n8n-pipeline** (this repo). Cloning it gives you the n8n code and scripts at the **root** of the clone, not inside a folder named `n8n`. The stack and **`bundle_data_setup.sh`** expect the n8n-pipeline to live at **`~/SWP-News-Summary/n8n`**.
+The GitHub repository is the project source. Cloning it gives you the n8n code and scripts at the **root** of the clone, not inside a folder named `n8n`. The stack and **`bundle_data_setup.sh`** expect the n8n-pipeline to live at **`~/SWP-News-Summary/n8n`**.
 
 **Option A – Clone the n8n-pipeline branch, then let the setup script fix the layout (recommended)**
 
 ```bash
 cd "${HOME}"
-git clone --branch n8n-pipeline https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git cswspws25
+git clone --branch main https://github.com/eniseirem/news-summary-project.git cswspws25
+# Old GitLab URL: https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git
 cd cswspws25
 ./bundle_data_setup.sh
 ```
@@ -116,7 +117,8 @@ cd ~/SWP-News-Summary/n8n
 ```bash
 mkdir -p "${HOME}/SWP-News-Summary"
 cd "${HOME}/SWP-News-Summary"
-git clone --branch n8n-pipeline https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git n8n
+git clone --branch main https://github.com/eniseirem/news-summary-project.git n8n
+# Old GitLab URL: https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git
 cd n8n
 ./bundle_data_setup.sh
 ```

@@ -161,7 +161,8 @@ The pipeline was optimized to handle large-scale article processing efficiently 
 3. **n8n** uses OpenSearch k-NN search to find relevant cluster centroids and matches
 4. **n8n** updates matched cluster centroids (weighted average)
 
-See: [M3 Incremental Clustering (KNN)](https://gitlab.fokus.fraunhofer.de/dana/cswspws25/-/blob/n8n-pipeline/workflows/docs/M3_Incremental_Clustering_KNN.md)
+See: [M3 Incremental Clustering (KNN)](https://github.com/eniseirem/news-summary-project/blob/main/n8n/workflows/docs/M3_Incremental_Clustering_KNN.md)
+<!-- Old GitLab link: https://gitlab.fokus.fraunhofer.de/dana/cswspws25/-/blob/n8n-pipeline/workflows/docs/M3_Incremental_Clustering_KNN.md -->
 
 **Performance Impact:** Faster matching of articles to clusters
 

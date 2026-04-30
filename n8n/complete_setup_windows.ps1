@@ -64,7 +64,8 @@ function Write-Info([string]$Text)    { Write-Host "  [i] $Text" -ForegroundColo
 # CONFIGURATION (mirrors complete_setup.sh)
 # -----------------------------------------------------------------------------
 
-$REPO_URL          = "https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git"
+$REPO_URL          = "https://github.com/eniseirem/news-summary-project.git"
+# Old GitLab URL: https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git
 $BASE_DIR          = Join-Path $env:USERPROFILE "SWP-News-Summary"
 
 $BRANCH_OPENSEARCH = "Opensearch"

@@ -15,7 +15,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/config.sh"
 
 # Git configuration
-GIT_REPO="https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git"
+GIT_REPO="https://github.com/eniseirem/news-summary-project.git"
+# Old GitLab URL: https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git
 GIT_BRANCH="m3-final"
 
 echo ""
@@ -136,7 +137,7 @@ if [ ! -d "$LLM_PATH" ]; then
     mkdir -p "$BASE_DIR"
     cd "$BASE_DIR"
     
-    echo "You'll need to enter your GitLab credentials:"
+    echo "You'll need to enter your Git credentials:"
     git clone -b "$GIT_BRANCH" "$GIT_REPO" "$(basename "$LLM_PATH")"
     
     if [ ! -d "$LLM_PATH" ]; then

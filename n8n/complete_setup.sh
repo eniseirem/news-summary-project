@@ -17,7 +17,8 @@ NC='\033[0m'
 # CONFIGURATION
 # =============================================================================
 
-REPO_URL="https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git"
+REPO_URL="https://github.com/eniseirem/news-summary-project.git"
+# Old GitLab URL: https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git
 BASE_DIR="$HOME/SWP-News-Summary"
 
 # Branch configuration

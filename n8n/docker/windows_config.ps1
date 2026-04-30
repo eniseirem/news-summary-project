@@ -52,13 +52,15 @@ $Global:SWP_DashboardPort        = 8501
 $Global:SWP_OllamaModel         = "llama3.2:3b"
 $Global:SWP_OllamaNumParallel   = 2
 $Global:SWP_OllamaContextLength = 8192
-$Global:SWP_LlmGitRepo          = "https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git"
+$Global:SWP_LlmGitRepo          = "https://github.com/eniseirem/news-summary-project.git"
+# Old GitLab URL: https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git
 $Global:SWP_LlmGitBranch        = "m3-final"
 
 # --- Git branches for other services (same repo) ---
 # NOTE: n8n is not cloned – it is the tree that contains bundle_data_setup_windows.ps1 (SWP_N8nDir).
 
-$Global:SWP_RepoUrl             = "https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git"
+$Global:SWP_RepoUrl             = "https://github.com/eniseirem/news-summary-project.git"
+# Old GitLab URL: https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git
 $Global:SWP_OpensearchPath      = Join-Path $SWP_BaseDir "opensearch"
 $Global:SWP_BranchOpensearch    = "Opensearch"
 $Global:SWP_BranchCrawler       = "WebCrawlerMain"

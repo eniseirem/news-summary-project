@@ -43,7 +43,8 @@ OPENSEARCH_VOLUME="opensearch-data"
 
 # Optional repository cloning (mirrors branches from complete_setup.sh)
 # NOTE: n8n is NOT cloned here – it is the tree that contains this script (N8N_DIR = BASE_DIR/n8n).
-REPO_URL="https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git"
+REPO_URL="https://github.com/eniseirem/news-summary-project.git"
+# Old GitLab URL: https://gitlab.fokus.fraunhofer.de/dana/cswspws25.git
 BRANCH_OPENSEARCH="Opensearch"
 BRANCH_CRAWLER="WebCrawlerMain"
 BRANCH_LLM="m3-final"
