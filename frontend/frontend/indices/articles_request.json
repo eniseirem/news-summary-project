@@ -1,0 +1,154 @@
+{
+  
+    "mappings" : {
+      "properties" : {
+        "attempt" : {
+          "type" : "integer"
+        },
+        "created_at" : {
+          "type" : "date"
+        },
+        "endpoint" : {
+          "type" : "keyword"
+        },
+        "error_message" : {
+          "type" : "text"
+        },
+        "error_type" : {
+          "type" : "keyword"
+        },
+        "http_code" : {
+          "type" : "integer"
+        },
+        "http_method" : {
+          "type" : "keyword"
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "payload_excerpt" : {
+          "properties" : {
+            "article_id" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "by_source" : {
+              "properties" : {
+                "failed" : {
+                  "type" : "long"
+                },
+                "source_id" : {
+                  "type" : "text",
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
+                    }
+                  }
+                },
+                "source_name" : {
+                  "type" : "text",
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
+                    }
+                  }
+                },
+                "successful" : {
+                  "type" : "long"
+                },
+                "total" : {
+                  "type" : "long"
+                }
+              }
+            },
+            "data_received" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "endpoint" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "failed" : {
+              "type" : "long"
+            },
+            "source" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "source_id" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "source_name" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "successful" : {
+              "type" : "long"
+            },
+            "title" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "total_articles" : {
+              "type" : "long"
+            },
+            "total_sources" : {
+              "type" : "long"
+            }
+          }
+        },
+        "request_id" : {
+          "type" : "keyword"
+        },
+        "source" : {
+          "type" : "keyword"
+        },
+        "status" : {
+          "type" : "keyword"
+        },
+        "triggered_by" : {
+          "type" : "keyword"
+        }
+      }
+    
+  }
+}

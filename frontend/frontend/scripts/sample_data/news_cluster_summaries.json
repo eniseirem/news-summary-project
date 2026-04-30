@@ -1,0 +1,87 @@
+[
+    {
+        "id": "summary_1",
+        "request_id": "req_abc_123",
+        "cluster_id": "cluster_xyz_456",
+        "category": "Global Politics",
+        "subcategory": "Climate",
+        "language": "en",
+        "topic_label": "Climate Summit Agreements",
+        "topic_summary": "A global summit on climate change concluded with new international agreements. Leaders discussed carbon emission targets and green energy investments, though some critics argue the measures are not sufficient.",
+        "mega_summary": "Overview: Global commitments around climate targets and financing.",
+        "article_count": 2,
+        "articles": [
+            {"id": "art_pol_001", "title": "Global Summit Concludes", "url": "http://example.com/pol", "source": "Reuters", "published_at": "2023-10-27T12:00:00Z"},
+            {"id": "art_pol_002", "title": "Activists Respond to Climate Pact", "url": "http://example.com/pol2", "source": "The Guardian", "published_at": "2023-10-27T15:00:00Z"}
+        ],
+        "processed_at": "2023-10-28T14:00:00Z"
+    },
+    {
+        "id": "summary_2",
+        "request_id": "req_def_456",
+        "cluster_id": "cluster_tech_001",
+        "category": "Technology",
+        "subcategory": "AI",
+        "language": "en",
+        "topic_label": "AI Development and Funding",
+        "topic_summary": "The AI sector sees rapid development with a new model release and significant funding for a startup creating novel AI chip architecture. The industry is buzzing with potential applications.",
+        "mega_summary": "Overview: Rapid development in AI models and hardware deployments.",
+        "article_count": 3,
+        "articles": [
+            {"id": "art_tech_001", "title": "New AI Model Released", "url": "http://example.com/ai1", "source": "TechCrunch", "published_at": "2023-10-27T10:00:00Z"},
+            {"id": "art_tech_002", "title": "Startup raises funding for AI chip", "url": "http://example.com/ai2", "source": "VentureBeat", "published_at": "2023-10-26T08:30:00Z"},
+            {"id": "art_tech_003", "title": "The Ethics of Advanced AI", "url": "http://example.com/ai3", "source": "Wired", "published_at": "2023-10-28T11:00:00Z"}
+        ],
+        "processed_at": "2023-10-28T15:00:00Z"
+    },
+    {
+        "id": "summary_3",
+        "request_id": "req_ghi_789",
+        "cluster_id": "cluster_eco_de",
+        "category": "Wirtschaft",
+        "subcategory": "Makro",
+        "language": "de",
+        "topic_label": "Starkes Wirtschaftsquartal",
+        "topic_summary": "Die neusten Wirtschaftsindikatoren zeigen ein robustes Wachstum in mehreren Sektoren, angetrieben durch starke Exporte und Binnennachfrage. Experten sind optimistisch für das Jahresende.",
+        "mega_summary": "Übersicht: Positive Wirtschaftsdaten im letzten Quartal.",
+        "article_count": 2,
+        "articles": [
+            {"id": "art_eco_001", "title": "Wirtschaftsindikatoren zeigen Wachstum", "url": "http://example.com/eco", "source": "Handelsblatt", "published_at": "2023-10-26T09:00:00Z"},
+            {"id": "art_eco_002", "title": "Ifo-Index steigt überraschend", "url": "http://example.com/eco2", "source": "FAZ", "published_at": "2023-10-25T10:00:00Z"}
+        ],
+        "processed_at": "2023-10-27T10:00:00Z"
+    },
+    {
+        "id": "summary_4",
+        "request_id": "req_jkl_012",
+        "cluster_id": "cluster_sports_001",
+        "category": "Sports",
+        "subcategory": "Football",
+        "language": "en",
+        "topic_label": "Championship Win",
+        "topic_summary": "A local underdog team secured the national title in a thrilling final match, overcoming the reigning champions in a dramatic penalty shootout.",
+        "mega_summary": "Overview: Highlights from the national championship.",
+        "article_count": 1,
+        "articles": [{"id": "art_sports_001", "title": "Local Team Wins Championship", "url": "http://example.com/sports", "source": "ESPN", "published_at": "2023-10-25T18:00:00Z"}],
+        "processed_at": "2023-10-25T20:00:00Z"
+    },
+    {
+        "id": "summary_5",
+        "request_id": "req_mno_345",
+        "cluster_id": "cluster_health_001",
+        "category": "Health",
+        "subcategory": "Research",
+        "language": "en",
+        "topic_label": "Breakthrough in Cancer Research",
+        "topic_summary": "Researchers have announced a significant breakthrough in cancer treatment, with a new therapy showing remarkable results in early-stage clinical trials. The study focuses on a novel immunotherapy approach.",
+        "mega_summary": "Overview: Promising developments in medical research.",
+        "article_count": 4,
+        "articles": [
+            {"id": "art_health_001", "title": "New Cancer Therapy Shows Promise", "url": "http://example.com/health1", "source": "Nature", "published_at": "2023-10-29T09:00:00Z"},
+            {"id": "art_health_002", "title": "Clinical Trial Results Exceed Expectations", "url": "http://example.com/health2", "source": "ScienceDaily", "published_at": "2023-10-29T11:00:00Z"},
+            {"id": "art_health_003", "title": "Understanding the New Immunotherapy", "url": "http://example.com/health3", "source": "WebMD", "published_at": "2023-10-29T12:30:00Z"},
+            {"id": "art_health_004", "title": "FDA Fast-Tracks New Drug Review", "url": "http://example.com/health4", "source": "Reuters Health", "published_at": "2023-10-30T08:00:00Z"}
+        ],
+        "processed_at": "2023-10-30T14:00:00Z"
+    }
+]

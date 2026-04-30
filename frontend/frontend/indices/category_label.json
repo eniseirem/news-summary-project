@@ -1,0 +1,48 @@
+{
+    "mappings" : {
+      "properties" : {
+        "article_count" : {
+          "type" : "integer"
+        },
+        "article_ids" : {
+          "type" : "keyword"
+        },
+        "category" : {
+          "type" : "keyword"
+        },
+        "category_translated" : {
+          "type" : "keyword"
+        },
+        "category_translated_language" : {
+          "type" : "keyword"
+        },
+        "cluster_id" : {
+          "type" : "keyword"
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "is_noise_cluster" : {
+          "type" : "boolean"
+        },
+        "lda_keywords" : {
+          "type" : "keyword"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "request_id" : {
+          "type" : "keyword"
+        },
+        "summary_length" : {
+          "type" : "integer"
+        },
+        "use_lda" : {
+          "type" : "boolean"
+        },
+        "used_lda" : {
+          "type" : "boolean"
+        }
+      }
+    }
+  }

@@ -1,0 +1,29 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "analysis": {
+        "analyzer": {
+          "en_analyzer": {
+            "type": "standard",
+            "stopwords": "_english_"
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "request_id": { "type": "keyword" },
+      "created_at": { "type": "date" },
+      "time_window": { "type": "keyword" },
+      "filter_category_id": { "type": "keyword" },
+      "keywords": { "type": "keyword" },
+      "options": { "type": "object", "enabled": true },
+      "language": { "type": "keyword" },
+      "article_ids": { "type": "keyword" },
+      "status": { "type": "keyword" }
+    }
+  }
+}

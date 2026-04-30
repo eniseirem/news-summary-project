@@ -1,0 +1,33 @@
+{
+  
+    "mappings" : {
+      "properties" : {
+        "article_id" : {
+          "type" : "keyword"
+        },
+        "id" : {
+          "type" : "keyword"
+        },
+        "language" : {
+          "type" : "keyword"
+        },
+        "model" : {
+          "type" : "keyword"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "sentiment" : {
+          "type" : "keyword"
+        },
+        "style_version" : {
+          "type" : "keyword"
+        },
+        "summary" : {
+          "type" : "text",
+          "analyzer" : "en_analyzer"
+        }
+      }
+    }
+  
+}

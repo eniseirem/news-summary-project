@@ -1,0 +1,27 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "analysis": {
+        "analyzer": {
+          "en_analyzer": {
+            "type": "standard",
+            "stopwords": "_english_"
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": { "type": "keyword" },
+      "batch_request_id": { "type": "keyword" },
+      "chunk_id": { "type": "integer" },
+      "summary": { "type": "text", "analyzer": "en_analyzer" },
+      "source_article_ids": { "type": "keyword" },
+      "created_at": { "type": "date" },
+      "embedding_knn": { "type": "knn_vector", "dimension": 768 }
+    }
+  }
+}

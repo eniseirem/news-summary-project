@@ -1,0 +1,83 @@
+{
+    "mappings" : {
+      "properties" : {
+        "cluster_article_ids" : {
+          "properties" : {
+            "c1" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            }
+          }
+        },
+        "error_reasons" : {
+          "type" : "keyword"
+        },
+        "individual_results" : {
+          "type" : "nested",
+          "properties" : {
+            "error" : {
+              "type" : "text"
+            },
+            "model" : {
+              "type" : "keyword"
+            },
+            "scores" : {
+              "properties" : {
+                "coherence" : {
+                  "type" : "float"
+                },
+                "consistency" : {
+                  "type" : "float"
+                },
+                "fluency" : {
+                  "type" : "float"
+                },
+                "relevance" : {
+                  "type" : "float"
+                }
+              }
+            },
+            "status" : {
+              "type" : "keyword"
+            }
+          }
+        },
+        "ingested_at" : {
+          "type" : "date"
+        },
+        "num_judges_used" : {
+          "type" : "integer"
+        },
+        "processed_at" : {
+          "type" : "date"
+        },
+        "request_id" : {
+          "type" : "keyword"
+        },
+        "scores" : {
+          "properties" : {
+            "coherence" : {
+              "type" : "float"
+            },
+            "consistency" : {
+              "type" : "float"
+            },
+            "fluency" : {
+              "type" : "float"
+            },
+            "relevance" : {
+              "type" : "float"
+            }
+          }
+        },
+        "status" : {
+          "type" : "keyword"
+        }
+      }
+    }
+  }
