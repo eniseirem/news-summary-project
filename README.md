@@ -53,7 +53,7 @@ Most pipeline logic is orchestrated by n8n workflows.
 |                       Docker Network                             |
 |------------------------------------------------------------------|
 |                                                                  |
-|  [Crawler] ─────▶ [n8n] ─────▶ [llm-service] ─────▶ [Ollama]   |
+|  [Crawler] ─────▶ [n8n] ─────▶ [llm-service] ─────▶ [Ollama]     |
 |                     │                                            |
 |                     │                                            |
 |                     ├────────────▶ [Dashboard]                   |
@@ -140,8 +140,9 @@ Component-specific implementation also lives in:
 
 ## Contributors
 
-- **eniseirem** (N8N Lead, Integration)
-- **Lennyad** (collaborator invited)
+- **lelatvaliashvili**
+- **eniseirem** 
+- **Lennyad** 
 
 Add future contributors in GitHub repository settings:
 `Settings -> Collaborators and teams`.
