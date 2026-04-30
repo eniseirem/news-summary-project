@@ -1,0 +1,980 @@
+###### Scrape Report for Bild at 2026-01-27 17:10:40.363802 #####
+Incomplete article crawls: 3 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/fussball/es-geht-um-die-upamecao-zukunft-moderatorin-verkuendet-bayern-vorgang-live-in-der-sendung-69788beefe9fcdf90e7cadfb 
+['title', 'body', 'published_at'] missing in https://www.bild.de/politik/bild-politikchef-zu-sozialstaat-reform-werden-die-minijobs-abgeschafft-697897a5fe9fcdf90e7caf80 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/stars-und-leute/an-ihrem-1-geburtstag-kleines-maedchen-pustet-nicht-sie-kotzt-die-kerze-aus-6977658f707d4aa207581cf0 
+###### Scrape Report for Welt at 2026-01-27 17:11:51.853123 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Spiegel at 2026-01-27 17:13:11.963909 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Tagesspiegel at 2026-01-27 17:15:11.595147 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Tagesspiegel at 2026-01-27 17:27:50.487048 #####
+Incomplete article crawls: 0 
+###### Scrape Report for SBS at 2026-01-27 17:29:21.837879 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Tagesspiegel at 2026-01-27 17:30:16.988182 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Tagesspiegel at 2026-01-27 17:31:08.829527 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Tagesspiegel at 2026-01-27 17:32:24.014578 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Tagesspiegel at 2026-01-27 17:32:25.225466 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Tagesspiegel at 2026-01-27 17:33:36.203304 #####
+Incomplete article crawls: 0 
+###### Scrape Report for tagesschau at 2026-01-27 17:35:16.378311 #####
+Incomplete article crawls: 0 
+###### Scrape Report for tagesschau at 2026-01-27 17:35:18.617634 #####
+Incomplete article crawls: 0 
+###### Scrape Report for tagesschau at 2026-01-27 17:37:02.572952 #####
+Incomplete article crawls: 68 
+Failed articles: 
+['published_at'] missing in https://www.faz.net/aktuell/politik/ausland/verteidigungspartnerschaft-die-eu-will-indien-weg-von-putin-ziehen-110826175.html 
+['published_at'] missing in https://www.faz.net/aktuell/wirtschaft/abkommen-zwischen-indien-und-der-eu-der-handel-lebt-110826128.html 
+['published_at'] missing in https://www.faz.net/aktuell/sport/olympische-winterspiele/ice-einsatz-bei-olympia-2026-in-italien-kritik-an-us-behoerde-accg-200479359.html 
+['published_at'] missing in https://www.faz.net/aktuell/feuilleton/debatten/schroeder-wird-zum-ostdeutschen-110826269.html 
+['published_at'] missing in https://www.faz.net/aktuell/wirtschaft/hessens-wirtschaftsminister-mansoori-kritisiert-iran-verbindung-der-hilton-hotels-110826437.html 
+['published_at'] missing in https://www.faz.net/podcasts/f-a-z-podcast-fuer-deutschland/nato-am-wendepunkt-carlo-masala-ueber-neue-weltordnung-200480463.html 
+['published_at'] missing in https://www.faz.net/aktuell/rhein-main/region-und-hessen/kochen-und-essen-wie-im-mittelalter-accg-200445557.html 
+['published_at'] missing in https://www.faz.net/aktuell/politik/inland/warum-cem-oezdemir-auf-boris-palmer-setzt-110826385.html 
+['published_at'] missing in https://www.faz.net/aktuell/politik/ausland/eu-bericht-das-ausmass-an-antisemitismus-ist-deutlich-groesser-200479692.html 
+['published_at'] missing in https://www.faz.net/aktuell/politik/inland/holocaust-ueberlebende-tova-friedman-spricht-im-bundestag-damit-die-erinnerung-nicht-verblasst-accg-110825847.html 
+['published_at'] missing in https://www.faz.net/aktuell/politik/geschichte/holocaust-gedenktag-judenmord-jenseits-von-auschwitz-110825254.html 
+['published_at'] missing in https://www.faz.net/aktuell/politik/nie-wieder-willkuer-staatliche-gewalt-erfordert-kontrolle-110825896.html 
+['published_at'] missing in https://www.faz.net/aktuell/feuilleton/debatten/das-ende-des-wachstums-110825597.html 
+['published_at'] missing in https://www.faz.net/aktuell/rhein-main/kultur/schnee-200477994.html 
+['published_at'] missing in https://www.faz.net/aktuell/politik/inland/in-rheinland-pfalz-ist-die-letzte-ampel-am-ende-110821541.html 
+['published_at'] missing in https://www.faz.net/aktuell/sport/mehr-sport/tyrese-haliburton-bei-x-zu-minneapolis-alex-pretti-wurde-ermordet-110825854.html 
+['published_at'] missing in https://www.faz.net/aktuell/wirtschaft/unternehmen/anta-sports-investiert-in-puma-eine-chance-fuer-den-adidas-konkurrenten-110826098.html 
+['published_at'] missing in https://www.faz.net/aktuell/technik-motor/die-sichersten-autos-kritik-an-verbraucherschuetzern-110825073.html 
+['published_at'] missing in https://www.faz.net/aktuell/wirtschaft/unternehmen/ruestungs-speed-die-ruestungsindustrie-braucht-mehr-auftraege-110825866.html 
+['published_at'] missing in https://www.faz.net/aktuell/rhein-main/region-und-hessen/altlasten-mainz-laesst-marode-betonbruecken-abreissen-200475522.html 
+['published_at'] missing in https://www.faz.net/aktuell/politik/inland/afd-im-osten-auf-dem-weg-zur-volkspartei-110825758.html 
+['published_at'] missing in https://www.faz.net/aktuell/wirtschaft/lifestyle-politik-110825627.html 
+['published_at'] missing in https://www.faz.net/aktuell/politik/inland/nrw-ministerin-paul-tritt-nach-kritik-wegen-solingen-zurueck-110826228.html 
+['published_at'] missing in https://www.faz.net/aktuell/politik/inland/verfahren-gegen-tilman-kuban-eingestellt-kein-hinreichender-tatverdacht-200480322.html 
+['published_at'] missing in https://www.faz.net/aktuell/gesellschaft/kriminalitaet/anwalt-von-christina-block-fordert-einstellung-des-verfahrens-200480446.html 
+['published_at'] missing in https://www.faz.net/aktuell/spiele/news-quiz/news-quiz-des-tages-testen-sie-ihr-wissen-heute-wer-will-nein-zu-trump-sagen-faz-200480268.html 
+['published_at'] missing in https://www.faz.net/aktuell/gesellschaft/menschen/promis-empoert-wie-hollywoodstars-gegen-ice-protestieren-200479529.html 
+['published_at'] missing in https://www.faz.net/aktuell/feuilleton/kunst-und-architektur/die-altenberger-madonna-komplettiert-im-staedel-nach-100-jahren-den-gleichnamigen-altar-110826309.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/pro-finanzen/vermoegensaufbau/das-sind-die-zehn-besten-etf-2025-und-die-schlechtesten-accg-110825800.html 
+['published_at'] missing in https://www.faz.net/podcasts/f-a-z-finanzen-immobilien/f-a-z-so-gelingt-ein-aktiendepot-ohne-etf-200476365.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/pro-finanzen/vermoegensaufbau/ein-etf-sparplan-sollte-teil-in-jedem-depot-und-jeder-altersvorsorgeplanung-sein-accg-110824624.html 
+['published_at'] missing in https://www.faz.net/aktuell/feuilleton/debatten/sind-normalverdiener-zufriedener-als-die-superreichen-accg-110824216.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/etf-tricks-wie-sie-die-steuer-senken-accg-110824134.html 
+['published_at'] missing in https://www.faz.net/aktuell/wissen/medizin-ernaehrung/immunabwehr-staerken-wie-das-belohnungssystem-hilft-accg-200465317.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/was-den-gold-rekord-befeuert-und-anleger-jetzt-wissen-muessen-accg-200474227.html 
+['published_at'] missing in https://www.faz.net/aktuell/feuilleton/debatten/hessen-landgraf-donatus-und-benedikt-kuhn-ueber-moegliche-schenkung-von-schloessern-accg-110825051.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/wenn-die-krankenkasse-nach-dem-wechsel-boese-briefe-schreibt-accg-110820541.html 
+['published_at'] missing in https://www.faz.net/aktuell/technik-motor/elektromobilitaet/xpeng-g9-ueberzeugt-im-test-mit-hoher-ladeleistung-accg-110821133.html 
+['published_at'] missing in https://www.faz.net/aktuell/politik/ausland/deutscher-aussenpolitik-fehlt-strategisches-wissen-accg-200459952.html 
+['published_at'] missing in https://www.faz.net/aktuell/karriere-hochschule/buero-co/stress-und-erschoepfung-warum-applaus-fuer-viel-arbeit-suechtig-machen-kann-accg-110755700.html 
+['published_at'] missing in https://www.faz.net/aktuell/stil/leib-seele/kolumnen/gegen-die-klischees-frauen-in-der-lebensmitte-wollen-sex-accg-110740334.html 
+['published_at'] missing in https://www.faz.net/aktuell/stil/leib-seele/preis-der-untreue-warum-wir-trotzdem-fremdgehen-110547655.html 
+['published_at'] missing in https://www.faz.net/aktuell/stil/leib-seele/kolumnen/midlife-crisis-so-schlecht-wie-mit-40-ging-es-mir-noch-nie-accg-110612566.html 
+['published_at'] missing in https://www.faz.net/aktuell/gesellschaft/menschen/ein-sugarbabe-und-sugardaddy-erzaehlen-von-ihren-erfahrungen-110585880.html 
+['published_at'] missing in https://www.faz.net/aktuell/rhein-main/region-und-hessen/psychologin-erklaert-wie-fuenf-minuten-die-beziehung-retten-koennen-110552893.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/pro-finanzen/auf-diese-etf-setzen-vermoegensverwalter-msci-world-nur-auf-platz-vier-110525965.html 
+['published_at'] missing in https://www.faz.net/aktuell/wissen/medizin-ernaehrung/so-koennen-maenner-mehr-als-zehn-jahre-lebenszeit-gewinnen-110388601.html 
+['published_at'] missing in https://www.faz.net/aktuell/wissen/medizin-ernaehrung/wechseljahre-wie-die-hormonumstellung-zu-gelenkschmerzen-fuehren-kann-110385068.html 
+['published_at'] missing in https://www.faz.net/aktuell/wirtschaft/immobilien-wohnen/mieten-vermieten/hausverkauf-eigentuemer-bewerten-ihre-haeuser-oft-viel-zu-hoch-110324201.html 
+['published_at'] missing in https://www.faz.net/aktuell/stil/leib-seele/der-partner-geht-zu-einer-prostituierten-und-jetzt-110249616.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/ab-welchem-einkommen-ihre-bank-sie-fuer-reich-haelt-und-welche-vorteile-das-hat-110143362.html 
+['published_at'] missing in https://www.faz.net/aktuell/gesellschaft/gesundheit/warum-kleinkinder-nicht-vor-dem-bildschirm-sitzen-sollten-110221127.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/vermoegensaufbau-wann-ist-die-finanzielle-unabhaengigkeit-erreicht-19794351.html 
+['published_at'] missing in https://www.faz.net/aktuell/wirtschaft/warum-trump-groenland-so-dringend-unter-kontrolle-der-usa-bringen-will-110223944.html 
+['published_at'] missing in https://www.faz.net/aktuell/wissen/leben-gene/geschwister-beziehung-eltern-haben-enormen-einfluss-auf-das-verhaeltnis-110184892.html 
+['published_at'] missing in https://www.faz.net/aktuell/stil/essen-trinken/wie-sie-mit-der-richtigen-ernaehrung-laenger-leben-koennen-110127315.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/pro-finanzen/vermoegensaufbau/ruhestandsrechner-wann-kann-ich-mit-der-arbeit-aufhoeren-19986400.html 
+['published_at'] missing in https://www.faz.net/aktuell/wirtschaft/immobilien-wohnen/mieten-vermieten/immobilie-kaufen-makler-erklaert-wie-man-richtig-preise-verhandelt-19967632.html 
+['published_at'] missing in https://www.faz.net/aktuell/wissen/medizin-ernaehrung/schutz-vor-demenz-diese-14-risikofaktoren-sollten-sie-ausschalten-19892344.html 
+['published_at'] missing in https://www.faz.net/aktuell/stil/leib-seele/die-rolle-von-sex-in-beziehungen-wie-begehren-entsteht-19866152.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/pro-finanzen/vermoegensaufbau/gutverdiener-in-geldnot-10-000-euro-im-monat-reichen-nicht-was-tun-19741295.html 
+['published_at'] missing in https://www.faz.net/aktuell/stil/leib-seele/kolumnen/trennen-oder-bleiben-wann-die-beziehung-noch-zu-retten-ist-18583801.html 
+['published_at'] missing in https://www.faz.net/aktuell/gesellschaft/tipps-fuer-eltern-so-gehen-kinder-gut-und-resilient-durchs-leben-18468713.html 
+['published_at'] missing in https://www.faz.net/aktuell/feuilleton/kolumnen/richtig-essen/ueber-einen-monat-lang-hochverarbeitete-nahrung-ich-fuehle-mich-zehn-jahre-aelter-110269807.html 
+['published_at'] missing in https://www.faz.net/pro/digitalwirtschaft/kuenstliche-intelligenz/ueberraschende-ergebnisse-wie-menschen-chatgpt-wirklich-nutzen-110687940.html 
+['published_at'] missing in https://www.faz.net/pro/weltwirtschaft/weltwissen/mercosur-abkommen-im-ueberblick-inhalte-ziele-und-offene-fragen-accg-200362590.html 
+['published_at'] missing in https://www.faz.net/aktuell/finanzen/pro-finanzen/vermoegensaufbau/gold-ist-sehr-beliebt-diese-etfs-kaufen-die-profis-accg-200336500.html 
+['published_at'] missing in https://www.faz.net/aktuell/feuilleton/kolumnen/richtig-essen/andreas-michalsen-ueber-omega-3-fettsaeuren-vitamin-d-und-b12-accg-200261930.html 
+###### Scrape Report for tagesschau at 2026-01-27 17:37:34.525825 #####
+Incomplete article crawls: 20 
+Failed articles: 
+['published_at'] missing in https://www.stern.de/politik/deutschland/sonntagsfrage--so-stehen-die-parteien-in-aktuellen-umfragen-da-35731284.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/sachsen/buendnis-sahra-wagenknecht--ronny-kupke-neuer-bsw-fraktionschef-im-landtag-von-sachsen-37082336.html 
+['published_at'] missing in https://www.stern.de/politik/ausland/geschichte--auschwitz-gedenken--ueberlebender-warnt-vor-wachsendem-hass-37082330.html 
+['published_at'] missing in https://www.stern.de/politik/ausland/ice-einsatz-in-minneapolis--homan-statt-bovino--ein-hardliner-ersetzt-den-anderen-37081952.html 
+['published_at'] missing in https://www.stern.de/satirische-bestandsaufnahme-vor-jubilaeumsausgabe-37082322.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/nordrhein-westfalen/prozesse--abberufung-von-gleichstellungsbeauftragter-war-rechtswidrig-37082312.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/baden-wuerttemberg/baumfaellarbeiten--lkw-faehrt-gegen-sicherungsanhaenger---a96-vier-stunden-dicht-37082308.html 
+['published_at'] missing in https://www.stern.de/politik/deutschland/umfrage--afd-nicht-mehr-staerkste-kraft---erstmals-seit-monaten--video--37081574.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/bayern/amtsgericht-augsburg--erzieher-nach-uebergriffen-in-kitas-zu-haftstrafe-verurteilt-37082292.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/berlin-brandenburg/gedenken-an-ns-opfer--brandenburg-gedenkt-der-holocaust-opfer-37078982.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/niedersachsen-bremen/schienenverkehr--nach-zugcrash-bei-elze--strecke-bleibt-bis-februar-gesperrt-37082296.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/bayern/unfaelle--lastwagen-verliert-rund-240-getraenkekaesten-auf-bundesstrasse-37082280.html 
+['published_at'] missing in https://www.stern.de/lifestyle/leute/monaco--fuerstenfamilie-mit-elegantem-auftritt-zum-feiertag-37080414.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/thueringen/messen---thueringen-ausstellung--startet-mit-mehr-als-750-ausstellern-37082286.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/bayern/wetter--winterchaos-in-franken---nach-schnee-droht-nun-glaette-37079192.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/berlin-brandenburg/wetter-und-verkehr--nach-eisregen-fahren-immer-mehr-strassenbahnen-wieder-37078910.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/berlin-brandenburg/wetter-und-verkehr--nach-eisregen--viele-tram-linien-in-berlin-wieder-in-betrieb-37082304.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/niedersachsen-bremen/winterwetter--oldenburg-sperrt-turnhallen-wegen-schneelast-auf-daechern-37082274.html 
+['published_at'] missing in https://www.stern.de/gesellschaft/regional/mecklenburg-vorpommern/arbeitsschutz--stralsunder-werftarbeiter-mit-blei-kontaminiert-37082268.html 
+['published_at'] missing in https://www.stern.de/news/primaerarztsystem--warken-erhofft-sich-bessere-und-schnellere-versorgung-37082260.html 
+###### Scrape Report for tagesschau at 2026-01-27 17:38:55.084281 #####
+Incomplete article crawls: 0 
+###### Scrape Report for tagesschau at 2026-01-27 17:38:56.912051 #####
+Incomplete article crawls: 0 
+###### Scrape Report for tagesschau at 2026-01-27 17:43:49.433998 #####
+Incomplete article crawls: 0 
+###### Scrape Report for tagesschau at 2026-01-27 17:43:51.842640 #####
+Incomplete article crawls: 0 
+###### Scrape Report for tagesschau at 2026-01-27 17:43:52.903567 #####
+Incomplete article crawls: 0 
+###### Scrape Report for tagesschau at 2026-01-27 17:46:06.896250 #####
+Incomplete article crawls: 0 
+###### Scrape Report for ntv at 2026-01-27 17:51:11.242472 #####
+Incomplete article crawls: 30 
+Failed articles: 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/50-000-eliminierte-Russen-pro-Monat-Ukraine-plant-Drohnen-Hoelle-id30291954.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Zensiert-Tiktok-Trump-kritische-Inhalte-id30291673.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/CDU-Politiker-stellt-Bettler-an-den-Pranger-und-entfacht-Diskussion-id30291676.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Unesco-prangert-Antisemitismus-an-Schulen-in-Europa-an-id30291381.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Eine-richtige-Reform-ist-das-nicht-aber-genau-das-ist-ihr-Vorteil-id30291483.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Reiche-ist-jetzt-schon-unbeliebter-als-es-Habeck-je-war-id30289702.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Hamas-soll-auf-Tausende-Polizisten-in-neuer-Gaza-Verwaltung-dringen-id30290579.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Union-ist-wieder-staerkste-Kraft-AfD-verliert-an-Zustimmung-id30289075.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Linnemann-erteilt-Teilzeit-Vorstoss-Absage-id30289999.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Bericht-USA-wollen-Garantien-fuer-Ukraine-nur-bei-Gebietsverzicht-geben-id30289510.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/NRW-Ministerin-Paul-tritt-im-Zuge-von-Solingen-Aufarbeitung-zurueck-id30289089.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Bundesregierung-will-Kampfdrohnen-fuer-600-Millionen-Euro-kaufen-id30289034.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Reformen-ohne-Einschnitte-werden-nicht-funktionieren-id30289105.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Experten-beraten-ueber-Zuerst-zum-Hausarzt-Reform-id30288400.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Pariser-Klimaschutzabkommen-muss-ab-sofort-ohne-USA-auskommen-id30288635.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Frankreichs-Parlament-stimmt-fuer-Social-Media-Verbot-unter-15-id30288692.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Trump-wuerdigt-Hamas-Hilfe-bei-Suche-nach-letzter-Geisel-id30288316.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Trump-deutet-Umschwenken-in-Minneapolis-an-id30288393.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Trump-erhoeht-Zoelle-fuer-Suedkorea-auf-25-Prozent-id30288184.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Trump-setzt-auf-Deal-mit-dem-Iran-id30288103.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Grenzschutz-Kommandeur-Bovino-soll-Minneapolis-verlassen-id30287933.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Dobrindt-will-Linksextremisten-staerker-auf-den-Zahn-fuehlen-id30287761.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Nato-Chef-Ohne-USA-braeuchte-Europa-ein-Zehn-Prozent-Ziel-id30287516.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/US-Flugzeugtraeger-Abraham-Lincoln-erreicht-Ziel-im-Nahen-Osten-id30287357.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Die-Ukrainer-draengen-die-Russen-aus-Kupjansk-hinaus-id30286538.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Gregory-Bovino-das-ist-Trumps-Mann-fuers-Grobe-id30287284.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Kommission-will-den-deutschen-Sozialstaat-stark-umbauen-id30287318.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Koalition-einigt-sich-bei-Asyl-und-Migrationspaket-id30287395.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Hubschrauber-attackiert-Russen-schrauben-Elon-Musks-Starlink-System-auf-Drohnen-id30286799.html 
+Exception: name 'link' is not defined in:https://www.n-tv.de/politik/Skandalpolitiker-Krah-steht-vor-Parteiverfahren-id30287241.html 
+###### Scrape Report for ntv at 2026-01-27 17:54:47.906865 #####
+Incomplete article crawls: 30 
+Failed articles: 
+['published_at'] missing in https://www.n-tv.de/politik/50-000-eliminierte-Russen-pro-Monat-Ukraine-plant-Drohnen-Hoelle-id30291954.html
+['published_at'] missing in https://www.n-tv.de/politik/Zensiert-Tiktok-Trump-kritische-Inhalte-id30291673.html
+['published_at'] missing in https://www.n-tv.de/politik/CDU-Politiker-stellt-Bettler-an-den-Pranger-und-entfacht-Diskussion-id30291676.html
+['published_at'] missing in https://www.n-tv.de/politik/Unesco-prangert-Antisemitismus-an-Schulen-in-Europa-an-id30291381.html
+['published_at'] missing in https://www.n-tv.de/politik/Eine-richtige-Reform-ist-das-nicht-aber-genau-das-ist-ihr-Vorteil-id30291483.html
+['published_at'] missing in https://www.n-tv.de/politik/Reiche-ist-jetzt-schon-unbeliebter-als-es-Habeck-je-war-id30289702.html
+['published_at'] missing in https://www.n-tv.de/politik/Hamas-soll-auf-Tausende-Polizisten-in-neuer-Gaza-Verwaltung-dringen-id30290579.html
+['published_at'] missing in https://www.n-tv.de/politik/Union-ist-wieder-staerkste-Kraft-AfD-verliert-an-Zustimmung-id30289075.html
+['published_at'] missing in https://www.n-tv.de/politik/Linnemann-erteilt-Teilzeit-Vorstoss-Absage-id30289999.html
+['published_at'] missing in https://www.n-tv.de/politik/Bericht-USA-wollen-Garantien-fuer-Ukraine-nur-bei-Gebietsverzicht-geben-id30289510.html
+['published_at'] missing in https://www.n-tv.de/politik/NRW-Ministerin-Paul-tritt-im-Zuge-von-Solingen-Aufarbeitung-zurueck-id30289089.html
+['published_at'] missing in https://www.n-tv.de/politik/Bundesregierung-will-Kampfdrohnen-fuer-600-Millionen-Euro-kaufen-id30289034.html
+['published_at'] missing in https://www.n-tv.de/politik/Reformen-ohne-Einschnitte-werden-nicht-funktionieren-id30289105.html
+['published_at'] missing in https://www.n-tv.de/politik/Experten-beraten-ueber-Zuerst-zum-Hausarzt-Reform-id30288400.html
+['published_at'] missing in https://www.n-tv.de/politik/Pariser-Klimaschutzabkommen-muss-ab-sofort-ohne-USA-auskommen-id30288635.html
+['published_at'] missing in https://www.n-tv.de/politik/Frankreichs-Parlament-stimmt-fuer-Social-Media-Verbot-unter-15-id30288692.html
+['published_at'] missing in https://www.n-tv.de/politik/Trump-wuerdigt-Hamas-Hilfe-bei-Suche-nach-letzter-Geisel-id30288316.html
+['published_at'] missing in https://www.n-tv.de/politik/Trump-deutet-Umschwenken-in-Minneapolis-an-id30288393.html
+['published_at'] missing in https://www.n-tv.de/politik/Trump-erhoeht-Zoelle-fuer-Suedkorea-auf-25-Prozent-id30288184.html
+['published_at'] missing in https://www.n-tv.de/politik/Trump-setzt-auf-Deal-mit-dem-Iran-id30288103.html
+['published_at'] missing in https://www.n-tv.de/politik/Grenzschutz-Kommandeur-Bovino-soll-Minneapolis-verlassen-id30287933.html
+['published_at'] missing in https://www.n-tv.de/politik/Dobrindt-will-Linksextremisten-staerker-auf-den-Zahn-fuehlen-id30287761.html
+['published_at'] missing in https://www.n-tv.de/politik/Nato-Chef-Ohne-USA-braeuchte-Europa-ein-Zehn-Prozent-Ziel-id30287516.html
+['published_at'] missing in https://www.n-tv.de/politik/US-Flugzeugtraeger-Abraham-Lincoln-erreicht-Ziel-im-Nahen-Osten-id30287357.html
+['published_at'] missing in https://www.n-tv.de/politik/Die-Ukrainer-draengen-die-Russen-aus-Kupjansk-hinaus-id30286538.html
+['published_at'] missing in https://www.n-tv.de/politik/Gregory-Bovino-das-ist-Trumps-Mann-fuers-Grobe-id30287284.html
+['published_at'] missing in https://www.n-tv.de/politik/Kommission-will-den-deutschen-Sozialstaat-stark-umbauen-id30287318.html
+['published_at'] missing in https://www.n-tv.de/politik/Koalition-einigt-sich-bei-Asyl-und-Migrationspaket-id30287395.html
+['published_at'] missing in https://www.n-tv.de/politik/Hubschrauber-attackiert-Russen-schrauben-Elon-Musks-Starlink-System-auf-Drohnen-id30286799.html
+['published_at'] missing in https://www.n-tv.de/politik/Skandalpolitiker-Krah-steht-vor-Parteiverfahren-id30287241.html
+###### Scrape Report for ntv at 2026-01-27 17:55:20.022294 #####
+Incomplete article crawls: 30 
+Failed articles: 
+['published_at'] missing in https://www.n-tv.de/politik/50-000-eliminierte-Russen-pro-Monat-Ukraine-plant-Drohnen-Hoelle-id30291954.html
+['published_at'] missing in https://www.n-tv.de/politik/Zensiert-Tiktok-Trump-kritische-Inhalte-id30291673.html
+['published_at'] missing in https://www.n-tv.de/politik/CDU-Politiker-stellt-Bettler-an-den-Pranger-und-entfacht-Diskussion-id30291676.html
+['published_at'] missing in https://www.n-tv.de/politik/Unesco-prangert-Antisemitismus-an-Schulen-in-Europa-an-id30291381.html
+['published_at'] missing in https://www.n-tv.de/politik/Eine-richtige-Reform-ist-das-nicht-aber-genau-das-ist-ihr-Vorteil-id30291483.html
+['published_at'] missing in https://www.n-tv.de/politik/Reiche-ist-jetzt-schon-unbeliebter-als-es-Habeck-je-war-id30289702.html
+['published_at'] missing in https://www.n-tv.de/politik/Hamas-soll-auf-Tausende-Polizisten-in-neuer-Gaza-Verwaltung-dringen-id30290579.html
+['published_at'] missing in https://www.n-tv.de/politik/Union-ist-wieder-staerkste-Kraft-AfD-verliert-an-Zustimmung-id30289075.html
+['published_at'] missing in https://www.n-tv.de/politik/Linnemann-erteilt-Teilzeit-Vorstoss-Absage-id30289999.html
+['published_at'] missing in https://www.n-tv.de/politik/Bericht-USA-wollen-Garantien-fuer-Ukraine-nur-bei-Gebietsverzicht-geben-id30289510.html
+['published_at'] missing in https://www.n-tv.de/politik/NRW-Ministerin-Paul-tritt-im-Zuge-von-Solingen-Aufarbeitung-zurueck-id30289089.html
+['published_at'] missing in https://www.n-tv.de/politik/Bundesregierung-will-Kampfdrohnen-fuer-600-Millionen-Euro-kaufen-id30289034.html
+['published_at'] missing in https://www.n-tv.de/politik/Reformen-ohne-Einschnitte-werden-nicht-funktionieren-id30289105.html
+['published_at'] missing in https://www.n-tv.de/politik/Experten-beraten-ueber-Zuerst-zum-Hausarzt-Reform-id30288400.html
+['published_at'] missing in https://www.n-tv.de/politik/Pariser-Klimaschutzabkommen-muss-ab-sofort-ohne-USA-auskommen-id30288635.html
+['published_at'] missing in https://www.n-tv.de/politik/Frankreichs-Parlament-stimmt-fuer-Social-Media-Verbot-unter-15-id30288692.html
+['published_at'] missing in https://www.n-tv.de/politik/Trump-wuerdigt-Hamas-Hilfe-bei-Suche-nach-letzter-Geisel-id30288316.html
+['published_at'] missing in https://www.n-tv.de/politik/Trump-deutet-Umschwenken-in-Minneapolis-an-id30288393.html
+['published_at'] missing in https://www.n-tv.de/politik/Trump-erhoeht-Zoelle-fuer-Suedkorea-auf-25-Prozent-id30288184.html
+['published_at'] missing in https://www.n-tv.de/politik/Trump-setzt-auf-Deal-mit-dem-Iran-id30288103.html
+['published_at'] missing in https://www.n-tv.de/politik/Grenzschutz-Kommandeur-Bovino-soll-Minneapolis-verlassen-id30287933.html
+['published_at'] missing in https://www.n-tv.de/politik/Dobrindt-will-Linksextremisten-staerker-auf-den-Zahn-fuehlen-id30287761.html
+['published_at'] missing in https://www.n-tv.de/politik/Nato-Chef-Ohne-USA-braeuchte-Europa-ein-Zehn-Prozent-Ziel-id30287516.html
+['published_at'] missing in https://www.n-tv.de/politik/US-Flugzeugtraeger-Abraham-Lincoln-erreicht-Ziel-im-Nahen-Osten-id30287357.html
+['published_at'] missing in https://www.n-tv.de/politik/Die-Ukrainer-draengen-die-Russen-aus-Kupjansk-hinaus-id30286538.html
+['published_at'] missing in https://www.n-tv.de/politik/Gregory-Bovino-das-ist-Trumps-Mann-fuers-Grobe-id30287284.html
+['published_at'] missing in https://www.n-tv.de/politik/Kommission-will-den-deutschen-Sozialstaat-stark-umbauen-id30287318.html
+['published_at'] missing in https://www.n-tv.de/politik/Koalition-einigt-sich-bei-Asyl-und-Migrationspaket-id30287395.html
+['published_at'] missing in https://www.n-tv.de/politik/Hubschrauber-attackiert-Russen-schrauben-Elon-Musks-Starlink-System-auf-Drohnen-id30286799.html
+['published_at'] missing in https://www.n-tv.de/politik/Skandalpolitiker-Krah-steht-vor-Parteiverfahren-id30287241.html
+###### Scrape Report for Bild at 2026-01-30 13:04:17.486734 #####
+Incomplete article crawls: 12 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/inland/toedlicher-vorfall-in-hamburg-u-bahn-erfasst-zwei-menschen-697bf8d1fa531953d5215640 
+['title', 'body', 'published_at'] missing in https://www.bild.de/politik/ausland-und-internationales/first-lady-mit-exklusiven-einblicken-so-lief-die-melania-premiere-697c6e3cfa531953d5215a9b 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/mehr-sport/bild-reporter-steht-direkt-daneben-im-aufzug-brach-zverev-fast-zusammen-697c8d27fa531953d5215db0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/stars-und-leute/1-geburtstag-baby-pustet-kerze-nicht-aus-sondern-erbricht-sich-auf-den-kuchen-6977658f707d4aa207581cf0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/winter-ohne-ende-in-kamtschatka-zeitraffervideos-begeistern-das-netz-69754073707d4aa2075803d2 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/muss-ich-schuld-fuehlen-wenn-opa-nazi-war-thilo-mischke-im-interview-697a283918848ea61928a4ad 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/tv-fernsehformate/bauer-patrick-mit-tierquaelerei-im-dschungelcamp-jetzt-greift-rtl-durch-697bcfa00bddf67c8d5e1bd3 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/inland/winterwunderland-deutschland-unser-groesster-binnensee-komplett-zugefroren-6978eb89707d4aa2075838a0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/stars-und-leute/zu-victoria-beckhams-verteidigung-so-tanzen-andere-muetter-auf-hochzeiten-697b520fe0862a349aeb51d2 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/arbeiten-trotz-migraene-was-im-buero-wirklich-hilft-6915ee1d7ff132e7560fa7fb 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/symptome-auf-einen-blick-wie-aeussert-sich-migraene-6915e5647ff132e7560fa65b 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/ausland/houston-wir-haben-ein-problem-nasa-flieger-kracht-auf-landebahn-6979c8d2fe9fcdf90e7cbf5f 
+###### Scrape Report for Tagesspiegel at 2026-01-30 13:07:30.893857 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Welt at 2026-01-30 13:07:44.228914 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Bild at 2026-01-30 13:17:34.232326 #####
+Incomplete article crawls: 12 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/inland/toedlicher-vorfall-in-hamburg-u-bahn-erfasst-zwei-menschen-697bf8d1fa531953d5215640 
+['title', 'body', 'published_at'] missing in https://www.bild.de/politik/ausland-und-internationales/first-lady-mit-exklusiven-einblicken-so-lief-die-melania-premiere-697c6e3cfa531953d5215a9b 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/mehr-sport/bild-reporter-steht-direkt-daneben-im-aufzug-brach-zverev-fast-zusammen-697c8d27fa531953d5215db0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/stars-und-leute/1-geburtstag-baby-pustet-kerze-nicht-aus-sondern-erbricht-sich-auf-den-kuchen-6977658f707d4aa207581cf0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/winter-ohne-ende-in-kamtschatka-zeitraffervideos-begeistern-das-netz-69754073707d4aa2075803d2 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/muss-ich-schuld-fuehlen-wenn-opa-nazi-war-thilo-mischke-im-interview-697a283918848ea61928a4ad 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/tv-fernsehformate/bauer-patrick-mit-tierquaelerei-im-dschungelcamp-jetzt-greift-rtl-durch-697bcfa00bddf67c8d5e1bd3 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/inland/winterwunderland-deutschland-unser-groesster-binnensee-komplett-zugefroren-6978eb89707d4aa2075838a0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/stars-und-leute/zu-victoria-beckhams-verteidigung-so-tanzen-andere-muetter-auf-hochzeiten-697b520fe0862a349aeb51d2 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/arbeiten-trotz-migraene-was-im-buero-wirklich-hilft-6915ee1d7ff132e7560fa7fb 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/symptome-auf-einen-blick-wie-aeussert-sich-migraene-6915e5647ff132e7560fa65b 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/ausland/houston-wir-haben-ein-problem-nasa-flieger-kracht-auf-landebahn-6979c8d2fe9fcdf90e7cbf5f 
+###### Scrape Report for Bild at 2026-01-30 13:19:54.337406 #####
+Incomplete article crawls: 12 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/inland/toedlicher-vorfall-in-hamburg-u-bahn-erfasst-zwei-menschen-697bf8d1fa531953d5215640 
+['title', 'body', 'published_at'] missing in https://www.bild.de/politik/ausland-und-internationales/first-lady-mit-exklusiven-einblicken-so-lief-die-melania-premiere-697c6e3cfa531953d5215a9b 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/mehr-sport/bild-reporter-steht-direkt-daneben-im-aufzug-brach-zverev-fast-zusammen-697c8d27fa531953d5215db0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/stars-und-leute/1-geburtstag-baby-pustet-kerze-nicht-aus-sondern-erbricht-sich-auf-den-kuchen-6977658f707d4aa207581cf0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/winter-ohne-ende-in-kamtschatka-zeitraffervideos-begeistern-das-netz-69754073707d4aa2075803d2 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/muss-ich-schuld-fuehlen-wenn-opa-nazi-war-thilo-mischke-im-interview-697a283918848ea61928a4ad 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/tv-fernsehformate/bauer-patrick-mit-tierquaelerei-im-dschungelcamp-jetzt-greift-rtl-durch-697bcfa00bddf67c8d5e1bd3 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/inland/winterwunderland-deutschland-unser-groesster-binnensee-komplett-zugefroren-6978eb89707d4aa2075838a0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/stars-und-leute/zu-victoria-beckhams-verteidigung-so-tanzen-andere-muetter-auf-hochzeiten-697b520fe0862a349aeb51d2 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/arbeiten-trotz-migraene-was-im-buero-wirklich-hilft-6915ee1d7ff132e7560fa7fb 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/symptome-auf-einen-blick-wie-aeussert-sich-migraene-6915e5647ff132e7560fa65b 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/ausland/houston-wir-haben-ein-problem-nasa-flieger-kracht-auf-landebahn-6979c8d2fe9fcdf90e7cbf5f 
+###### Scrape Report for Spiegel at 2026-01-30 13:20:18.156016 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Spiegel at 2026-01-30 13:22:12.880945 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Tagesspiegel at 2026-01-30 13:22:42.195855 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Welt at 2026-01-30 13:23:04.431400 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Welt at 2026-01-30 13:25:55.543166 #####
+Incomplete article crawls: 8 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697b27b4e4f9f267aa1181d5/mietwucher-durch-dreiste-vermieter-dieser-populismus-kaschiert-das-eigene-versagen.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697b3740d7ccc21a5b4c6ac0/make-economy-great-again-fuer-diejenigen-die-diesen-sozialstaat-in-anspruch-nehmen-wird-es-noch-einfacher.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697c74bfa58e5b705ac2c9e7/das-ende-des-verbrenner-aus-ist-das-nicht-bosch-chef-warnt-vor-neuem-jobabbau.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/debatte/plus697c6c60fa531953d5215a65/gesundheitsministerin-warken-die-letzte-hoffnung-fuer-radikale-sozialstaatsreformen.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/vermischtes/plus697c5ecea58e5b705ac2c835/elternschaft-paare-die-das-nicht-machen-denen-geht-es-irgendwann-nicht-mehr-gut.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697b7375e0862a349aeb5549/tether-tonnenweise-gold-im-atombunker-der-krypto-gigant-der-den-markt-leerkauft.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/debatte/plus697b63a2f0e62064809de388/verhaeltnis-zu-trump-das-mega-maga-problem.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus69733f59029492de1675a15f/lebenslauf-experte-diesen-satz-will-kein-chef-nach-einem-personalgespraech-hoeren.html 
+###### Scrape Report for Bild at 2026-01-30 13:32:17.726706 #####
+Incomplete article crawls: 12 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.bild.de/geld/wirtschaft/ceo-der-counder-conference-erklaert-was-macht-die-tech-szene-in-suedafrika-697b9348393ebaf886c7844c 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/inland/toedlicher-vorfall-in-hamburg-u-bahn-erfasst-zwei-menschen-697bf8d1fa531953d5215640 
+['title', 'body', 'published_at'] missing in https://www.bild.de/politik/ausland-und-internationales/first-lady-mit-exklusiven-einblicken-so-lief-die-melania-premiere-697c6e3cfa531953d5215a9b 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/mehr-sport/bild-reporter-steht-direkt-daneben-im-aufzug-brach-zverev-fast-zusammen-697c8d27fa531953d5215db0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/stars-und-leute/1-geburtstag-baby-pustet-kerze-nicht-aus-sondern-erbricht-sich-auf-den-kuchen-6977658f707d4aa207581cf0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/winter-ohne-ende-in-kamtschatka-zeitraffervideos-begeistern-das-netz-69754073707d4aa2075803d2 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/muss-ich-schuld-fuehlen-wenn-opa-nazi-war-thilo-mischke-im-interview-697a283918848ea61928a4ad 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/tv-fernsehformate/bauer-patrick-mit-tierquaelerei-im-dschungelcamp-jetzt-greift-rtl-durch-697bcfa00bddf67c8d5e1bd3 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/inland/winterwunderland-deutschland-unser-groesster-binnensee-komplett-zugefroren-6978eb89707d4aa2075838a0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/stars-und-leute/zu-victoria-beckhams-verteidigung-so-tanzen-andere-muetter-auf-hochzeiten-697b520fe0862a349aeb51d2 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/arbeiten-trotz-migraene-was-im-buero-wirklich-hilft-6915ee1d7ff132e7560fa7fb 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/symptome-auf-einen-blick-wie-aeussert-sich-migraene-6915e5647ff132e7560fa65b 
+###### Scrape Report for CNN at 2026-01-30 13:33:13.274475 #####
+Incomplete article crawls: 1 
+Failed articles: 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/business/live-news/fox-news-dominion-trial-04-18-23/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/business/live-news/fox-news-dominion-trial-04-18-23/h_8d51e3ae2714edaa0dace837305d03b8 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/media/dominion-fox-news-allegations/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/media/fox-dominion-settlement/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/mccarthy-biden-debt-ceiling/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/kansas-city-ralph-yarl-shooting-tuesday/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/entertainment/jake-gyllenhaal-jamie-lee-curtis-pandemic-living/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/white-house-toddler/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/entertainment/jamie-foxx-remains-hospitalized/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/benadryl-tiktok-challenge-teen-death-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/media/netflix-dvd-red-envelopes/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/tech/lina-khan-ai-warning/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/health/rise-type-2-diabetes-global-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/health/teen-misuse-adhd-meds-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/clarence-thomas-ethics-democrats/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/europe/live-news/russia-ukraine-war-news-04-18-23/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/europe/wagner-commanders-russia-kill-children-intl-hnk/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/schumer-senate-feinstein-vote-cardin/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/mccurtain-county-oklahoma-officials-recording/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/us-warns-russia-zaporizhzhia-nuclear-plant/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/health/fda-bivalent-booster-additional-doses/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/maine-shooting-bowdoin-yarmouth/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/southwest-airlines-flight-delays/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/sport/damar-hamlin-cleared-to-train-nfl-spt-intl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/gilday-defends-non-binary-sailor/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/fulton-county-trump-fake-electors/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/high-speed-rail-us/index.html 
+Exception: name 'link' is not defined in:https://www.cnn.com/audio/podcasts/the-assignment/episodes/42a2f0e2-066a-4675-82ff-afe2016a0bb5 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/success/tax-day-2023-file-irs/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/undocumented-immigrants-taxes-cec/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/opinions/us-tax-system-wealthy-disney-pearl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/worlds-longest-cycling-tunnel/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/style/article/ai-photo-win-sony-scli-intl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/style/article/marilyn-minter-artist-elder-sex/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/economy/china-gdp-q1-2023-intl-hnk/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/16/success/husbands-wives-earning-division-of-labor-pew-survey/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/business/mcdonalds-burgers/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/tech/google-ai-search-engine-stock-drop/index.html 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/opinions/medication-abortion-mifepristone-miscarriage-jones-ctpr/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/opinions/2024-presidential-election-alternative-voters-lieberman 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/opinions/jim-jordan-clarence-thomas-judiciary-committee-obeidallah/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/16/opinions/top-secrets-come-spilling-out-opinion-column-galant/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/opinions/sudan-revolution-to-civil-war-lynch/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/entertainment/michelle-yeoh-star-trek-section-31/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/16/entertainment/succession-season-4-episode-4-recap/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/14/entertainment/yellowjackets-90s-music/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/16/entertainment/jeremy-renner-update/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/14/entertainment/barry-season-4-review/index.html 
+###### Scrape Report for ESPN at 2026-01-30 13:34:03.611196 #####
+Incomplete article crawls: 2 
+Failed articles: 
+['title'] missing in https://www.espn.com/fantasy/baseball/story/_/id/47550193/fantasy-baseball-espn-offseason-news-noise-buzz-prospects-free-agents-trades-injuries-2026 
+['title'] missing in https://www.espn.com/pll/story/_/id/47767697/2026-pll-wll-championship-series-outlaws-atlas-redwoods-chaos-palms-charm-guard-charging 
+###### Scrape Report for ESPN at 2026-01-30 13:35:08.087555 #####
+Incomplete article crawls: 2 
+Failed articles: 
+['published_at'] missing in https://www.espn.com/fantasy/baseball/story/_/id/47550193/fantasy-baseball-espn-offseason-news-noise-buzz-prospects-free-agents-trades-injuries-2026 
+['published_at'] missing in https://www.espn.com/pll/story/_/id/47767697/2026-pll-wll-championship-series-outlaws-atlas-redwoods-chaos-palms-charm-guard-charging 
+###### Scrape Report for FoxNews at 2026-01-30 13:35:50.791853 #####
+Incomplete article crawls: 0 
+###### Scrape Report for FoxNews at 2026-01-30 13:36:12.748556 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Goal at 2026-01-30 13:36:27.377685 #####
+Incomplete article crawls: 1 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.goal.com/en/en/news/live/transfer-news-and-rumours-live/blt1ccfda38eda06d5a 
+###### Scrape Report for Goal at 2026-01-30 13:36:54.673419 #####
+Incomplete article crawls: 1 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.goal.com/en/en/news/live/transfer-news-and-rumours-live/blt1ccfda38eda06d5a 
+###### Scrape Report for Guardian at 2026-01-30 13:37:22.512209 #####
+Incomplete article crawls: 0 
+###### Scrape Report for GuardianSport at 2026-01-30 13:37:46.255183 #####
+Incomplete article crawls: 7 
+Failed articles: 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2026/jan/26/sign-up-for-the-winter-olympics-2026-daily-briefing-the-best-of-the-olympics-and-paralympics 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2025/oct/01/sign-up-to-the-sport-in-focus-newsletter-the-sporting-week-in-photos 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2016/aug/18/sign-up-to-the-spin 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2017/may/15/the-recap-sign-up-for-the-best-of-the-guardians-sport-coverage 
+Exception: 'NoneType' object has no attribute 'find' in:https://www.theguardian.com/sport/2026/jan/30/cooper-flagg-nba-teen-record-49-mavericks-hornets-knueppel 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/football/picture/2026/jan/27/david-squires-on-manchester-united-giving-arsenal-the-title-wobbles 
+Exception: 'NoneType' object has no attribute 'find' in:https://www.theguardian.com/sport/2026/jan/23/australian-opens-scenic-riverside-path-symbolises-sports-long-walk-to-equality 
+###### Scrape Report for Japan Times at 2026-01-30 13:38:31.158793 #####
+Incomplete article crawls: 0 
+###### Scrape Report for NBC at 2026-01-30 13:38:57.663946 #####
+Incomplete article crawls: 0 
+###### Scrape Report for SBS at 2026-01-30 13:40:01.610037 #####
+Incomplete article crawls: 0 
+###### Scrape Report for South Morning China Post at 2026-01-30 13:40:52.753172 #####
+Incomplete article crawls: 6 
+Failed articles: 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/news/china/diplomacy/article/3341814/trump-slams-allies-china-ties-top-generals-fall-cross-strait-talks?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341768/china-seeks-slow-bull-rally?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341714/china-needs-more-education-higher-wages-advance-lawrence-lau-says?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341542/gold-surges-trump-calls-weak-dollar-great?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340975/china-may-cut-gdp-goal-trump-davos-starmer-visit?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340954/chinas-divided-economy?utm_source=rss_feed 
+###### Scrape Report for South Morning China Post at 2026-01-30 13:41:27.635319 #####
+Incomplete article crawls: 6 
+Failed articles: 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/news/china/diplomacy/article/3341814/trump-slams-allies-china-ties-top-generals-fall-cross-strait-talks?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341768/china-seeks-slow-bull-rally?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341714/china-needs-more-education-higher-wages-advance-lawrence-lau-says?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341542/gold-surges-trump-calls-weak-dollar-great?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340975/china-may-cut-gdp-goal-trump-davos-starmer-visit?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340954/chinas-divided-economy?utm_source=rss_feed 
+###### Scrape Report for South Morning China Post at 2026-01-30 13:42:09.853904 #####
+Incomplete article crawls: 6 
+Failed articles: 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/news/china/diplomacy/article/3341814/trump-slams-allies-china-ties-top-generals-fall-cross-strait-talks?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341768/china-seeks-slow-bull-rally?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341714/china-needs-more-education-higher-wages-advance-lawrence-lau-says?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341542/gold-surges-trump-calls-weak-dollar-great?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340975/china-may-cut-gdp-goal-trump-davos-starmer-visit?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340954/chinas-divided-economy?utm_source=rss_feed 
+###### Scrape Report for Spiegel at 2026-01-30 13:42:43.877775 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Tass at 2026-01-30 13:43:30.922733 #####
+Incomplete article crawls: 0 
+###### Scrape Report for TeleSur at 2026-01-30 13:45:07.252165 #####
+Incomplete article crawls: 9 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/china-supports-cuba-against-us-sanctions/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/unrwa-gaza-funding-crisis-pay-cuts/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/colombia-satena-plane-crash-black-box/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/argentina-fire-emergency-in-4-provinces/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/venezuela-denies-psoe-financing-claims/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/cuba-condemns-u-s-sanctions-oil-supply/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/turkiye-hosts-iran-regional-talks/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/ghana-malaria-vaccines-funding-threat/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/hind-rajab-2-anniversary-war-crimes/ 
+###### Scrape Report for TeleSur at 2026-01-30 13:46:42.909594 #####
+Incomplete article crawls: 9 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/china-supports-cuba-against-us-sanctions/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/unrwa-gaza-funding-crisis-pay-cuts/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/colombia-satena-plane-crash-black-box/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/argentina-fire-emergency-in-4-provinces/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/venezuela-denies-psoe-financing-claims/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/cuba-condemns-u-s-sanctions-oil-supply/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/turkiye-hosts-iran-regional-talks/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/ghana-malaria-vaccines-funding-threat/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/hind-rajab-2-anniversary-war-crimes/ 
+###### Scrape Report for TheNews at 2026-01-30 13:47:22.792120 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Times of India at 2026-01-30 13:52:31.055905 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Welt at 2026-01-30 13:52:58.383602 #####
+Incomplete article crawls: 8 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.welt.de/debatte/plus697c9ae2a3f0a8f7d1899637/berlin-ohne-streusalz-warum-baeume-wichtiger-sind-als-arme-rentnerinnen.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/politik/deutschland/plus697c645aa58e5b705ac2c874/hoehere-tabaksteuer-das-verzerrte-bild-vom-raucher-als-immense-finanzbelastung.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697b27b4e4f9f267aa1181d5/mietwucher-durch-dreiste-vermieter-dieser-populismus-kaschiert-das-eigene-versagen.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697b3740d7ccc21a5b4c6ac0/make-economy-great-again-fuer-diejenigen-die-diesen-sozialstaat-in-anspruch-nehmen-wird-es-noch-einfacher.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697c74bfa58e5b705ac2c9e7/das-ende-des-verbrenner-aus-ist-das-nicht-bosch-chef-warnt-vor-neuem-jobabbau.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697b7375e0862a349aeb5549/tether-tonnenweise-gold-im-atombunker-der-krypto-gigant-der-den-markt-leerkauft.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/debatte/plus697b63a2f0e62064809de388/verhaeltnis-zu-trump-das-mega-maga-problem.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus69733f59029492de1675a15f/lebenslauf-experte-diesen-satz-will-kein-chef-nach-einem-personalgespraech-hoeren.html 
+###### Scrape Report for YahooFinance at 2026-01-30 13:53:56.733292 #####
+Incomplete article crawls: 1 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.barrons.com/articles/fed-rates-big-tech-earnings-stocks-d6ca4648?siteid=yhoof2&yptr=yahoo 
+###### Scrape Report for YahooFinance at 2026-01-30 13:55:07.910568 #####
+Incomplete article crawls: 1 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.barrons.com/articles/fed-rates-big-tech-earnings-stocks-d6ca4648?siteid=yhoof2&yptr=yahoo 
+###### Scrape Report for YahooNews at 2026-01-30 13:56:07.341002 #####
+Incomplete article crawls: 30 
+Failed articles: 
+https://www.yahoo.com/news/articles/china-executes-11-members-myanmar-055101444.html 
+https://www.yahoo.com/news/articles/erika-kirk-under-fire-husbands-181551718.html 
+https://www.yahoo.com/news/articles/zohran-mamdani-jacket-just-went-203233009.html 
+https://www.yahoo.com/news/articles/trumps-wide-ambitions-board-peace-164839167.html 
+https://www.yahoo.com/news/articles/were-holding-other-frisco-community-143452942.html 
+https://www.yahoo.com/entertainment/movies/articles/entire-nation-pulls-melania-movie-195450986.html 
+https://www.yahoo.com/news/articles/man-arrested-attack-ilhan-omar-170155769.html 
+https://www.yahoo.com/lifestyle/articles/700-pound-grizzly-sat-inches-185349774.html 
+https://www.yahoo.com/news/articles/conservative-judge-minnesota-tries-keep-204939635.html 
+https://www.yahoo.com/news/articles/republicans-fear-midterm-chances-slipping-020455447.html 
+https://www.yahoo.com/news/articles/elementary-school-assistant-principal-arrested-151013975.html 
+https://www.yahoo.com/news/articles/february-shift-makes-winter-feel-150450251.html 
+https://www.yahoo.com/news/articles/shapiro-suggests-strong-case-made-222835575.html 
+https://www.yahoo.com/news/articles/senator-demands-answers-trump-accepted-180742735.html 
+https://www.yahoo.com/news/articles/kremlin-says-still-waiting-u-101638312.html 
+https://www.yahoo.com/news/articles/weeks-she-killed-monique-tepe-214046355.html 
+https://www.yahoo.com/news/articles/deadly-crans-montana-fire-sends-060300172.html 
+https://www.yahoo.com/news/articles/selfless-lawyer-44-died-plane-182757363.html 
+https://sports.yahoo.com/articles/olympian-dallas-native-sha-carri-230804669.html 
+https://www.yahoo.com/news/articles/dozens-faith-leaders-arrested-washington-011221181.html 
+https://www.yahoo.com/news/articles/moscow-records-heaviest-snowfall-over-173826863.html 
+https://www.yahoo.com/news/articles/donald-trump-skips-over-kristi-201233029.html 
+https://www.yahoo.com/news/articles/liar-trump-official-accidentally-traps-184529245.html 
+https://www.yahoo.com/news/articles/us-appeals-court-says-noems-062712692.html 
+https://www.yahoo.com/lifestyle/articles/woman-shares-moment-she-detained-215407417.html 
+https://www.yahoo.com/news/articles/nicaraguan-mans-death-troubled-texas-201855556.html 
+https://www.yahoo.com/news/articles/white-house-scrambles-fix-humiliating-203132416.html 
+https://www.yahoo.com/entertainment/celebrity/articles/tiktok-star-sparks-backlash-saying-051608344.html 
+https://www.yahoo.com/entertainment/celebrity/articles/iranian-motorbike-influencer-baby-rider-160046443.html 
+https://www.yahoo.com/news/articles/people-genuinely-surprised-piece-white-191523130.html 
+###### Scrape Report for ESPN at 2026-01-30 14:22:54.253073 #####
+Incomplete article crawls: 1 
+Failed articles: 
+['published_at'] missing in https://www.espn.com/fantasy/baseball/story/_/id/47550193/fantasy-baseball-espn-offseason-news-noise-buzz-prospects-free-agents-trades-injuries-2026 
+###### Scrape Report for Spiegel at 2026-01-30 14:23:17.751668 #####
+Incomplete article crawls: 0 
+###### Scrape Report for TeleSur at 2026-01-30 14:24:17.529319 #####
+Incomplete article crawls: 9 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/china-supports-cuba-against-us-sanctions/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/unrwa-gaza-funding-crisis-pay-cuts/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/colombia-satena-plane-crash-black-box/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/argentina-fire-emergency-in-4-provinces/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/venezuela-denies-psoe-financing-claims/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/cuba-condemns-u-s-sanctions-oil-supply/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/turkiye-hosts-iran-regional-talks/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/ghana-malaria-vaccines-funding-threat/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/hind-rajab-2-anniversary-war-crimes/ 
+###### Scrape Report for CNN at 2026-01-30 14:30:54.945718 #####
+Incomplete article crawls: 1 
+Failed articles: 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/business/live-news/fox-news-dominion-trial-04-18-23/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/business/live-news/fox-news-dominion-trial-04-18-23/h_8d51e3ae2714edaa0dace837305d03b8 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/media/dominion-fox-news-allegations/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/media/fox-dominion-settlement/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/mccarthy-biden-debt-ceiling/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/kansas-city-ralph-yarl-shooting-tuesday/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/entertainment/jake-gyllenhaal-jamie-lee-curtis-pandemic-living/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/white-house-toddler/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/entertainment/jamie-foxx-remains-hospitalized/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/benadryl-tiktok-challenge-teen-death-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/media/netflix-dvd-red-envelopes/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/tech/lina-khan-ai-warning/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/health/rise-type-2-diabetes-global-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/health/teen-misuse-adhd-meds-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/clarence-thomas-ethics-democrats/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/europe/live-news/russia-ukraine-war-news-04-18-23/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/europe/wagner-commanders-russia-kill-children-intl-hnk/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/schumer-senate-feinstein-vote-cardin/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/mccurtain-county-oklahoma-officials-recording/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/us-warns-russia-zaporizhzhia-nuclear-plant/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/health/fda-bivalent-booster-additional-doses/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/maine-shooting-bowdoin-yarmouth/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/southwest-airlines-flight-delays/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/sport/damar-hamlin-cleared-to-train-nfl-spt-intl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/gilday-defends-non-binary-sailor/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/fulton-county-trump-fake-electors/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/high-speed-rail-us/index.html 
+Exception: name 'link' is not defined in:https://www.cnn.com/audio/podcasts/the-assignment/episodes/42a2f0e2-066a-4675-82ff-afe2016a0bb5 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/success/tax-day-2023-file-irs/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/undocumented-immigrants-taxes-cec/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/opinions/us-tax-system-wealthy-disney-pearl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/worlds-longest-cycling-tunnel/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/style/article/ai-photo-win-sony-scli-intl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/style/article/marilyn-minter-artist-elder-sex/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/economy/china-gdp-q1-2023-intl-hnk/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/16/success/husbands-wives-earning-division-of-labor-pew-survey/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/business/mcdonalds-burgers/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/tech/google-ai-search-engine-stock-drop/index.html 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer 
+###### Scrape Report for ESPN at 2026-01-30 14:31:17.370472 #####
+Incomplete article crawls: 1 
+Failed articles: 
+['published_at'] missing in https://www.espn.com/fantasy/baseball/story/_/id/47550193/fantasy-baseball-espn-offseason-news-noise-buzz-prospects-free-agents-trades-injuries-2026 
+###### Scrape Report for FoxNews at 2026-01-30 14:31:22.707492 #####
+Incomplete article crawls: 0 
+###### Scrape Report for CNN at 2026-01-30 14:32:23.355878 #####
+Incomplete article crawls: 1 
+Failed articles: 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/business/live-news/fox-news-dominion-trial-04-18-23/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/business/live-news/fox-news-dominion-trial-04-18-23/h_8d51e3ae2714edaa0dace837305d03b8 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/media/dominion-fox-news-allegations/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/media/fox-dominion-settlement/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/mccarthy-biden-debt-ceiling/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/kansas-city-ralph-yarl-shooting-tuesday/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/entertainment/jake-gyllenhaal-jamie-lee-curtis-pandemic-living/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/white-house-toddler/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/entertainment/jamie-foxx-remains-hospitalized/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/benadryl-tiktok-challenge-teen-death-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/media/netflix-dvd-red-envelopes/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/tech/lina-khan-ai-warning/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/health/rise-type-2-diabetes-global-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/health/teen-misuse-adhd-meds-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/clarence-thomas-ethics-democrats/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/europe/live-news/russia-ukraine-war-news-04-18-23/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/europe/wagner-commanders-russia-kill-children-intl-hnk/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/schumer-senate-feinstein-vote-cardin/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/mccurtain-county-oklahoma-officials-recording/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/us-warns-russia-zaporizhzhia-nuclear-plant/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/health/fda-bivalent-booster-additional-doses/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/maine-shooting-bowdoin-yarmouth/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/southwest-airlines-flight-delays/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/sport/damar-hamlin-cleared-to-train-nfl-spt-intl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/gilday-defends-non-binary-sailor/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/fulton-county-trump-fake-electors/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/high-speed-rail-us/index.html 
+Exception: name 'link' is not defined in:https://www.cnn.com/audio/podcasts/the-assignment/episodes/42a2f0e2-066a-4675-82ff-afe2016a0bb5 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/success/tax-day-2023-file-irs/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/undocumented-immigrants-taxes-cec/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/opinions/us-tax-system-wealthy-disney-pearl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/worlds-longest-cycling-tunnel/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/style/article/ai-photo-win-sony-scli-intl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/style/article/marilyn-minter-artist-elder-sex/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/economy/china-gdp-q1-2023-intl-hnk/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/16/success/husbands-wives-earning-division-of-labor-pew-survey/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/business/mcdonalds-burgers/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/tech/google-ai-search-engine-stock-drop/index.html 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer 
+###### Scrape Report for ESPN at 2026-01-30 14:32:41.339771 #####
+Incomplete article crawls: 1 
+Failed articles: 
+['published_at'] missing in https://www.espn.com/fantasy/baseball/story/_/id/47550193/fantasy-baseball-espn-offseason-news-noise-buzz-prospects-free-agents-trades-injuries-2026 
+###### Scrape Report for FoxNews at 2026-01-30 14:32:47.171209 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Goal at 2026-01-30 14:32:54.208669 #####
+Incomplete article crawls: 1 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.goal.com/en/en/news/live/transfer-news-and-rumours-live/blt1ccfda38eda06d5a 
+###### Scrape Report for Guardian at 2026-01-30 14:32:57.567462 #####
+Incomplete article crawls: 0 
+###### Scrape Report for GuardianSport at 2026-01-30 14:33:07.636674 #####
+Incomplete article crawls: 7 
+Failed articles: 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2026/jan/26/sign-up-for-the-winter-olympics-2026-daily-briefing-the-best-of-the-olympics-and-paralympics 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2025/oct/01/sign-up-to-the-sport-in-focus-newsletter-the-sporting-week-in-photos 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2016/aug/18/sign-up-to-the-spin 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2017/may/15/the-recap-sign-up-for-the-best-of-the-guardians-sport-coverage 
+Exception: 'NoneType' object has no attribute 'find' in:https://www.theguardian.com/sport/2026/jan/30/cooper-flagg-nba-teen-record-49-mavericks-hornets-knueppel 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/football/picture/2026/jan/27/david-squires-on-manchester-united-giving-arsenal-the-title-wobbles 
+Exception: 'NoneType' object has no attribute 'find' in:https://www.theguardian.com/sport/2026/jan/23/australian-opens-scenic-riverside-path-symbolises-sports-long-walk-to-equality 
+###### Scrape Report for Japan Times at 2026-01-30 14:33:17.746740 #####
+Incomplete article crawls: 0 
+###### Scrape Report for NBC at 2026-01-30 14:33:18.814965 #####
+Incomplete article crawls: 0 
+###### Scrape Report for SBS at 2026-01-30 14:33:36.998717 #####
+Incomplete article crawls: 0 
+###### Scrape Report for South Morning China Post at 2026-01-30 14:33:45.268896 #####
+Incomplete article crawls: 6 
+Failed articles: 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/news/china/diplomacy/article/3341814/trump-slams-allies-china-ties-top-generals-fall-cross-strait-talks?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341768/china-seeks-slow-bull-rally?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341714/china-needs-more-education-higher-wages-advance-lawrence-lau-says?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341542/gold-surges-trump-calls-weak-dollar-great?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340975/china-may-cut-gdp-goal-trump-davos-starmer-visit?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340954/chinas-divided-economy?utm_source=rss_feed 
+###### Scrape Report for South Morning China Post at 2026-01-30 14:33:53.056584 #####
+Incomplete article crawls: 6 
+Failed articles: 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/news/china/diplomacy/article/3341814/trump-slams-allies-china-ties-top-generals-fall-cross-strait-talks?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341768/china-seeks-slow-bull-rally?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341714/china-needs-more-education-higher-wages-advance-lawrence-lau-says?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341542/gold-surges-trump-calls-weak-dollar-great?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340975/china-may-cut-gdp-goal-trump-davos-starmer-visit?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340954/chinas-divided-economy?utm_source=rss_feed 
+###### Scrape Report for Tass at 2026-01-30 14:33:55.849076 #####
+Incomplete article crawls: 0 
+###### Scrape Report for TeleSur at 2026-01-30 14:34:52.985107 #####
+Incomplete article crawls: 9 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/china-supports-cuba-against-us-sanctions/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/unrwa-gaza-funding-crisis-pay-cuts/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/colombia-satena-plane-crash-black-box/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/argentina-fire-emergency-in-4-provinces/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/venezuela-denies-psoe-financing-claims/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/cuba-condemns-u-s-sanctions-oil-supply/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/turkiye-hosts-iran-regional-talks/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/ghana-malaria-vaccines-funding-threat/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/hind-rajab-2-anniversary-war-crimes/ 
+###### Scrape Report for TheNews at 2026-01-30 14:35:20.408489 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Times of India at 2026-01-30 14:35:29.362003 #####
+Incomplete article crawls: 0 
+###### Scrape Report for YahooFinance at 2026-01-30 14:36:11.578630 #####
+Incomplete article crawls: 9 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.wsj.com/economy/central-banking/singapores-central-bank-stays-on-hold-as-it-raises-inflation-forecasts-19c98b7c?siteid=yhoof2&yptr=yahoo 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_46018_MarketOutlook_1769776033000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_46017_TechnicalAnalysis_1769775997000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_3161_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_3103_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_6199_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_3073_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_3086_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_3569_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+###### Scrape Report for YahooNews at 2026-01-30 14:37:02.092662 #####
+Incomplete article crawls: 32 
+Failed articles: 
+https://www.yahoo.com/news/articles/china-lift-restrictions-uk-lawmakers-121303859.html 
+https://www.yahoo.com/news/articles/erika-kirk-under-fire-husbands-181551718.html 
+https://www.yahoo.com/news/articles/zohran-mamdani-jacket-just-went-203233009.html 
+https://www.yahoo.com/news/articles/were-holding-other-frisco-community-143452942.html 
+https://www.yahoo.com/news/articles/us-appeals-court-says-noems-062712692.html 
+https://www.yahoo.com/news/articles/nicaraguan-mans-death-troubled-texas-201855556.html 
+https://www.yahoo.com/lifestyle/articles/700-pound-grizzly-sat-inches-185349774.html 
+https://www.yahoo.com/news/articles/republicans-fear-midterm-chances-slipping-020455447.html 
+https://www.yahoo.com/entertainment/movies/articles/entire-nation-pulls-melania-movie-195450986.html 
+https://www.yahoo.com/news/articles/no-no-school-no-shopping-090601001.html 
+https://www.yahoo.com/news/articles/im-business-owner-minneapolis-working-100902447.html 
+https://www.yahoo.com/news/articles/kremlin-says-still-waiting-u-101638312.html 
+https://www.yahoo.com/news/articles/february-shift-makes-winter-feel-150450251.html 
+https://www.yahoo.com/news/articles/shapiro-suggests-strong-case-made-222835575.html 
+https://www.yahoo.com/news/articles/india-reports-two-nipah-virus-073816758.html 
+https://www.yahoo.com/news/articles/veteran-senator-destroys-jd-vance-233639401.html 
+https://www.yahoo.com/news/articles/one-storm-another-much-us-162644842.html 
+https://www.yahoo.com/lifestyle/articles/under-radar-bay-area-downtown-130000831.html 
+https://www.yahoo.com/news/articles/ripped-part-heart-north-texas-025454794.html 
+https://www.yahoo.com/news/articles/china-executes-11-members-myanmar-055101444.html 
+https://www.yahoo.com/news/articles/selfless-lawyer-44-died-plane-182757363.html 
+https://www.yahoo.com/news/articles/trump-pac-threatens-ice-track-215222156.html 
+https://www.yahoo.com/news/articles/man-arrested-attack-ilhan-omar-170155769.html 
+https://www.yahoo.com/news/articles/ukrainian-drone-strikes-parked-russian-000055744.html 
+https://www.yahoo.com/news/articles/trumps-wide-ambitions-board-peace-164839167.html 
+https://www.yahoo.com/entertainment/movies/articles/uhh-heres-melania-doing-internationally-214830800.html 
+https://www.yahoo.com/news/articles/ice-agents-stunning-order-top-114359682.html 
+https://www.yahoo.com/news/articles/donald-trump-skips-over-kristi-201233029.html 
+https://www.yahoo.com/entertainment/celebrity/articles/sydney-sweeney-sends-fans-frenzy-203803003.html 
+https://www.yahoo.com/news/articles/conservative-judge-minnesota-tries-keep-204939635.html 
+https://www.yahoo.com/news/articles/60-years-ago-record-blizzard-163505870.html 
+https://www.yahoo.com/news/articles/white-house-scrambles-fix-humiliating-203132416.html 
+###### Scrape Report for Bild at 2026-01-30 14:37:20.156714 #####
+Incomplete article crawls: 12 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/eilmeldung-lindsey-vonn-sturz-vor-letzter-abfahrt-vor-olympia-697c7c2ef0e62064809df0ba 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/mehr-sport/vonn-mit-helikopter-in-klinik-geflogen-weltcup-rennen-nach-sturz-von-superstar-abgebrochen-697caf3ffa531953d5216116 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/nach-bar-feuer-auf-mallorca-anklage-will-7-jahre-haft-fuer-kegelbrueder-697c5c27f0e62064809dee39 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/ausland/vier-jahre-nach-bar-feuer-auf-mallorca-staatsanwalt-haft-fuer-kegelbrueder-697ca1b6a3f0a8f7d18996de 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/mehr-sport/nach-dem-halbfinal-aus-zverev-erklaert-seine-frust-szene-697cacbaa58e5b705ac2cf3b 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/ein-satz-aus-kindermund-gott-sei-dank-sind-wir-keine-juden-697a2d5922446308a2436160 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/thilo-mischke-zu-gast-bei-mein-leben-ich-was-wir-erben-ohne-es-zu-wollen-697a2d6722446308a2436168 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/jobs-die-es-moeglich-machen-viel-gehalt-ganz-ohne-studium-6978a363707d4aa207582fd0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/inland/toedlicher-vorfall-in-hamburg-u-bahn-erfasst-zwei-menschen-697bf8d1fa531953d5215640 
+['title', 'body', 'published_at'] missing in https://www.bild.de/politik/arbeitslosenzahl-schock-staat-waechst-wirtschaft-schrumpft-verdi-streikt-697c9453fa531953d5215e83 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/ausland/proteste-gegen-ice-eskalieren-weiter-beamter-versucht-in-konsulat-einzudringen-697c89e0a58e5b705ac2cc13 
+['title', 'body', 'published_at'] missing in https://www.bild.de/geld/wirtschaft/ceo-der-counder-conference-erklaert-was-macht-die-tech-szene-in-suedafrika-697b9348393ebaf886c7844c 
+###### Scrape Report for CNN at 2026-01-30 14:38:30.850040 #####
+Incomplete article crawls: 1 
+Failed articles: 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/business/live-news/fox-news-dominion-trial-04-18-23/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/business/live-news/fox-news-dominion-trial-04-18-23/h_8d51e3ae2714edaa0dace837305d03b8 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/media/dominion-fox-news-allegations/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/media/fox-dominion-settlement/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/mccarthy-biden-debt-ceiling/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/kansas-city-ralph-yarl-shooting-tuesday/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/entertainment/jake-gyllenhaal-jamie-lee-curtis-pandemic-living/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/white-house-toddler/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/entertainment/jamie-foxx-remains-hospitalized/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/benadryl-tiktok-challenge-teen-death-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/media/netflix-dvd-red-envelopes/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/tech/lina-khan-ai-warning/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/health/rise-type-2-diabetes-global-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/health/teen-misuse-adhd-meds-wellness/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/clarence-thomas-ethics-democrats/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/europe/live-news/russia-ukraine-war-news-04-18-23/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/europe/wagner-commanders-russia-kill-children-intl-hnk/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/schumer-senate-feinstein-vote-cardin/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/mccurtain-county-oklahoma-officials-recording/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/us-warns-russia-zaporizhzhia-nuclear-plant/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/health/fda-bivalent-booster-additional-doses/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/maine-shooting-bowdoin-yarmouth/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/southwest-airlines-flight-delays/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/sport/damar-hamlin-cleared-to-train-nfl-spt-intl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/gilday-defends-non-binary-sailor/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/politics/fulton-county-trump-fake-electors/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/high-speed-rail-us/index.html 
+Exception: name 'link' is not defined in:https://www.cnn.com/audio/podcasts/the-assignment/episodes/42a2f0e2-066a-4675-82ff-afe2016a0bb5 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/success/tax-day-2023-file-irs/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/18/us/undocumented-immigrants-taxes-cec/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/opinions/us-tax-system-wealthy-disney-pearl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/travel/article/worlds-longest-cycling-tunnel/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/style/article/ai-photo-win-sony-scli-intl/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/style/article/marilyn-minter-artist-elder-sex/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/economy/china-gdp-q1-2023-intl-hnk/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/16/success/husbands-wives-earning-division-of-labor-pew-survey/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/business/mcdonalds-burgers/index.html 
+Exception: local variable 'counter' referenced before assignment in:https://www.cnn.com/2023/04/17/tech/google-ai-search-engine-stock-drop/index.html 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/reviews/best-bidets?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/home/editors-favorite-sustainable-products?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/gifts/best-mothers-day-gifts-2023?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/fashion/mens-spring-fashion-style-guide?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/travel/amazon-travel-products?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/money/high-yield-savings-accounts?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/money/how-to-file-taxes?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/home/how-to-compost-at-home?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/reviews/mmmat-silicone-mats?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/dyson-supersonic-sale-2023-04-17?iid=CNNUnderscoredHPcontainer?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/wayfair-way-day-2023-04-17?iid=CNNUnderscoredHPcontainer 
+Exception: Article `download()` failed with 403 Client Error: Forbidden for url: https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer on URL https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer in:https://www.cnn.com/cnn-underscored/deals/best-amazon-deals-2023-04-12?iid=CNNUnderscoredHPcontainer 
+###### Scrape Report for ESPN at 2026-01-30 14:38:53.282410 #####
+Incomplete article crawls: 1 
+Failed articles: 
+['published_at'] missing in https://www.espn.com/fantasy/baseball/story/_/id/47550193/fantasy-baseball-espn-offseason-news-noise-buzz-prospects-free-agents-trades-injuries-2026 
+###### Scrape Report for FoxNews at 2026-01-30 14:38:59.556175 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Goal at 2026-01-30 14:39:01.782868 #####
+Incomplete article crawls: 1 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.goal.com/en/en/news/live/transfer-news-and-rumours-live/blt1ccfda38eda06d5a 
+###### Scrape Report for Guardian at 2026-01-30 14:39:04.825682 #####
+Incomplete article crawls: 0 
+###### Scrape Report for GuardianSport at 2026-01-30 14:39:15.568826 #####
+Incomplete article crawls: 7 
+Failed articles: 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2026/jan/26/sign-up-for-the-winter-olympics-2026-daily-briefing-the-best-of-the-olympics-and-paralympics 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2025/oct/01/sign-up-to-the-sport-in-focus-newsletter-the-sporting-week-in-photos 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2016/aug/18/sign-up-to-the-spin 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/sport/2017/may/15/the-recap-sign-up-for-the-best-of-the-guardians-sport-coverage 
+Exception: 'NoneType' object has no attribute 'find' in:https://www.theguardian.com/sport/2026/jan/30/cooper-flagg-nba-teen-record-49-mavericks-hornets-knueppel 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.theguardian.com/football/picture/2026/jan/27/david-squires-on-manchester-united-giving-arsenal-the-title-wobbles 
+Exception: 'NoneType' object has no attribute 'find' in:https://www.theguardian.com/sport/2026/jan/23/australian-opens-scenic-riverside-path-symbolises-sports-long-walk-to-equality 
+###### Scrape Report for Japan Times at 2026-01-30 14:39:19.194297 #####
+Incomplete article crawls: 0 
+###### Scrape Report for NBC at 2026-01-30 14:39:20.102735 #####
+Incomplete article crawls: 0 
+###### Scrape Report for SBS at 2026-01-30 14:39:33.746416 #####
+Incomplete article crawls: 0 
+###### Scrape Report for South Morning China Post at 2026-01-30 14:39:42.653467 #####
+Incomplete article crawls: 6 
+Failed articles: 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/news/china/diplomacy/article/3341814/trump-slams-allies-china-ties-top-generals-fall-cross-strait-talks?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341768/china-seeks-slow-bull-rally?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341714/china-needs-more-education-higher-wages-advance-lawrence-lau-says?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341542/gold-surges-trump-calls-weak-dollar-great?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340975/china-may-cut-gdp-goal-trump-davos-starmer-visit?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340954/chinas-divided-economy?utm_source=rss_feed 
+###### Scrape Report for South Morning China Post at 2026-01-30 14:39:50.678789 #####
+Incomplete article crawls: 6 
+Failed articles: 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/news/china/diplomacy/article/3341814/trump-slams-allies-china-ties-top-generals-fall-cross-strait-talks?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341768/china-seeks-slow-bull-rally?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341714/china-needs-more-education-higher-wages-advance-lawrence-lau-says?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3341542/gold-surges-trump-calls-weak-dollar-great?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340975/china-may-cut-gdp-goal-trump-davos-starmer-visit?utm_source=rss_feed 
+Exception: 'NoneType' object has no attribute 'find_all' in:https://www.scmp.com/plus/economy/china-economy/article/3340954/chinas-divided-economy?utm_source=rss_feed 
+###### Scrape Report for Tass at 2026-01-30 14:39:53.746250 #####
+Incomplete article crawls: 0 
+###### Scrape Report for TeleSur at 2026-01-30 14:40:49.264784 #####
+Incomplete article crawls: 9 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/china-supports-cuba-against-us-sanctions/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/unrwa-gaza-funding-crisis-pay-cuts/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/colombia-satena-plane-crash-black-box/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/argentina-fire-emergency-in-4-provinces/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/venezuela-denies-psoe-financing-claims/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/cuba-condemns-u-s-sanctions-oil-supply/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/turkiye-hosts-iran-regional-talks/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/ghana-malaria-vaccines-funding-threat/ 
+['title', 'body', 'published_at'] missing in https://www.telesurenglish.net/hind-rajab-2-anniversary-war-crimes/ 
+###### Scrape Report for TheNews at 2026-01-30 14:41:26.294557 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Times of India at 2026-01-30 14:41:34.598209 #####
+Incomplete article crawls: 0 
+###### Scrape Report for YahooFinance at 2026-01-30 14:42:18.463636 #####
+Incomplete article crawls: 8 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_46018_MarketOutlook_1769776033000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_46017_TechnicalAnalysis_1769775997000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_3161_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_3103_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_6199_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_3073_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_3086_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+['title', 'body', 'published_at'] missing in https://finance.yahoo.com/research/reports/ARGUS_3569_AnalystReport_1769775523000?yptr=yahoo&ncid=yahooproperties_plusresear_nm5q6ze1cei 
+###### Scrape Report for YahooNews at 2026-01-30 14:43:03.981161 #####
+Incomplete article crawls: 33 
+Failed articles: 
+https://www.yahoo.com/news/articles/trumps-wide-ambitions-board-peace-164839167.html 
+https://www.yahoo.com/news/articles/erika-kirk-under-fire-husbands-181551718.html 
+https://www.yahoo.com/news/articles/exclusive-former-bay-area-university-130000665.html 
+https://www.yahoo.com/news/articles/zohran-mamdani-jacket-just-went-203233009.html 
+https://www.yahoo.com/news/articles/us-appeals-court-says-noems-062712692.html 
+https://www.yahoo.com/news/articles/were-holding-other-frisco-community-143452942.html 
+https://www.yahoo.com/lifestyle/articles/700-pound-grizzly-sat-inches-185349774.html 
+https://www.yahoo.com/news/articles/nicaraguan-mans-death-troubled-texas-201855556.html 
+https://www.yahoo.com/entertainment/movies/articles/entire-nation-pulls-melania-movie-195450986.html 
+https://www.yahoo.com/news/articles/kremlin-says-still-waiting-u-101638312.html 
+https://www.yahoo.com/news/articles/no-no-school-no-shopping-090601001.html 
+https://www.yahoo.com/news/articles/im-business-owner-minneapolis-working-100902447.html 
+https://www.yahoo.com/news/articles/dozens-faith-leaders-arrested-washington-011221181.html 
+https://www.yahoo.com/news/articles/india-reports-two-nipah-virus-073816758.html 
+https://www.yahoo.com/news/articles/february-shift-makes-winter-feel-150450251.html 
+https://www.yahoo.com/news/articles/shapiro-suggests-strong-case-made-222835575.html 
+https://www.yahoo.com/news/articles/u-turn-france-backs-move-184918020.html 
+https://www.yahoo.com/news/articles/veteran-senator-destroys-jd-vance-233639401.html 
+https://www.yahoo.com/news/articles/ripped-part-heart-north-texas-025454794.html 
+https://www.yahoo.com/news/articles/china-executes-11-members-myanmar-055101444.html 
+https://www.yahoo.com/news/articles/trump-suggests-appointed-doug-burgum-001250648.html 
+https://www.yahoo.com/news/articles/naples-man-killed-attempting-cross-171657132.html 
+https://www.yahoo.com/news/articles/man-arrested-attack-ilhan-omar-170155769.html 
+https://www.yahoo.com/news/articles/selfless-lawyer-44-died-plane-182757363.html 
+https://www.yahoo.com/news/articles/trump-pac-threatens-ice-track-215222156.html 
+https://www.yahoo.com/news/articles/republicans-fear-midterm-chances-slipping-020455447.html 
+https://www.yahoo.com/entertainment/movies/articles/uhh-heres-melania-doing-internationally-214830800.html 
+https://www.yahoo.com/news/articles/conservative-judge-minnesota-tries-keep-204939635.html 
+https://www.yahoo.com/news/articles/ukrainian-drone-strikes-parked-russian-000055744.html 
+https://www.yahoo.com/lifestyle/articles/woman-shares-moment-she-detained-215407417.html 
+https://www.yahoo.com/news/articles/liar-trump-official-accidentally-traps-184529245.html 
+https://www.yahoo.com/news/articles/white-house-scrambles-fix-humiliating-203132416.html 
+https://www.yahoo.com/news/articles/one-storm-another-much-us-162644842.html 
+###### Scrape Report for Bild at 2026-01-30 14:43:25.034580 #####
+Incomplete article crawls: 12 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/eilmeldung-lindsey-vonn-sturz-vor-letzter-abfahrt-vor-olympia-697c7c2ef0e62064809df0ba 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/mehr-sport/vonn-mit-helikopter-in-klinik-geflogen-weltcup-rennen-nach-sturz-von-superstar-abgebrochen-697caf3ffa531953d5216116 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/nach-bar-feuer-auf-mallorca-anklage-will-7-jahre-haft-fuer-kegelbrueder-697c5c27f0e62064809dee39 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/ausland/vier-jahre-nach-bar-feuer-auf-mallorca-staatsanwalt-haft-fuer-kegelbrueder-697ca1b6a3f0a8f7d18996de 
+['title', 'body', 'published_at'] missing in https://www.bild.de/sport/mehr-sport/nach-dem-halbfinal-aus-zverev-erklaert-seine-frust-szene-697cacbaa58e5b705ac2cf3b 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/ein-satz-aus-kindermund-gott-sei-dank-sind-wir-keine-juden-697a2d5922446308a2436160 
+['title', 'body', 'published_at'] missing in https://www.bild.de/leben-wissen/thilo-mischke-zu-gast-bei-mein-leben-ich-was-wir-erben-ohne-es-zu-wollen-697a2d6722446308a2436168 
+['title', 'body', 'published_at'] missing in https://www.bild.de/unterhaltung/jobs-die-es-moeglich-machen-viel-gehalt-ganz-ohne-studium-6978a363707d4aa207582fd0 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/inland/toedlicher-vorfall-in-hamburg-u-bahn-erfasst-zwei-menschen-697bf8d1fa531953d5215640 
+['title', 'body', 'published_at'] missing in https://www.bild.de/politik/arbeitslosenzahl-schock-staat-waechst-wirtschaft-schrumpft-verdi-streikt-697c9453fa531953d5215e83 
+['title', 'body', 'published_at'] missing in https://www.bild.de/news/ausland/proteste-gegen-ice-eskalieren-weiter-beamter-versucht-in-konsulat-einzudringen-697c89e0a58e5b705ac2cc13 
+['title', 'body', 'published_at'] missing in https://www.bild.de/geld/wirtschaft/ceo-der-counder-conference-erklaert-was-macht-die-tech-szene-in-suedafrika-697b9348393ebaf886c7844c 
+###### Scrape Report for Spiegel at 2026-01-30 14:43:40.052908 #####
+Incomplete article crawls: 0 
+###### Scrape Report for Welt at 2026-01-30 14:43:50.729920 #####
+Incomplete article crawls: 8 
+Failed articles: 
+['title', 'body', 'published_at'] missing in https://www.welt.de/debatte/plus697c9ae2a3f0a8f7d1899637/berlin-ohne-streusalz-warum-baeume-wichtiger-sind-als-arme-rentnerinnen.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/politik/deutschland/plus697c645aa58e5b705ac2c874/hoehere-tabaksteuer-das-verzerrte-bild-vom-raucher-als-immense-finanzbelastung.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697b27b4e4f9f267aa1181d5/mietwucher-durch-dreiste-vermieter-dieser-populismus-kaschiert-das-eigene-versagen.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697b3740d7ccc21a5b4c6ac0/make-economy-great-again-fuer-diejenigen-die-diesen-sozialstaat-in-anspruch-nehmen-wird-es-noch-einfacher.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697c74bfa58e5b705ac2c9e7/das-ende-des-verbrenner-aus-ist-das-nicht-bosch-chef-warnt-vor-neuem-jobabbau.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus697b7375e0862a349aeb5549/tether-tonnenweise-gold-im-atombunker-der-krypto-gigant-der-den-markt-leerkauft.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/debatte/plus697b63a2f0e62064809de388/verhaeltnis-zu-trump-das-mega-maga-problem.html 
+['title', 'body', 'published_at'] missing in https://www.welt.de/wirtschaft/plus69733f59029492de1675a15f/lebenslauf-experte-diesen-satz-will-kein-chef-nach-einem-personalgespraech-hoeren.html 
