@@ -173,6 +173,7 @@ Component-specific implementation also lives in:
 - [@lelatvaliashvili](https://github.com/lelatvaliashvili)
 - [@eniseirem](https://github.com/eniseirem)
 - [@Lennyad](https://github.com/Lennyad)
+- [@resialer2](https://github.com/resialer2)
 
 
 ## Team Responsibilities
@@ -200,13 +201,17 @@ This draft can be adjusted as team ownership evolves. If you are added as a cont
 - Testing, validation, and issue triage during integration cycles.
 - Support on implementation tasks across services.
 
+### @resialer2 (LLM Team Member)
+- Testing and validation of the multilingual LLM pipeline (German ↔ English translation and processing).
+- Evaluation of output quality, including summaries, topic labeling, and keyword generation for coherence and accuracy.
+- Consistency checks across article, cluster, and overall summaries, with documentation of results and issues.
+
 ## Acknowledgements (Non-GitHub Contributors)
 
 The following people contributed to the project but are not currently listed as GitHub collaborators: 
 
 - **Abby** - LLM Team 
 - **Demi** - LLM Team 
-- **Theresia** - LLM Team
 - **Anh** - Crawlers Team
 - **Levin** - Crawlers Team 
 - **Shidan** - N8N Team 
