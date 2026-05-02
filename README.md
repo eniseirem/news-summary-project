@@ -181,9 +181,12 @@ Component-specific implementation also lives in:
 This draft can be adjusted as team ownership evolves. If you are added as a contributor, feel free to update the section that reflects your responsibilities.
 
 ### lelatvaliashvili (Team Lead)
-- Product direction and milestone scope definition.
-- Workflow quality review for business relevance and output usefulness.
-- Final acceptance for release/demo readiness.
+- Led iterative development of the system, coordinating planning and execution while adapting architecture and pipeline design based on experimental results
+- Provided technical guidance and review across workflows, ensuring correctness, robustness, and alignment with project goals
+- Directed milestone planning and final system validation for demonstration
+- Led research and design of the system, including literature review for LLM-based summarization and evaluation methodologies  
+- Coordinated project execution across components, translating high-level system goals into concrete tasks and guiding implementation through iterative refinement cycles
+- Produced extensive technical documentation formalizing system architecture, pipeline design, and evaluation methodology for reproducibility and analysis  
 
 ### eniseirem (N8N Team Lead, End-to-End Workflow & Integration)
 - End-to-end workflow orchestration across services using n8n.
